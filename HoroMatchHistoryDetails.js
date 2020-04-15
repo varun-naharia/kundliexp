@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,PermissionsAndroid,ToastAndroid, Text, View,FlatList,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {Platform, StyleSheet,AsyncStorage,ScrollView,PermissionsAndroid,ToastAndroid, Text, View,FlatList,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
 const windowW= Dimensions.get('window').width
 const windowH = Dimensions.get('window').height
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -10,6 +10,7 @@ const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Pdf from 'react-native-pdf';
 import RNFetchBlob from 'rn-fetch-blob';
+import IndicatorCustom from './IndicatorCustom'
 import Svg, {
   Circle,Path, Rect,SvgXml, Defs, Marker } from 'react-native-svg';
 import { AnimatedSVGPath } from 'react-native-svg-animations';
@@ -28,10 +29,10 @@ class HoroMatchHistoryDetails extends Component<Props> {
         const { navigation } = this.props;
         this.state = {
             istoggle:false,
-            color:'red'
+            data:this.props.navigation.state.params.params.get.item
         }
     }
-    _keyExtractor = (item, index) => item.productID;
+
 
 
 
@@ -46,15 +47,17 @@ class HoroMatchHistoryDetails extends Component<Props> {
 
 
     componentDidMount(){
+    this.showLoading()
+    this.timeoutCheck = setTimeout(() => {
+        this.hideLoading()
+   }, 200);
 
-//        this.props.navigation.addListener('willFocus',this._handleStateChange);
+    console.log(JSON.stringify(this.props.navigation.state.params.params.get.item))
+//    this.setState({data: this.props.navigation.state.params.params.get.item})
 
-//  this.getReviews()
     }
 
-    getReviews= () =>{
 
-    }
 
     actualDownload=()=>{
             const { dirs } = RNFetchBlob.fs;
@@ -92,6 +95,38 @@ class HoroMatchHistoryDetails extends Component<Props> {
     } 
     }
 
+    selectedPred=(item, index)=>{
+        Linking.openURL(item.path)
+    }
+
+
+    renderRowItem1=({item, index})=>{
+        return(
+
+   <TouchableOpacity style={{marginBottom:hp(0.2)}}
+   onPress={() => this.selectedPred(item, index)
+    } activeOpacity={0.9}>
+     <View style={{backgroundColor:'white',flexDirection:'column' ,borderColor:'red',borderWidth:0,
+      flex: 1 ,borderRadius :5,width : wp(40),elevation:4, padding:10, marginTop:hp(1.5),marginLeft:wp(2),marginBottom:hp(0.6)}}>
+
+    {item.type =='application/pdf' && (
+
+    <Image style={{width:60, height:60, resizeMode:'contain', alignSelf:'center', marginVertical:hp(1)}}
+     source={require('./resources/pdf_im.png')}/>
+
+     )}    
+    {item.type == 'image/jpeg' && (
+    <Image style={{width:60, height:60, resizeMode:'contain', alignSelf:'center', marginVertical:hp(1)}}
+     source={{uri : item.path}}/>
+
+
+        )}
+
+    </View>
+
+    </TouchableOpacity>            
+            )
+    }
 
 
     render() {
@@ -109,16 +144,12 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
 
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-
-                                       size={50} color="#E9128B" />
-
-                </View>
+                <IndicatorCustom/>
             )
         }
+        var yeah = this.state.data
 
-        const source = {uri:'http://samples.leanpub.com/thereactnativebook-sample.pdf',cache:true};
+  //     const source = {uri:'http://samples.leanpub.com/thereactnativebook-sample.pdf',cache:true};
 
         return (
 
@@ -131,12 +162,94 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
                        headerName={'HOROSCOPE MATCHING DETAILS'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-        <View style={{width:wp(91), flex:1 ,backgroundColor:'white',flexDirection:'column',
-        marginTop:hp(3), borderRadius:5, alignSelf:'center', marginBottom:hp(5)}}>
+
+    <ScrollView>
+     <View style={{backgroundColor:'white',flexDirection:'column' ,borderColor:'red',borderWidth:0,
+      flex: 1 ,borderRadius :5,width : wp(91), padding:10, marginTop:hp(2), alignSelf:'center'}}>
+ 
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#E60000',marginTop:hp(0.5)}}>
+       Boy Details </Text>
+    
+       <Text style = {{fontSize:16,fontFamily:'Nunito-Bold',color:'black',}}>
+        {yeah.boy_name}
+       </Text>
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Time of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.boy_tob}</Text>
+       </Text>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Place of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.boy_pob}</Text>
+       </Text>
+    
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Date of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.boy_dob}</Text>
+       </Text>
+
+
+       <View style={{width:'100%', height:0.5, backgroundColor:'#bfbfbf', marginVertical:hp(2)}}/>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#E60000',}}>
+       Girl Details </Text>
+
+       <Text style = {{fontSize:16,fontFamily:'Nunito-Bold',color:'black'}}>
+        {yeah.girl_name}
+       </Text>
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Time of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.girl_tob}</Text>
+       </Text>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Place of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.girl_pob}</Text>
+       </Text>
+    
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Date of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.girl_dob}</Text>
+       </Text>
+
+  {yeah.trxn_status== 'success' && (
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+        Status: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'green',}}>
+        {yeah.trxn_status}</Text>
+       </Text>
+  )}
+
+  {yeah.trxn_status!= 'success' && (
+
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+        Status: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'red',}}>
+        {yeah.trxn_status}</Text>
+       </Text>
+
+    )}
+              <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
+                Id: #{yeah.id}
+               </Text>
+
+
+       <View style={{width:'100%', height:0.5, backgroundColor:'#bfbfbf', marginVertical:hp(2)}}/>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#E60000',}}>
+       Attachments </Text>
+
+
+                <FlatList style = {{marginTop:5,}}
+                    data={yeah.imagess}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={this.renderRowItem1}
+                    numColumns={2}
+                    extraData={this.state}
+                />
+
+
 
 
 {/*        <SvgXml xml={markerRendering}/>
-*/}
 
                  <Pdf
                     source={source}
@@ -153,11 +266,13 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
                         console.log(`Link presse: ${uri}`)
                     }}
                     style={{width:'100%', height:'100%', borderRadius:5,}}/>
+*/}
 
         </View>
 
+        </ScrollView>
 
-        <TouchableOpacity 
+{/*        <TouchableOpacity 
         style={{marginBottom:hp(4),marginRight:wp(2), alignSelf:'flex-end',}}
         onPress={()=> this.downloadFile()}>
         <View style={{flexDirection:'row',padding:10, backgroundColor:'transparent',
@@ -170,7 +285,7 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
          source={require('./resources/ic_download.png')}/>
         </View>
         </TouchableOpacity>
-
+*/}
             </View>
         );
     }
@@ -180,17 +295,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column'
     },
-    loading: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
 });
 
 export default HoroMatchHistoryDetails;

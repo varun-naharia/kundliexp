@@ -14,7 +14,8 @@ import {
     ScrollView,
     StatusBar,
     ImageBackground,
-    Linking
+    Linking,
+    Platform
 } from 'react-native';
 var status ;
 import AsyncStorage from '@react-native-community/async-storage';
@@ -28,7 +29,11 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Thumbnail } from 'react-native-thumbnail-video';
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
-
+import requestCameraAndAudioPermission from './requestCameraAndAudioPermission.js';
+import { Dialogs_ex, DialogContent_ex, DialogComponent, DialogTitle } from 'react-native-dialog-component';
+import moment from 'moment'
+import * as Animatable from 'react-native-animatable';
+import LinearGradient from 'react-native-linear-gradient';
 
 var myBanners=[{
     id: '1',
@@ -54,57 +59,90 @@ export default class Home extends Component {
     state = {
       activeSlide:0,
       myBanners:[],
-      visible:false,
+      visibles:false,
+      visible_consult: false,
+      live_details:{},
+      response_consult:{},
       moviesList:[
       {
         id: '1',
         title: 'Astrology Classes',    
-        artwork: require('./resources/hone.png')
+        artwork: require('./resources/hone.png'),
+        colors:['#27f0f0','#303395'],
+        animation: 'shake',
+        duration: 2500,
       },
       {
         id: '2',
         title: 'Chat With Us',    
-        artwork: require('./resources/htwo.png')
+        artwork: require('./resources/htwo.png'),
+        colors:['#fd0f77','#61258a'],
+        animation: 'fadeIn',
+        duration: 2100,
       },
       {
         id: '3',
         title: 'Call Now',    
-        artwork: require('./resources/hthree.png')
+        artwork: require('./resources/hthree.png'),
+        colors:['#61d8f7','#ab64f6'],
+        animation: 'rubberBand',
+        duration: 2700,
       },
       {
         id: '4',
         title: 'Ask a question',    
-        artwork: require('./resources/hfour.png')
+        artwork: require('./resources/hfour.png'),
+        colors:['#eabc85','#ed4443'],
+        animation: 'swing',
+        duration: 3100,        
       },
       {
         id: '5',
         title: 'Video Call',    
-        artwork: require('./resources/hfive.png')
+        artwork: require('./resources/hfive.png'),
+        colors:['#faeb18','#fb121a'],
+        animation: 'wobble',
+        duration: 2400,
       },
       {
         id: '6',
         title: 'Life Prediction',    
-        artwork: require('./resources/hsix.png')
+        artwork: require('./resources/hsix.png'),
+        colors:['#f8f8ba','#00abee'],
+        animation: 'rotate',
+        duration: 2800,        
       },
       {
         id: '7',
         title: 'Horoscope Matching',    
-        artwork: require('./resources/hnine.png')
+        artwork: require('./resources/hnine.png'),
+        colors:['#ffff92','#009900'],
+        animation: 'tada',
+        duration: 3600,        
       },
       {
         id: '8',
         title: 'In Person Consultation',    
-        artwork: require('./resources/heigh.png')
+        artwork: require('./resources/heigh.png'),
+        colors:['#009b90','#90218c'],
+        animation: 'bounce',
+        duration: 2900,        
       },
       {
         id: '9',
         title: 'Horoscope',    
-        artwork: require('./resources/hseven.png')
+        artwork: require('./resources/hseven.png'),
+        colors:['#05f1e1','#d481ff'],
+        animation: 'jello',
+        duration: 3500,        
       },
       {
         id: '10',
         title: 'Free Astro Reports',    
-        artwork: require('./resources/hten.png')
+        artwork: require('./resources/hten.png'),
+        colors:['#f9f981','#04a5c1'],
+        animation: 'lightSpeedIn',
+        duration: 2300,        
       },
     ],
     videos:[],
@@ -134,7 +172,7 @@ export default class Home extends Component {
               <Pagination
                 dotsLength={this.state.myBanners.length}
                 activeDotIndex={activeSlide}
-                containerStyle={{ alignSelf:'flex-start',backgroundColor: 'transparent', marginTop:-20, marginLeft:-20, }}
+                containerStyle={{ alignSelf:'flex-start',backgroundColor: 'transparent', marginTop:-20, marginLeft:-10, }}
                 dotStyle={{
                     width: 20,
                     height: 6,
@@ -204,8 +242,8 @@ _renderItems ({item, index}) {
         }else if (index == 6){
             this.props.navigation.navigate('LifePred')
         }else if (index == 7){
-            this.setState({visible:true})
-//            this.props.navigation.navigate('HoroscopeMatching')
+//            this.setState({visibles:true})
+           this.props.navigation.navigate('HoroscopeMatching')
         }else if(index == 8){
             GLOBAL.headerTitle='BOOKING'
             GLOBAL.consultType = '5'               
@@ -219,6 +257,20 @@ _renderItems ({item, index}) {
     }
 
 _handleStateChange = state => {
+    var d = new Date()
+    GLOBAL.gldate = d.getDate(); // 11
+    GLOBAL.glmonth =  d.getMonth()+1; // 0  month is like array so you have to do +1 for correct month
+    GLOBAL.glyear =  d.getFullYear(); // 1933
+
+    var time = moment().format('HH:mm')
+
+    GLOBAL.glhour = moment().hour();
+    GLOBAL.glminute = moment().minutes();
+
+    console.warn('-->times' + GLOBAL.glhour +'-->'+GLOBAL.glminute)
+    console.warn('-->'+ GLOBAL.gldate+'-->'+GLOBAL.glmonth+'-->'+GLOBAL.glyear)
+
+    this.forConsult()
     this.loadHome()
  };
 
@@ -300,20 +352,23 @@ _renderItemallrashi=(itemData)=>{
 
 
 
-    _renderItemproducts = (itemData) => {
+    _renderItemproducts = ({item, index}) => {
 
         return (
-            <TouchableOpacity style={{width:wp('45%'), margin:5, height:hp('13.5%')}}
-            onPress={() => this.selectedFirst(itemData.item.id)}
+
+
+            <TouchableOpacity style={{width:wp('47.3%'), margin:4, height:hp('13.5%')}}
+            onPress={() => this.selectedFirst(item.id)}
             activeOpacity={0.99}>
-                <View   style  = {{width:'100%', height:'100%',backgroundColor:'white',shadowColor: "#000",
+{/*                <View   style  = {{width:'100%', height:'100%',backgroundColor:'white',shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
                         height: 2,
                     },
                     shadowOpacity: 0.25,borderRadius:8,
                     shadowRadius: 3.84,elevation:4, flexDirection:'column',alignItems:'center', justifyContent:'center'
-                }}>
+                }}
+                >
                     <Image source={itemData.item.artwork}
                            style  = {{width:45, height:45,alignSelf:'center',resizeMode:'contain'}}/>
 
@@ -322,6 +377,37 @@ _renderItemallrashi=(itemData)=>{
                     </Text>
 
                 </View>
+ */}
+
+<LinearGradient colors={item.colors}
+start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+ style={{width:'100%', height:'100%', borderRadius:5, margin:3,
+  justifyContent:'space-between', flexDirection:'row', alignItems:'center'}}
+ >
+<View style={{flexDirection:'column', width:'65%'}}>
+ <Text style={{fontSize:18, color:'white', marginLeft:10, fontFamily:'Nunito-ExtraBold'}}>{item.title}</Text>
+
+</View>
+      <Animatable.Image style={{width:50, height:50, resizeMode:'contain', marginRight:9, zIndex:0}}
+      source={item.artwork}
+      animation={item.animation}
+      easing='linear'      
+      iterationCount="infinite"
+      duration={5500}/>
+
+       <Animatable.Image style={{height:'100%', width:7, position:'absolute',
+       right:75}}
+      animation='slideInLeft'
+      iterationCount="infinite"
+      easing='linear'
+      imageOpacity={0.5}      
+      duration={item.duration}
+      useNativeDriver={true}
+
+      source={require('./resources/line.png')}
+      />
+</LinearGradient> 
+
             </TouchableOpacity>
         )
     }
@@ -381,6 +467,152 @@ _renderItemNewsImageList=(itemData)=>{
         this.setState({loading: false})
     }
 
+    joinConsult=()=>{
+
+
+
+      console.log(JSON.stringify({
+                    booking_id: GLOBAL.booking_id,
+                    what: "2",
+                    from: "user"
+                  }))
+//      this.setState({visible_consult: false})
+
+      if(GLOBAL.is_chat_or_video_start =='1'){
+                const url = GLOBAL.BASE_URL + "start_status_online_consult";
+
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify({
+                    booking_id: GLOBAL.booking_id,
+                    what: "2",
+                    from: "user"
+                  })
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+//                    GLOBAL.bookingid = item.chat_g_id;
+
+                    if (responseJson.status == true) {
+                      if (GLOBAL.booking_type == "chat") {
+                        this.props.navigation.navigate("Chat");
+                      } else if(GLOBAL.booking_type == 'audio'){
+//                        GLOBAL.bookingid = item.chat_g_id;
+                        this.props.navigation.navigate("AudioCall", {
+                          channelName: GLOBAL.chat_g_id,
+                          onCancel: message => {
+                            this.setState({
+                              visible: true,
+                              message
+                            });
+                          }
+                        });
+                      } else {
+//                        GLOBAL.bookingid = item.chat_g_id;
+                        this.props.navigation.navigate("VideoCall", {
+                          channelName: GLOBAL.chat_g_id,
+                          onCancel: message => {
+                            this.setState({
+                              visible: true,
+                              message
+                            });
+                          }
+                        });
+                      }
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    //this.hideLoading()
+                  });
+
+      }else{
+
+                      if (GLOBAL.booking_type == "chat") {
+                        this.props.navigation.navigate("Chat");
+                      } else if(GLOBAL.booking_type == 'audio'){
+//                        GLOBAL.bookingid = item.chat_g_id;
+                        this.props.navigation.navigate("AudioCall", {
+                          channelName: GLOBAL.chat_g_id,
+                          onCancel: message => {
+                            this.setState({
+                              visible: true,
+                              message
+                            });
+                          }
+                        });
+                      } else {
+//                        GLOBAL.bookingid = item.chat_g_id;
+                        this.props.navigation.navigate("VideoCall", {
+                          channelName: GLOBAL.chat_g_id,
+                          onCancel: message => {
+                            this.setState({
+                              visible: true,
+                              message
+                            });
+                          }
+                        });
+                      }
+
+      }
+    }
+
+
+    forConsult=()=>{
+      const url = GLOBAL.BASE_URL + "home_user_dynamics";
+      //  this.showLoading()
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: GLOBAL.user_id,
+
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+//          console.log(JSON.stringify(responseJson));
+//          this.hideLoading();
+          if (responseJson.status == true) {
+
+
+
+                GLOBAL.is_chat_or_video_start = responseJson.is_chat_or_video_start
+                GLOBAL.booking_id = responseJson.booking_id
+                GLOBAL.chat_g_id = responseJson.chat_g_id
+                GLOBAL.is_booking = responseJson.is_booking
+                GLOBAL.get_expert_name_ = responseJson.get_expert_name_
+                GLOBAL.booking_type = responseJson.booking_type
+                GLOBAL.expert_id = responseJson.expert_id
+                GLOBAL.get_expert_name_image = responseJson.get_expert_name_image
+
+            if(responseJson.is_booking == 1){
+//              this.setState({visible_consult : true})
+              this.dialogComponents.show()
+
+            }
+//            this.forConsult() // recursive
+
+          } else {
+            alert(
+              "Something went wrong!"
+            );
+          }
+        })
+        .catch(error => {
+  //        this.hideLoading();
+          console.error(error);
+        });
+
+    }
+
     loadHome=()=>{
       const url = GLOBAL.BASE_URL + "home_user";
       //  this.showLoading()
@@ -396,7 +628,7 @@ _renderItemNewsImageList=(itemData)=>{
       })
         .then(response => response.json())
         .then(responseJson => {
-//          console.log(JSON.stringify(responseJson));
+          console.log(JSON.stringify(responseJson.live_details));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
@@ -420,7 +652,8 @@ _renderItemNewsImageList=(itemData)=>{
                     videos : resultant,
                     newslist : responseJson.news_list,
                     allrashi : responseJson.gems,
-                    wall : responseJson.user_detail.wallet
+                    wall : responseJson.user_detail.wallet,
+                    live_details : responseJson.live_details
                    })
                   // this.setState({ videos : resultant})
                   // this.setState({ newslist : responseJson.news_list})
@@ -428,6 +661,7 @@ _renderItemNewsImageList=(itemData)=>{
                   // this.setState({wall : responseJson.user_detail.wallet })
                   GLOBAL.all_settings = responseJson.get_Settings
                   GLOBAL.userDetails = responseJson.user_detail
+                  GLOBAL.helpline_number = responseJson.helpline_number
                   GLOBAL.walletAmount = responseJson.user_detail.wallet
 //                  alert(JSON.stringify(GLOBAL.all_settings))
           } else {
@@ -443,16 +677,34 @@ _renderItemNewsImageList=(itemData)=>{
 
     }
 
-    componentWillMount(){
-//      alert(GLOBAL.user_id)
-      this.loadHome()
-    }
+//     componentWillMount(){
+// //      alert(GLOBAL.user_id)
+//       // this.loadHome()
+//       // this.forConsult()
+//     }
 
 
     componentDidMount(){
 //      NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-  //  alert(GLOBAL.serviceContract)
-  
+    var d = new Date()
+    GLOBAL.gldate = d.getDate(); // 11
+    GLOBAL.glmonth =  d.getMonth()+1; // 0  month is like array so you have to do +1 for correct month
+    GLOBAL.glyear =  d.getFullYear(); // 1933
+    GLOBAL.gl_currYear = d.getFullYear();
+    var time = moment().format('HH:mm')
+
+    GLOBAL.glhour = moment().hour();
+    GLOBAL.glminute = moment().minutes();
+
+    console.warn('-->times' + GLOBAL.glhour +'-->'+GLOBAL.glminute)
+    console.warn('-->'+ GLOBAL.gldate+'-->'+GLOBAL.glmonth+'-->'+GLOBAL.glyear)
+
+      if (Platform.OS === 'android') {                    //Request required permissions from Android
+          requestCameraAndAudioPermission().then(_ => {
+              console.log('requested!');
+          });
+        }
+
         var value =  AsyncStorage.getItem('username');
         value.then((e)=> {
             GLOBAL.name = e;
@@ -463,7 +715,12 @@ _renderItemNewsImageList=(itemData)=>{
             GLOBAL.mobile = e;
         })
         this.props.navigation.addListener('willFocus',this._handleStateChange);
+        // this.props.navigation.addListener('willBlur',()=>{ //called when screen goes out of focus
+        //   alert('ads')
+        // });
 
+
+//        this.dialogComponents.show()
 //        this.loadHome()
     }
 
@@ -479,6 +736,7 @@ _renderItemNewsImageList=(itemData)=>{
     }
 
     componentWillUnmount() {
+
       //  NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
     }
 
@@ -499,10 +757,17 @@ _renderItemNewsImageList=(itemData)=>{
 
 
 buttonOkMatch=()=>{
-            this.setState({visible:false})
+            this.setState({visibles:false})
             this.props.navigation.navigate('HoroscopeMatching')
  
 }
+
+buttonOkJoin=()=>{
+            this.setState({visible_consult:false}) 
+            this.dialogComponents.dismiss()
+            this.joinConsult()
+}
+
 
     render() {
         if(this.state.loading){
@@ -513,8 +778,9 @@ buttonOkMatch=()=>{
                 </View>
             )
         }
+        console.log('render')
         return (
-
+        <>
               <ScrollView style={styles.container}
               nestedScrollEnabled={true}>
                       <StatusBar backgroundColor={'#c70b0b'}/>
@@ -556,7 +822,7 @@ buttonOkMatch=()=>{
                     <Image style={{width:wp('20%'), height:hp('13%'),position:'absolute',left:wp('-5%'),top:hp('52%'), zIndex:0, resizeMode:'contain'}}
                     source={require('./resources/home_right.png')}/>
 
-                  <View style = {{width :wp('95%'),alignSelf:'flex-start',margin:10,marginTop:hp('-11.5%')}}>
+                  <View style = {{width :wp('100%'),alignSelf:'center',alignItems:'center',margin:0,marginTop:hp('-11.5%')}}>
 
 
                   <Carousel
@@ -570,9 +836,11 @@ buttonOkMatch=()=>{
                            />{this.pagination}
 
 
+      {this.state.live_details.status == true && (
+
       <TouchableOpacity
       activeOpacity={0.99}
-      onPress={()=>{this.props.navigation.navigate('LiveStream')}}>
+      onPress={()=>{this.props.navigation.navigate('LiveStream' ,{params: {params: this.state.live_details}})}}>
       <View style  = {{width:wp(92),height:hp(13), backgroundColor:'white',shadowColor: "#000",
           elevation:4, flexDirection:'column',alignItems:'center',borderRadius:5, alignSelf:'center', marginBottom:hp(3)
       }}>
@@ -586,9 +854,11 @@ buttonOkMatch=()=>{
       </View>
       </TouchableOpacity>
 
+      )}
 
 
-                    <View style={{width:wp('95%'), justifyContent:'space-between', flexDirection:'row', marginTop:hp('-3%')}}>
+
+                    <View style={{width:wp('100%'), justifyContent:'space-between', flexDirection:'row', marginTop:hp('-3%')}}>
 
 
 
@@ -678,9 +948,9 @@ buttonOkMatch=()=>{
 
 
         <Dialog
-            visible={this.state.visible}
+            visible={this.state.visibles}
             onTouchOutside={() => {
-              this.setState({ visible: false });
+              this.setState({ visibles: false });
             }}
 
           >
@@ -703,7 +973,56 @@ buttonOkMatch=()=>{
             </DialogContent>
           </Dialog>
 
+
+
+{/*        <Dialog
+            visible={this.state.visible_consult}
+          >
+            <DialogContent>
+            <View style={{flexDirection:'column', width:wp(60), height:hp(25), }}>
+            <Image style={{width:140, height:140, resizeMode:'contain', alignSelf:'center', marginTop:hp(1)}} source={require('./resources/ic_consultpop.png')}/>
+            <Text style={{fontSize:15, color:'#8d8d8d',marginTop:hp(2), fontFamily:'Nunito-Bold', marginLeft:10, marginRight:10,
+             lineHeight:20, height:'auto', textAlign:'center'}}>Your {GLOBAL.booking_type} session with KM Sinha has started.</Text>
+            </View>
+
+            <Button
+            containerStyle={{width:wp('50%'),padding:10, height:hp(6), overflow:'hidden', borderRadius:40,
+             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(4), marginBottom:hp(2)}}
+            style={{fontSize: 18, color: 'white', alignSelf: 'center', fontFamily:'Nunito-Bold'}}
+            onPress={this.buttonOkJoin}
+            >
+            JOIN
+            </Button>
+
+            </DialogContent>
+          </Dialog>
+*/}
               </ScrollView>
+
+                <DialogComponent
+                    dialogStyle = {{backgroundColor:'transparent'}}
+                    dismissOnTouchOutside={false}
+                    dismissOnHardwareBackPress={false}
+                    ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+
+            <View style={{flexDirection:'column', width:wp(65),alignSelf:'center',backgroundColor:'white', height:hp(40),borderRadius:12 }}>
+            <Image style={{width:140, height:140, resizeMode:'contain', alignSelf:'center', marginTop:hp(1)}} source={require('./resources/ic_consultpop.png')}/>
+            <Text style={{fontSize:15, color:'#8d8d8d',marginTop:hp(2), fontFamily:'Nunito-Bold', marginLeft:10, marginRight:10,
+             lineHeight:20, height:'auto', textAlign:'center'}}>Your {GLOBAL.booking_type} session with KM Sinha has started.</Text>
+
+            <Button
+            containerStyle={{width:wp('50%'),padding:10, height:hp(6), overflow:'hidden', borderRadius:40,
+             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(4), marginBottom:hp(2)}}
+            style={{fontSize: 18, color: 'white', alignSelf: 'center', fontFamily:'Nunito-Bold'}}
+            onPress={this.buttonOkJoin}
+            >
+            JOIN
+            </Button>
+            </View>
+
+            </DialogComponent>
+</>              
         );
     }
 }

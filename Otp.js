@@ -4,13 +4,16 @@ import Button from 'react-native-button';
 const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import OTPInput from 'react-native-otp';
+// import OTPInput from 'react-native-otp';
 import AsyncStorage from '@react-native-community/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import NetInfo, {NetInfoSubscription} from "@react-native-community/netinfo";
 import * as RNLocalize from "react-native-localize";
 import SmsListener from 'react-native-android-sms-listener'
+import IndicatorCustom from './IndicatorCustom'
+
+import CodeInput from 'react-native-confirmation-code-input';
 
 // get all required values of device
 let uniqueId = DeviceInfo.getUniqueId();
@@ -52,6 +55,13 @@ export default class Otp extends Component {
     }
   }
 
+    showLoading() {
+        this.setState({loading: true})
+    }
+
+    hideLoading() {
+        this.setState({loading: false})
+    }
 
 
   componentDidMount(){
@@ -62,19 +72,24 @@ export default class Otp extends Component {
     })
   }
 
+  _onFulfill=(code)=>{
+    this.setState({otp : code})
+    this._handlePress(code) 
+  }
 
-  _handlePress=()=>{
+
+  _handlePress=(code)=>{
 //    alert(this.props.navigation.getParam('params'))
 
     var otpType = this.props.navigation.getParam('params')
     if(otpType == 'LoginOtp'){
 
-      if(this.state.otp == GLOBAL.loginOTP){
+      if(code == GLOBAL.loginOTP){
 //        alert('user_detail_after_otp')
       //this.props.navigation.replace('DrawerNavigator')
      const url = GLOBAL.BASE_URL +  'user_detail_after_otp'
 
-    //  this.showLoading()
+      this.showLoading()
    fetch(url, {
     method: 'POST',
     headers: {
@@ -87,7 +102,7 @@ export default class Otp extends Component {
     ip_address : GLOBAL.deviceIp,
     deviceID: uniqueId,
     deviceType: Platform.OS,
-    deviceToken: 'sadas',
+    deviceToken: GLOBAL.firebaseToken,
     model_name: model,
     carrier_name: GLOBAL.deviceCarrier,
     device_country: 'India',
@@ -98,7 +113,7 @@ export default class Otp extends Component {
 }).then((response) => response.json())
     .then((responseJson) => {
       console.log(JSON.stringify(responseJson))
-      //this.hideLoading()
+      this.hideLoading()
      if (responseJson.status == true) {
       
         this.setState({ results: responseJson.user_detail })
@@ -117,7 +132,7 @@ export default class Otp extends Component {
     })
     .catch((error) => {
       console.error(error);
-       //this.hideLoading()
+       this.hideLoading()
     });
 
       }else{
@@ -126,7 +141,7 @@ export default class Otp extends Component {
 
     }else if(otpType == 'SignupOtp'){
 
-      if(this.state.otp ==  GLOBAL.signupOtp){
+      if(code ==  GLOBAL.signupOtp){
             const url = GLOBAL.BASE_URL +  'Signup'
   //          console.log(url)
 //            console.log(GLOBAL.myname+'--' + GLOBAL.myemail+'--'+GLOBAL.mymobile+'--' +DeviceInfo.getUniqueId())
@@ -151,7 +166,7 @@ export default class Otp extends Component {
     longitude:'',
     deviceID: uniqueId,
     deviceType: Platform.OS,
-    deviceToken: 'sadas',
+    deviceToken: GLOBAL.firebaseToken,
     model_name: model,
     carrier_name: GLOBAL.deviceCarrier,
     device_country: 'India',
@@ -215,7 +230,15 @@ export default class Otp extends Component {
 
 
 
+
   render() {
+
+        if(this.state.loading){
+            return(
+              <IndicatorCustom/>
+            )
+        }
+
     return (
       <View style={styles.container}>
        <ImageBackground style = {{width :wp('100%') ,height : hp('100%'), flex:1,}}
@@ -240,8 +263,24 @@ export default class Otp extends Component {
           Enter your OTP code here
           </Text>
 
+       <CodeInput
+           containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
+           ref="codeInputRef1"
+           keyboardType="numeric"
+           secureTextEntry={false}
+           className={'border-box'}
+           space={6}
+           codeInputStyle={{width:wp(11), height:hp(7), marginLeft:wp(3.5),marginTop:hp(5), color:'#909090', fontSize:26, alignSelf:'center'}}
+           size={30}
+           codeLength={6}
+           inputPosition='center'
+           activeColor = '#E60000'
+           inactiveColor =  '#EAECEF'
+           onFulfill={(code) => this._onFulfill(code)}
+         />
 
-          <OTPInput 
+
+{/*          <OTPInput 
           containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
           value={this.state.otp}
           onChange={this.handleOTPChange}
@@ -250,23 +289,25 @@ export default class Otp extends Component {
           offTintColor="#EAECEF"
           otpLength={6}
           />
-
+*/}
 
           <View style={{width:wp('80%'), backgroundColor:'transparent', justifyContent:'space-between', alignSelf:'center', flexDirection:'row', alignItems:'center'}}>
 
           <TouchableOpacity>
-          <Text style = {{width:wp('35%'),color:'#000000',fontSize: 16,fontFamily:'Nunito-SemiBold',textAlign:'left', marginTop:hp(4)}}>
+          <Text style = {{width:wp('35%'),color:'#000000',fontSize: 16,fontFamily:'Nunito-SemiBold',textAlign:'left', marginTop:hp(8)}}>
           Resend Code?
           </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{alignSelf:'flex-end'}}
+{/*          <TouchableOpacity style={{alignSelf:'flex-end'}}
           onPress={()=> this._handlePress()}>
           <View style={{width:wp('24%'), height:hp('7%'), backgroundColor:'#E60000',justifyContent:'center',  borderRadius:50, alignSelf:'flex-end', marginTop:hp('4%'),marginRight:wp('1%')}}>
           <Image style={{width:wp(40), height:hp(3.5), resizeMode:'contain',alignSelf:'center'}} source={require('./resources/rightArrow.png')}
           />
           </View>
           </TouchableOpacity>
+
+        */}
           </View>
 
 

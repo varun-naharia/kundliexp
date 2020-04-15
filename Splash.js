@@ -47,7 +47,7 @@ StartImageRotateFunction () {
      this.getTimeZone()
   this.timeoutCheck = setTimeout(() => {
     this.proceed()
-   }, 500);
+   }, 2000);
   Geolocation.getCurrentPosition(info => 
     {
       console.log(info)

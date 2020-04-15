@@ -9,6 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ToggleSwitch from 'toggle-switch-react-native'
+import {NavigationActions,StackActions} from 'react-navigation';
 
 
 type Props = {};
@@ -52,7 +53,62 @@ class Settings extends Component<Props> {
 
     }
 
+    _YesLogout=()=>{
 
+       const url = GLOBAL.BASE_URL +  'logout'
+//      this.showLoading()
+      fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    user_id : GLOBAL.user_id,
+  }),
+}).then((response) => response.json())
+    .then((responseJson) => {
+
+//    alert(JSON.stringify(responseJson))
+  //     this.hideLoading()
+       if (responseJson.status == true) {
+        AsyncStorage.removeItem('userID');
+
+        this.props
+            .navigation
+            .dispatch(StackActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({
+                        routeName: 'Login',
+                        params: { someParams: 'parameters goes here...' },
+                    }),
+                ],
+            }))
+
+
+//        this.props.navigation.dispatch(DrawerActions.closeDrawer())
+
+           }else {
+               alert('Something Went Wrong.')
+           }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+
+    navigateToScreen1 = (route) => {
+
+        Alert.alert('Logout!','Are you sure you want to Logout?',
+            [{text:"Cancel"},
+                {text:"Yes", onPress:()=>this._YesLogout()
+                },
+            ],
+            {cancelable:false}
+        )
+
+    }
 
 
     render() {
@@ -130,7 +186,8 @@ class Settings extends Component<Props> {
         </TouchableOpacity>
 
 
-        <TouchableOpacity>
+        <TouchableOpacity 
+        onPress= {()=> this.navigateToScreen1('Login')}>
         <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
         <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
         <Image style={{width:wp(6), height:hp(4), resizeMode:'contain'}}

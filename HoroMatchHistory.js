@@ -25,10 +25,11 @@ class HoroMatchHistory extends Component<Props> {
         const { navigation } = this.props;
         this.state = {
             istoggle:false,
-            predlist:[]
+            predlist:[],
+            limit:0
         }
     }
-    _keyExtractor = (item, index) => item.productID;
+
 
 
 
@@ -51,7 +52,7 @@ class HoroMatchHistory extends Component<Props> {
 
     getHorosMatch= () =>{
         const url = GLOBAL.BASE_URL + "booking_matchmaking_history";
-        this.showLoading()
+//        this.showLoading()
       fetch(url, {
         method: "POST",
         headers: {
@@ -59,33 +60,35 @@ class HoroMatchHistory extends Component<Props> {
         },
         body: JSON.stringify({
           user_id: GLOBAL.user_id,
-          limit_from:"0"
+          limit_from: this.state.limit
 
         })
       })
         .then(response => response.json())
         .then(responseJson => {
-               this.hideLoading()
+  //             this.hideLoading()
        
           console.log(JSON.stringify(responseJson))
 
           if (responseJson.status == true) {
+          var resu = this.state.predlist
+          this.setState({predlist : [...resu ,...responseJson.lists]})
 
-            this.setState({predlist : responseJson.lists})
+//            this.setState({predlist : responseJson.lists})
           } else {
 
           }
         })
         .catch(error => {
           console.error(error);
-          this.hideLoading()
+    //      this.hideLoading()
         });
 
     }
 
 
     selectedPred=(item, index)=>{
-        this.props.navigation.navigate('HoroMatchHistoryDetails')
+        this.props.navigation.navigate('HoroMatchHistoryDetails', {params:{get : item}} )
     }
 
     _renderItempreds = (itemData, index) => {
@@ -153,6 +156,10 @@ class HoroMatchHistory extends Component<Props> {
        </Text>
 
     )}
+              <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
+                Id: #{itemData.item.id}
+               </Text>
+
 
         </View>
 
@@ -160,6 +167,18 @@ class HoroMatchHistory extends Component<Props> {
         )
     }
 
+
+    handleLoadMore=()=>{
+        // this.setState({limit: this.state.limit + 6})
+        // this.loadBookings()
+//        alert('ads')
+     this.setState({
+          limit: this.state.limit + 6
+        }, () => {
+          this.getHorosMatch();
+        });
+
+    }
 
     render() {
         if(this.state.loading){
@@ -181,11 +200,13 @@ class HoroMatchHistory extends Component<Props> {
         <View style={{width:wp(100),flex:1,backgroundColor:'transparent',flexDirection:'column',
         marginTop:hp(1), alignSelf:'center'}}>
 
-                    <FlatList style= {{flexGrow:0,marginBottom:hp(2)}}
+                    <FlatList style= {{marginBottom:hp(2)}}
                               data={this.state.predlist}
                               keyExtractor = { (item, index) => index.toString() }
                               renderItem={this._renderItempreds}
-                              extraData={this.state}
+                              extaData={this.state}
+                              onEndReached={this.handleLoadMore}
+                              onEndReachedThreshold={0.01}
                     />
 
 

@@ -66,6 +66,11 @@ export default class FreeAstro extends Component<Props> {
         artwork: require('./resources/fsix.png')
       },
       {
+        id: '7',
+        title: 'KP System',    
+        artwork: require('./resources/fseven.png')
+      },
+      {
         id: '8',
         title: 'Know Your Lucky Number',    
         artwork: require('./resources/ffour.png')
@@ -109,11 +114,6 @@ export default class FreeAstro extends Component<Props> {
         id: '18',
         title: 'Know Your Lucky Colour',    
         artwork: require('./resources/feig.png')
-      },
-      {
-        id: '19',
-        title: 'Job & Career',    
-        artwork: require('./resources/finin.png')
       },
       {
         id: '20',
@@ -225,11 +225,15 @@ selectedFirsts=(item,indexs)=>{
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 6){
     this.props.navigation.navigate('KundliForm',{astroReportType : 'lal_kitab'})  
+  }else if(item == 7){
+    this.props.navigation.navigate('KundliForm',{astroReportType : 'kp_system'})  
   }else if(item == 8){
     GLOBAL.isDailyPres = '1'
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 9){
     this.props.navigation.navigate('KundliForm',{astroReportType : 'sade_sati'})  
+  }else if(item == 14){
+    this.props.navigation.navigate('KundliForm',{astroReportType : 'year_pred'})  
   }else if(item == 16){
     GLOBAL.isDailyPres = '4'
     this.props.navigation.navigate('NumerologyForm')  
@@ -237,14 +241,24 @@ selectedFirsts=(item,indexs)=>{
     GLOBAL.isDailyPres = '3'
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 20){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'gemstone_sugges'})  
+    this.props.navigation.navigate('KundliForm',{astroReportType : 'gemstone_sugges'})
+  }else if(item == 21){
+    this.props.navigation.navigate('GandMool')
+  }else if(item == 23){
+    alert('Coming soon...')
+  }else if(item == 24){
+    alert('Coming soon...')
+  }else if(item == 25){
+    this.props.navigation.navigate('KundliForm',{astroReportType : 'chaughadive'})
   }else if(item == 27){
     GLOBAL.isDailyPres = '2'
     this.props.navigation.navigate('NumerologyForm')  
+  }else if(item == 28){
+    alert('Coming soon...')
   }else if(item == 29){
-    this.props.navigation.navigate('Chat')    
+  //  this.props.navigation.navigate('Chat')    
   }else if(item == 30){
-    this.props.navigation.navigate('VideoCall')    
+//    this.props.navigation.navigate('VideoCall')    
   }
 }
 

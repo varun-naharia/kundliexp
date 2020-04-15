@@ -92,6 +92,17 @@ buttonClickListener=()=>{
       }else{
           numFormType = 'numero_table'
       }
+
+      console.log('---->'+JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":"en",
+            "name": this.state.name,
+            "date": date,
+            "month": month,
+            "year": year,
+            "api-condition":numFormType
+            }))
+
         const url = GLOBAL.ASTRO_API_BASE_URL
 
         fetch(url, {

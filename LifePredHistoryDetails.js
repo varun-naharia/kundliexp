@@ -13,8 +13,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Svg, {
   Circle,Path, Rect,SvgXml, Defs, Marker } from 'react-native-svg';
 import { AnimatedSVGPath } from 'react-native-svg-animations';
-
+import IndicatorCustom from './IndicatorCustom'
 type Props = {};
+
 class LifePredHistoryDetails extends Component<Props> {
 
     static navigationOptions = ({ navigation }) => {
@@ -29,7 +30,7 @@ class LifePredHistoryDetails extends Component<Props> {
         this.state = {
             istoggle:false,
             color:'red',
-            getData: navigation.state.params.params
+            data:this.props.navigation.state.params.params.get.item
         }
     }
 
@@ -47,7 +48,12 @@ class LifePredHistoryDetails extends Component<Props> {
 
 
     componentDidMount(){
-        console.log(JSON.stringify(this.state.getData))
+    this.showLoading()
+    this.timeoutCheck = setTimeout(() => {
+        this.hideLoading()
+   }, 200);
+
+    console.log(JSON.stringify(this.props.navigation.state.params.params.get.item))
 //        this.props.navigation.addListener('willFocus',this._handleStateChange);
 
 //  this.getReviews()
@@ -94,6 +100,38 @@ class LifePredHistoryDetails extends Component<Props> {
     } 
     }
 
+    selectedPred=(item, index)=>{
+        Linking.openURL(item.path)
+    }
+
+
+    renderRowItem1=({item, index})=>{
+        return(
+
+   <TouchableOpacity style={{marginBottom:hp(0.2)}}
+   onPress={() => this.selectedPred(item, index)
+    } activeOpacity={0.9}>
+     <View style={{backgroundColor:'white',flexDirection:'column' ,borderColor:'red',borderWidth:0,
+      flex: 1 ,borderRadius :5,width : wp(40),elevation:4, padding:10, marginTop:hp(1.5),marginLeft:wp(2),marginBottom:hp(0.6)}}>
+
+    {item.type =='application/pdf' && (
+
+    <Image style={{width:60, height:60, resizeMode:'contain', alignSelf:'center', marginVertical:hp(1)}}
+     source={require('./resources/pdf_im.png')}/>
+
+     )}    
+    {item.type == 'image/jpeg' && (
+    <Image style={{width:60, height:60, resizeMode:'contain', alignSelf:'center', marginVertical:hp(1)}}
+     source={{uri : item.path}}/>
+
+
+        )}
+
+    </View>
+
+    </TouchableOpacity>            
+            )
+    }
 
 
     render() {
@@ -111,16 +149,12 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
 
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-
-                                       size={50} color="#E9128B" />
-
-                </View>
+                <IndicatorCustom/>
             )
         }
+        var yeah = this.state.data
 
-        const source = {uri:'http://samples.leanpub.com/thereactnativebook-sample.pdf',cache:true};
+//        const source = {uri:'http://samples.leanpub.com/thereactnativebook-sample.pdf',cache:true};
 
         return (
 
@@ -132,14 +166,82 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
                        backImagePath={require('./resources/back.png')}
                        headerName={'LIFE PREDICTION DETAILS'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
+    <ScrollView>
+     <View style={{backgroundColor:'white',flexDirection:'column' ,borderColor:'red',borderWidth:0,
+      flex: 1 ,borderRadius :5,width : wp(91), padding:10, marginTop:hp(2), alignSelf:'center'}}>
+ 
+    
+       <Text style = {{fontSize:16,fontFamily:'Nunito-Bold',color:'black',}}>
+        {yeah.name}
+       </Text>
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Gender: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.gender}</Text>
+       </Text>
 
-        <View style={{width:wp(91), flex:1 ,backgroundColor:'white',flexDirection:'column',
-        marginTop:hp(3), borderRadius:5, alignSelf:'center', marginBottom:hp(5)}}>
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Time of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.tob}</Text>
+       </Text>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Place of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.pob}</Text>
+       </Text>
+    
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Post Date: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.added_on}</Text>
+       </Text>
+
+  {yeah.trxn_status== 'success' && (
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+        Status: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'green',}}>
+        {yeah.trxn_status}</Text>
+       </Text>
+  )}
+
+  {yeah.trxn_status!= 'success' && (
+
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+        Status: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'red',}}>
+        {yeah.trxn_status}</Text>
+       </Text>
+
+    )}
+
+       <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Description: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {yeah.problem}</Text>
+       </Text>
+
+              <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
+                Id: #{yeah.id}
+               </Text>
+
+       <View style={{width:'100%', height:0.5, backgroundColor:'#bfbfbf', marginVertical:hp(2)}}/>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#E60000',}}>
+       Attachments </Text>
+
+
+                <FlatList style = {{marginTop:5,}}
+                    data={yeah.imagess}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={this.renderRowItem1}
+                    numColumns={2}
+                    extraData={this.state}
+                />
+
+
+        </View>
+
+
+
+        </ScrollView>
 
 
 {/*        <SvgXml xml={markerRendering}/>
-*/}
-
                  <Pdf
                     source={source}
                     onLoadComplete={(numberOfPages,filePath)=>{
@@ -159,6 +261,7 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
         </View>
 
 
+
         <TouchableOpacity 
         style={{marginBottom:hp(4),marginRight:wp(2), alignSelf:'flex-end',}}
         onPress={()=> this.downloadFile()}>
@@ -172,6 +275,7 @@ const markerRendering = `<svg xmlns="http://www.w3.org/2000/svg" version="1.0" w
          source={require('./resources/ic_download.png')}/>
         </View>
         </TouchableOpacity>
+*/}
 
             </View>
         );

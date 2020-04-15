@@ -53,6 +53,20 @@ export default class BasicDetails extends Component<Props> {
     }
 
     getBasicDetails= () =>{
+      console.log({
+            "user_id":GLOBAL.user_id,
+            "lang":"en",
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"basic_detail"
+            })
+
       this.showLoading()
         const url = GLOBAL.ASTRO_API_BASE_URL
 

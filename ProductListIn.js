@@ -48,7 +48,7 @@ export default class ProductListIn extends Component<Props> {
 
 
     componentDidMount(){
-    this.getProducts()      
+//    this.getProducts()      
 
         this.props.navigation.addListener('willFocus',this._handleStateChange);
 
@@ -99,12 +99,12 @@ export default class ProductListIn extends Component<Props> {
     }
 
 
-    openCart=(itemData)=>{
+    openCart=(item, index)=>{
       this.props.navigation.navigate('Cart')
     }
 
 
-    addToCart=(itemData)=>{
+    addToCart=(item, index)=>{
 //      alert(JSON.stringify(itemData.item))
       const url = GLOBAL.BASE_URL + "add_to_cart_gems";
     //  this.showLoading()
@@ -114,8 +114,8 @@ export default class ProductListIn extends Component<Props> {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        product_id: itemData.item.id,
-        order_price: itemData.item.base_price,
+        product_id: item.id,
+        order_price: item.base_price,
         user_id: GLOBAL.user_id,
       })
     })
@@ -124,8 +124,19 @@ export default class ProductListIn extends Component<Props> {
         //       this.hideLoading()
 //      alert(JSON.stringify(responseJson))
         if (responseJson.status == true) {
+            var s = this.state.pdList[index];
+            if (item.is_cart == 0) {
+              s.is_cart = 1;
+            } else {
+              s.is_cart = 0;
+            }
+            this.state.pdList[index] = s;
+
+            this.setState({pdList: this.state.pdList});
+
             alert('Added to cart')
-            this.getProducts()
+
+//            this.getProducts()
         } else {
             alert("Already in cart!");
         }
@@ -137,32 +148,32 @@ export default class ProductListIn extends Component<Props> {
     }
 
 
-selectedFirst=(itemData)=>{
-    GLOBAL.prodDetails = itemData.item
+selectedFirst=(item, index)=>{
+    GLOBAL.prodDetails = item
     this.props.navigation.navigate('ProductDetails')
 }
 
 
-  _renderItem=(itemData) => {
+  _renderItem=({item, index}) => {
         return (
     <TouchableOpacity style={{width:wp('45%'), margin:7,height:hp('28%'),backgroundColor:'white',}}
-    activeOpacity={0.99} onPress={()=> this.selectedFirst(itemData)}>
+    activeOpacity={0.99} onPress={()=> this.selectedFirst(item, index)}>
       <View style  = {{width:wp('45%'), height:hp('28%'),backgroundColor:'#f7f7f7',shadowColor: "#000",
           elevation:4, flexDirection:'column',alignItems:'center',borderRadius:5, 
       }}>
-    <Image style={{width:wp(40), height:hp(15), resizeMode:'cover',marginTop:hp(1)}} source={{uri : itemData.item.image}}/>
+    <Image style={{width:wp(40), height:hp(15), resizeMode:'cover',marginTop:hp(1)}} source={{uri : item.image}}/>
     <View style={{backgroundColor:'white', width:wp('45%'),  flexDirection:'column', marginTop:hp(2), borderBottomLeftRadius:5, borderBottomRightRadius:5}}>
           <Text style = {{fontSize:15,fontFamily:'Nunito-Regular',color:'#000000',width:wp('39%'),marginLeft:wp(3), marginTop:hp(1)}}
           numberOfLines={2}>
-              {itemData.item.name}
+              {item.name}
           </Text>
           <View style={{width:wp('40%'), flexDirection:'row', justifyContent:'space-between',marginLeft:wp(3), }}>
           <Text style = {{fontSize:10,fontFamily:'Nunito-Regular',color:'#E60000',width:wp(27),marginTop:hp(1)}}>
-              {itemData.item.Carat} Carat/{itemData.item.Ratti} Ratti
+              {item.Carat} Carat/{item.Ratti} Ratti
           </Text>
 
-          {itemData.item.is_cart == 0 && (
-          <TouchableOpacity onPress={()=> this.addToCart(itemData)}>
+          {item.is_cart == 0 && (
+          <TouchableOpacity onPress={()=> this.addToCart(item, index)}>
           <View style={{backgroundColor:'#E60000', height:25, width:wp(11.5), borderRadius:6, justifyContent:'center'}}>
           <Text style = {{fontSize:9,fontFamily:'Nunito-Regular',color:'white', alignSelf:'center'}}>
           Buy Now
@@ -171,8 +182,8 @@ selectedFirst=(itemData)=>{
           </TouchableOpacity>
           )}
 
-          {itemData.item.is_cart != 0 && (
-          <TouchableOpacity onPress={()=> this.openCart(itemData)}>
+          {item.is_cart != 0 && (
+          <TouchableOpacity onPress={()=> this.openCart(item, index)}>
           <View style={{backgroundColor:'#E60000', height:25, width:wp(11.5), borderRadius:6, justifyContent:'center'}}>
           <Text style = {{fontSize:9,fontFamily:'Nunito-Regular',color:'white', alignSelf:'center'}}>
           In Cart

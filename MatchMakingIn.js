@@ -46,28 +46,6 @@ export default class MatchMakingIn extends Component<Props> {
                  "is_selected":"0",
                 },
               ],
-            basicitems:[
-              {
-                id: '1',
-                title: 'Basic Details',    
-                artwork: require('./resources/fabout.png')
-              },
-              {
-                id: '2',
-                title: 'Panchang Details',    
-                artwork: require('./resources/om.png')
-              },
-              {
-                id: '3',
-                title: 'Ghat Chakra',    
-                artwork: require('./resources/ghat_ckra.png')
-              },
-              {
-                id: '4',
-                title: 'Astro Details',    
-                artwork: require('./resources/hten.png')
-              },
-             ]             
         }
             this.getMoonChartImage=this.getMoonChartImage.bind(this);
     }
@@ -375,56 +353,6 @@ var xml = `
 
 
 
-    get customRenderer(){
-// if(this.state.renderIndex == 2){
-
-// }
-      if(this.state.renderIndex == 0){
-          return(
-              <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
-                      data={this.state.basicitems}
-                      numColumns={2}
-                      keyExtractor = { (item, index) => index.toString() }
-                      renderItem={this._renderItem}
-            />
-
-          )
-      }else if(this.state.renderIndex == 1){
-
-            <LagnaChart index={this.state.renderIndex}/>
-
-      }else if(this.state.renderIndex == 2){
-        alert(GLOBAL.svgImage)
-          return(
-            <MoonChart index={this.state.renderIndex}
-            svgImage ={GLOBAL.svgImage}/>
-
-            )
-      }else if(this.state.renderIndex == 3){
-
-        this.getMoonChartImage(this.state.renderIndex)
-
-        return(
-            <NavmanshaChart index={this.state.renderIndex}/>
-        )
-      }else if(this.state.renderIndex == 4){
-
-        this.getMoonChartImage(this.state.renderIndex)
-
-        return(
-            <SunChart index={this.state.renderIndex}/>
-        )
-      }else if(this.state.renderIndex == 5){
-
-        this.getMoonChartImage(this.state.renderIndex)
-
-        return(
-            <HoraChart index={this.state.renderIndex}/>
-        )
-      }
-
-    }
-
 
     render() {
         if(this.state.loading){
@@ -494,9 +422,7 @@ var xml = `
             </>
             )}
 
-{/*
-            {this.customRenderer}
-*/}
+
 
           {this.state.renderIndex != 0 &&(
 

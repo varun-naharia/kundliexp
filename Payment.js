@@ -55,9 +55,9 @@ export default class Payment extends Component<Props> {
       value: 0,
       prices: '',
      referralrs: GLOBAL.userDetails.refferal_wallet,
-     //referralrs : "40.5",
+    // referralrs : "40",
       walletAmount: GLOBAL.walletAmount,
-    //  walletAmount: "500.00",
+     // walletAmount: "500.00",
        finalRef: "0",
      finalWall : "0",
       coupan_code: '0',
@@ -198,6 +198,8 @@ walletStateChange = () => {
       });
   };
 
+
+
   payNow = payType => {
 
     var decide_for = '';
@@ -233,7 +235,7 @@ walletStateChange = () => {
                   
                     from_payment_gateway:"0",
                     payment_from:"normal",
-                    discount_amount: this.state.finalCheckoutPrice.toString(),                    
+                    discount_amount: '0',                    
                     order_amount: get_price.toString(),
                     wallet_amount: this.state.finalWall.toString(),
                     referral_amount: this.state.finalRef.toString(),
@@ -343,7 +345,7 @@ walletStateChange = () => {
                   
                     from_payment_gateway:"0",
                     payment_from:"normal",
-                    discount_amount: this.state.finalCheckoutPrice.toString(),                    
+                    discount_amount: '0',                    
                     order_amount: get_price.toString(),
                     wallet_amount: this.state.finalWall.toString(),
                     referral_amount: this.state.finalRef.toString(),
@@ -456,7 +458,7 @@ walletStateChange = () => {
                   
                     payment_gateway_amount:"0",
                     payment_from:"normal",
-                    discount_amount: this.state.finalCheckoutPrice.toString(),                    
+                    discount_amount: '0',                    
                     order_amount: get_price.toString(),
                     wallet_amount: this.state.finalWall.toString(),
                     referral_amount: this.state.finalRef.toString(),
@@ -535,7 +537,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               } 
 
@@ -586,7 +588,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               }
 
@@ -655,7 +657,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               } 
                   fetch(url, {
@@ -703,7 +705,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               }
 
@@ -756,7 +758,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 payment_from: 'normal',
                 from_payment_gateway: '0',
                 coupan_code:'0',
@@ -797,7 +799,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 coupan_code:'0',
                 coupan_code_id:'0',                
               }
@@ -839,11 +841,102 @@ walletStateChange = () => {
         get_price = getItem.price
 
 
-        // if(this.state.finalCheckoutPrice==0){
+        if(this.state.finalCheckoutPrice==0){
+            const url = GLOBAL.BASE_URL + "add_permanent_booking";
+            var body ={
+                for: decide_for,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                order_amount: get_price,
+                wallet_amount: this.state.finalWall.toString(),
+                referral_amount: this.state.finalRef.toString(),
+                discount_amount: '0',
+                name:GLOBAL.userDetails.name,
+                email:GLOBAL.userDetails.email,
+                mobile:GLOBAL.userDetails.phone,
+                address: getItem.address,
+                area: getItem.area,
+                pincode: getItem.pincode,
+                city_state: getItem.city_state,
+                payment_from: 'normal',
+                from_payment_gateway: '0',
+                coupan_code:'0',
+                coupan_code_id:'0',                
+              }
+              console.log(JSON.stringify(body))
 
-        // }else{
+             fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
 
-        // }
+                  body: JSON.stringify(body)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+
+                      this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+
+        }else{
+
+           const url = GLOBAL.BASE_URL + "add_temporary_booking";
+            var body ={
+                for: decide_for,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                total_amount: get_price,
+                wallet_amount: this.state.finalWall.toString(),
+                referral_amount: this.state.finalRef.toString(),
+                discount_amount: '0',
+                name:GLOBAL.userDetails.name,
+                email:GLOBAL.userDetails.email,
+                mobile:GLOBAL.userDetails.phone,
+                address: getItem.address,
+                area: getItem.area,
+                pincode: getItem.pincode,
+                city_state: getItem.city_state,
+                payment_from: 'rajorpay',
+                from_payment_gateway: '0',
+                coupan_code:'0',
+                coupan_code_id:'0',                
+              }
+              console.log('---temp++'+JSON.stringify(body))
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(body)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+                      var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
+
+                       this.rajorPay(commonHtml)
+
+                      //this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+
+        }
 
       }else if(navigation.state.params.params.previous_screen=='audio'){
 
@@ -885,7 +978,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               } 
                   fetch(url, {
@@ -933,7 +1026,7 @@ walletStateChange = () => {
                 total_amount: get_price,
                 wallet_amount: this.state.finalWall.toString(),
                 referral_amount: this.state.finalRef.toString(),
-                discount_amount: this.state.finalCheckoutPrice.toString(),
+                discount_amount: '0',
                 trxn_mode:'normal'
               }
 
@@ -974,6 +1067,15 @@ walletStateChange = () => {
 
 
   };
+
+
+  testings=()=>{
+    console.log('finalCheckoutPrice--> '+ this.state.finalCheckoutPrice+
+                'finalref-->  '+this.state.finalRef+
+                'finalWall-->  '+ this.state.finalWall+
+                'totalPay-->  '+ this.state.totalPay)
+  }
+
 
   calculation = (value) => {
     var get_price = '';
@@ -1028,26 +1130,56 @@ walletStateChange = () => {
         var aa = parseFloat(get_price);
         var bb = parseFloat(this.state.walletAmount);
 
-        var total = 0;
+        // var total = 0;
 
-        if(aa <= bb){
+        // if(aa <= bb){
 
-          bb=bb-aa
-        }else{
-          aa = aa -bb
-          total = aa
-          bb = 0
-        }
+        //   bb=bb-aa
+        // }else{
+        //   aa = aa -bb
+        //   total = aa
+        //   bb = 0
+        // }
+//        bb=50
 
-
-
-      //  alert('wallet' + bb)
-
-        this.setState({finalCheckoutPrice: total,
+        var cc = bb-aa
+        if(cc > 0){
+        this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
           totalPay: get_price,          
           finalRef: 0
         })
+
+        }else{
+          var ss = aa - bb
+        this.setState({finalCheckoutPrice: ss,
+          finalWall: bb,
+          totalPay: get_price,
+          finalRef: 0
+        })
+
+        }
+
+
+            // if (c>0){
+            //    this.setState({finalwal :this.state.finalPrice})
+            //     this.setState({finalPrice:0})
+            //     this.setState({finalref :"0"})
+            // }else{
+            //     var s = a - b
+            //     this.setState({finalwal :b})
+            //     this.setState({finalPrice:s})
+            //     this.setState({finalref :"0"})
+            // }
+
+
+      //  alert('wallet' + bb)
+
+        // this.setState({finalCheckoutPrice: total,
+        //   finalWall: get_price,
+        //   totalPay: get_price,          
+        //   finalRef: 0
+        // })
 
     }else if(this.state.wallet == false && this.state.debit== true && this.state.refer ==false){
 
@@ -1065,100 +1197,185 @@ walletStateChange = () => {
       // use only 10% of balance
         var aa = ((parseFloat(this.state.referralrs))*10)/100;
         var bb = parseFloat(get_price);
-        var cc = bb - aa
-        this.setState({finalCheckoutPrice: cc,
-          finalRef : aa,
-          totalPay: get_price,          
-          finalWall: 0
-        })
+//        var cc = bb - aa
+        if (bb >= aa){
 
-      //  alert('referral' + cc)
-
-    }else if(this.state.wallet == false && this.state.debit== true && this.state.refer ==true){
-        var aa = ((parseFloat(this.state.referralrs))*10)/100;
-        var bb = parseFloat(get_price);
-        var cc = bb - aa
-        this.setState({finalCheckoutPrice: cc,
+          this.setState({finalCheckoutPrice: bb-aa,
           finalRef: aa,
           totalPay: get_price,          
           finalWall: 0
         })
+
+
+        }else{
+          this.setState({finalCheckoutPrice: 0,
+          finalRef: bb,
+          totalPay: get_price,          
+          finalWall: 0
+        })
+        }
+      //  alert('referral' + cc)
+
+    }else if(this.state.wallet == false && this.state.debit== true && this.state.refer ==true){
+
+        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var bb = parseFloat(get_price);
+//        var cc = bb - aa
+        if (bb >= aa){
+
+          this.setState({finalCheckoutPrice: bb-aa,
+          finalRef: aa,
+          totalPay: get_price,          
+          finalWall: 0
+        })
+
+
+        }else{
+          this.setState({finalCheckoutPrice: 0,
+          finalRef: bb,
+          totalPay: get_price,          
+          finalWall: 0
+        })
+        }
+        // this.setState({finalCheckoutPrice: cc,
+        //   finalRef: aa,
+        //   totalPay: get_price,          
+        //   finalWall: 0
+        // })
 
        // alert('debit refer' +total)
     }else if(this.state.wallet == true && this.state.debit== true && this.state.refer ==false){
         var aa = parseFloat(get_price);
         var bb = parseFloat(this.state.walletAmount);
 
-        var total = 0;
+        // var total = 0;
 
-        if(aa <= bb){
+        // if(aa <= bb){
 
-          bb=bb-aa
-        }else{
-          aa = aa -bb
-          total = aa
-          bb = 0
-        }
+        //   bb=bb-aa
+        // }else{
+        //   aa = aa -bb
+        //   total = aa
+        //   bb = 0
+        // }
+//        bb=50
 
-
-
-        //('wallet debit' + bb)
-
-        this.setState({finalCheckoutPrice: total,
+        var cc = bb-aa
+        if(cc > 0){
+        this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
           totalPay: get_price,          
           finalRef: 0
         })
-        alert('wallet debit'+ total)
+
+        }else{
+          var ss = aa - bb
+        this.setState({finalCheckoutPrice: ss,
+          finalWall: bb,
+          totalPay: get_price,
+          finalRef: 0
+        })
+
+        }
+
+
+            // if (c>0){
+            //    this.setState({finalwal :this.state.finalPrice})
+            //     this.setState({finalPrice:0})
+            //     this.setState({finalref :"0"})
+            // }else{
+            //     var s = a - b
+            //     this.setState({finalwal :b})
+            //     this.setState({finalPrice:s})
+            //     this.setState({finalref :"0"})
+            // }
+
+        // this.setState({finalCheckoutPrice: total,
+        //   finalWall: get_price,
+        //   totalPay: get_price,          
+        //   finalRef: 0
+        // })
+//        alert('wallet debit'+ total)
     }else if(this.state.wallet == true && this.state.debit== true && this.state.refer ==true){
 
-        var r_amt = ((parseFloat(this.state.referralrs))*10)/100;
-        var w_amt = parseFloat(this.state.walletAmount);        
-        var p_amt = parseFloat(get_price);
-        var cc = p_amt - (r_amt + w_amt)
-        
+        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var bb = parseFloat(get_price);
+        var zz = parseFloat(this.state.walletAmount);      
+        // var sum = aa+zz
+        // var total = 0;
+        var cc = bb - (aa+zz)
+
         if(cc < 0){
-          cc = 0
+
+        this.setState({finalCheckoutPrice: 0,
+          finalWall: get_price - aa,
+          totalPay: get_price,       
+          finalRef: aa
+        })
+
         }else{
-          cc=cc
+        this.setState({finalCheckoutPrice: cc,
+          finalWall: zz,
+          totalPay: get_price,          
+          finalRef: aa
+        })
+
         }
-        // if(zz<bb){
-        //   cc = bb-zz
-        // }else{
-        //   cc = zz-bb
-        // }
-
-        // cc= cc-aa
-
-        // zz = zz-bb;
-        // zz = zz-aa
-//        cc= bb-(aa+zz)
-
-//        console.log((cc))
-   //     console.log(w_amt = w_amt - r_amt)
-       this.setState({finalCheckoutPrice: cc,
-        finalRef: r_amt,
-        finalWall: get_price - r_amt,
-          totalPay: get_price,        
-       })
 
        // alert('wallet debit refer' +zz)
     }else if(this.state.wallet == true && this.state.debit== false && this.state.refer ==true){
         var aa = ((parseFloat(this.state.referralrs))*10)/100;
         var bb = parseFloat(get_price);
         var zz = parseFloat(this.state.walletAmount);      
-        var sum = aa+zz
-        var total = 0;
-        
-        if(sum <= bb){
-          bb= bb-sum
-          total =bb
+        // var sum = aa+zz
+        // var total = 0;
+        var cc = bb - (aa+zz)
+
+        if(cc < 0){
+
+        this.setState({finalCheckoutPrice: 0,
+          finalWall: get_price - aa,
+          totalPay: get_price,       
+          finalRef: aa
+        })
+
         }else{
-          sum= sum-bb
-          bb=0
-        total =sum
+        this.setState({finalCheckoutPrice: cc,
+          finalWall: zz,
+          totalPay: get_price,          
+          finalRef: aa
+        })
+
         }
-//        alert(total)
+
+
+            // var a = parseInt(GLOBAL.price)
+            // var b = parseInt(this.state.walletrs)
+            // var s = parseInt(this.state.referralrs)
+            // var c =  a - (b + s)
+
+            // if (c <= 0){
+            //     this.setState({finalPrice:0})
+            //     this.setState({finalwal :b})
+            //     this.setState({finalref :s})
+
+            // }else{
+
+
+            //     this.setState({finalPrice:c})
+            //     this.setState({finalwal :b})
+            //     this.setState({finalref :s})
+            // }
+
+        // if(sum <= bb){
+        //   bb= bb-sum
+        //   total =bb
+        // }else{
+        //   sum= sum-bb
+        //   bb=0
+        // total =sum
+        // }
+
 
         // if(zz< bb){
         //     total =  bb-zz
@@ -1167,17 +1384,21 @@ walletStateChange = () => {
         // }
 //        total = (aa+zz)-bb
 
-        console.log('check------->'+ parseFloat(zz-aa))
 
-        this.setState({finalCheckoutPrice: bb,
-          finalWall: get_price-aa,
-          totalPay: get_price,          
-          finalRef: aa
-        })
+
+        // this.setState({finalCheckoutPrice: bb,
+        //   finalWall: get_price-aa,
+        //   totalPay: get_price,          
+        //   finalRef: aa
+        // })
 
      //   alert('wallet refer' + total)
     }
 
+    console.log('finalCheckoutPrice--> '+ this.state.finalCheckoutPrice+
+                '  finalref-->  '+this.state.finalRef+
+                '  finalWall-->  '+ this.state.finalWall+
+                '  totalPay-->  '+ this.state.totalPay)
 
   };
 

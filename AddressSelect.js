@@ -150,7 +150,6 @@ export default class AddressSelect extends Component<Props> {
           sel_addr: item})
         GLOBAL.addressId = this.state.address_id
         this.makeDefaultAddress(item)
-
     }
 
 
@@ -259,17 +258,22 @@ export default class AddressSelect extends Component<Props> {
     }
 
     buttonClickListenerCont =()=>{
-      alert(JSON.stringify(this.state.sel_addr))
 
-        // var finalData={
-        //   price: GLOBAL.totalAmount,
-        // }
-        // if(this.state.address_id == ''){
-        // this.dropDownAlertRef.alertWithType('error', 'Error', 'Please select address.');
+        var finalData={
+          price: GLOBAL.totalAmount,
+        }
 
-        // }else{
-        //     this.props.navigation.navigate('Payment', {params:{previous_screen: 'from_cart', finalData}})
-        // }
+        finalData = {...finalData, ...this.state.sel_addr}
+
+        console.log(JSON.stringify(finalData))
+
+        
+        if(this.state.address_id == ''){
+        this.dropDownAlertRef.alertWithType('error', 'Error', 'Please select address.');
+
+        }else{
+            this.props.navigation.navigate('Payment', {params:{previous_screen: 'from_cart', finalData}})
+        }
     }
 
     buttonClickListenerAdd =()=>{

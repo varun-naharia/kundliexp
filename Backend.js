@@ -22,7 +22,7 @@ class Backend {
     }
     // retrieve the messages from the Backend
     loadMessages(callback) {
-        this.messagesRef =  firebase.database().ref().child("chat/" + '200');
+        this.messagesRef =  firebase.database().ref().child("chat/" + GLOBAL.chat_g_id + '200');
 
 
         this.messagesRef.off(); //Detaches a callback previously attached with on()

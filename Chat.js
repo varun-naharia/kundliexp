@@ -39,12 +39,50 @@ export default class Chat extends Component<Props> {
                 renderUsernameOnMessage = {true}
                 messages={this.state.messages}
                 onSend={message => {
-                    Backend.sendMessage(message);
-                }}
+
+
+                      const url = GLOBAL.BASE_URL +  'online_counsult_timer'
+
+
+                     fetch(url, {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                         },
+                         body: JSON.stringify({
+                             booking_id : GLOBAL.booking_id,
+
+                         }),
+                     }).then((response) => response.json())
+                         .then((responseJson) => {
+                         
+                            console.log(JSON.stringify(responseJson))
+
+                             if (responseJson.status == true) {
+
+
+                               if (responseJson.start_or_end == 1){
+                                     Backend.sendMessage(message);
+                               }else{
+
+                                 alert('Your session Expired')
+                               }
+
+                             }else {
+                                 alert('Something went wrong!')
+                             }
+                         })
+                         .catch((error) => {
+                             console.error(error);
+                         });
+
+
+
+                    }}
 
                 user={{
-                    _id: '1',
-                    name: 'Harshit Agrawal'
+                    _id: GLOBAL.user_id,
+                    name: GLOBAL.userDetails.name
                 }}
             />
 </View>

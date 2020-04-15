@@ -209,7 +209,7 @@ openVideo=(itemData)=>{
 
 componentWillUnmount(){
 //  alert('unmount')
-  this.setState({playVideo:false})
+//  this.setState({playVideo:false})
 }
 
 playVideo=(value)=>{

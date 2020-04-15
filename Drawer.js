@@ -96,22 +96,22 @@ class Drawer extends React.Component {
 
     _YesLogout=()=>{
 
-//        const url = GLOBAL.BASE_URL +  'logout'
-// //      this.showLoading()
-//       fetch(url, {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     user_id : GLOBAL.userid,
-//   }),
-// }).then((response) => response.json())
-//     .then((responseJson) => {
+       const url = GLOBAL.BASE_URL +  'logout'
+//      this.showLoading()
+      fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    user_id : GLOBAL.user_id,
+  }),
+}).then((response) => response.json())
+    .then((responseJson) => {
 
-// //    alert(JSON.stringify(responseJson))
-//   //     this.hideLoading()
-//        if (responseJson.status == true) {
+//    alert(JSON.stringify(responseJson))
+  //     this.hideLoading()
+       if (responseJson.status == true) {
         AsyncStorage.removeItem('userID');
 
         this.props
@@ -129,13 +129,13 @@ class Drawer extends React.Component {
 
         this.props.navigation.dispatch(DrawerActions.closeDrawer())
 
-        //    }else {
-        //        alert('Something Went Wrong.')
-        //    }
-        // })
-        // .catch((error) => {
-        //   console.error(error);
-        // });
+           }else {
+               alert('Something Went Wrong.')
+           }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
 openMembers=()=>{
@@ -266,7 +266,7 @@ openMembers=()=>{
                             <Image style={styles.drawericon}
                                    source={require('./resources/drawer/d_about.png')} />
                             <Text style = {styles.drawerTexts}
-                                  onPress={()=>this.props.navigation.navigate('Support')}>
+                                  onPress={()=>Linking.openURL('https://kundaliexpert.com/about.html')}>
                                About Us
                             </Text>
                         </View>
@@ -368,7 +368,7 @@ openMembers=()=>{
                             <Image style={styles.drawericon}
                                    source={require('./resources/drawer/d_tele.png')} />
                             <Text style = {styles.drawerTexts}
-                                  onPress={()=>this.props.navigation.navigate('Support')}>
+                                  onPress={()=>Linking.openURL(`tel:${GLOBAL.helpline_number}`)}>
                                   Customer Care No.
                             </Text>
                         </View>
@@ -395,6 +395,15 @@ openMembers=()=>{
                             </Text>
                         </View>
 
+                        <View style={styles.menuItem}>
+
+                            <Image style={styles.drawericon}
+                                   source={require('./resources/drawer/d_saved.png')} />
+                            <Text style = {styles.drawerTexts}
+                                  onPress={()=>this.props.navigation.navigate('SavedKundli')}>
+                                  Choose Saved Kundli
+                            </Text>
+                        </View>
 
 
                         <View style={styles.menuItem}>

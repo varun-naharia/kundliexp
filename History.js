@@ -89,17 +89,71 @@ class History extends Component<Props> {
     }
 
 
+    onPressCancel=(item, index)=>{
 
-    selectedProduct=(item, index)=>{
-        this.props.navigation.navigate('OrderDetails')
+
+//      alert(JSON.stringify(item.booking_id))
+         const url = GLOBAL.BASE_URL + 'cancel_by_user'
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "user_id": GLOBAL.user_id,
+                "booking_id": item.booking_id,
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+               console.log(JSON.stringify(responseJson))
+  //              this.hideLoading()
+                    if (responseJson.status == true) {
+
+                        var s = this.state.results[index];
+                    //  alert(JSON.stringify(s))      
+                        if (item.cancel_power == 1) {
+                          s.cancel_power = 0;
+                          s.booking_status ='cancelled'
+                       //   s.cancel_power = parseInt(item.cancel_power);
+                        } else {
+                          s.cancel_power = 1;
+                          s.booking_status = item.booking_status
+                     //     s.cancel_power = parseInt(item.cancel_power);
+                        }
+                        this.state.results[index] = s;
+
+                        this.setState({results: this.state.results});
+                        alert('Booking cancelled successfully!')
+
+
+                  } else {
+//                    this.setState({results: []})
+                  alert('Something went wrong!')
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+    //            this.hideLoading()
+            });
+
     }
 
-    _renderItemproducts = (itemData, index) => {
-        var im_base= itemData.item.expert_details.base_url_expert
-        var exp_im =  im_base+ '/'+itemData.item.expert_details.image
+
+
+    selectedProduct=(item, index)=>{
+        this.props.navigation.navigate('HistoryDetails', {params: {get: item}})
+    }
+
+
+
+
+    _renderItemproducts = ({item, index}) => {
+        var im_base= item.expert_details.base_url_expert
+        var exp_im =  im_base+ '/'+item.expert_details.image
 
         return (
-    <TouchableOpacity onPress={() => this.selectedProduct(itemData)
+    <TouchableOpacity onPress={() => this.selectedProduct(item, index)
     } activeOpacity={0.9}>
 
      <View style={{backgroundColor:'white',color :'white',flexDirection:'column' , flex: 1 ,margin: 5,borderRadius :6,width : wp(93), }}>
@@ -119,32 +173,29 @@ class History extends Component<Props> {
         source={{uri : exp_im}}/>
        <View style={{ flexDirection:'column', marginTop:15, }}>
                <Text style = {{fontSize:15,fontFamily:'Nunito-Bold',color:'black',}}>
-                {itemData.item.expert_details.name}
+                {item.expert_details.name}
                </Text>
+
                <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3}}>
-               Call Timing: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{itemData.item.appointment_time}
+               Price: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>Rs. {item.total_amount}/-
                </Text></Text>
 
                <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3}}>
-               Price: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>Rs. {itemData.item.total_amount}/-
-               </Text></Text>
-
-               <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3}}>
-               Date: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{itemData.item.appointment_date}
+               Date: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{item.appointment_date}
                </Text></Text>
                <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3,}}>
-               Time: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{itemData.item.appointment_time}
+               Time: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{item.appointment_time}
                </Text></Text>
                <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3,}}>
-               Booking Status: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{itemData.item.booking_status}
+               Booking Status: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{item.booking_status}
                </Text></Text>
 
                <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#8F8F8F',marginTop:3, marginBottom:5}}>
-               Booking Type: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{itemData.item.module}
+               Booking Type: <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'black',}}>{item.module}
                </Text></Text>
               <View style={{flexDirection:'row',marginTop:5, marginBottom:10, width:wp(65),}}>
 
-             {itemData.item.cancel_power == 1 && (
+             {item.cancel_power == 1 && (
                 <Button style={{fontSize:14,color:'#FF0000',fontFamily:'Nunito-Bold'}}
                         containerStyle={{overflow:'hidden',justifyContent:'center',}}
                         onPress={()=> this.onPressCancel(item, index)}>
@@ -152,7 +203,7 @@ class History extends Component<Props> {
                 </Button>
             )}
 
-{/*             {itemData.item.reshedule_power  == 1 && (
+{/*             {item.reshedule_power  == 1 && (
                     <Button style={{fontSize:14,color:'#E60000',fontFamily:'Nunito-Bold'}}
                             containerStyle={{overflow:'hidden',justifyContent:'center', marginLeft:20}}
                             onPress={()=> this.onPressResc(item,index)}
@@ -167,7 +218,7 @@ class History extends Component<Props> {
 
         </View>
               <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
-                Booking Id: #{itemData.item.booking_id}
+                Booking Id: #{item.booking_id}
                </Text>
 
         </View>

@@ -8,10 +8,10 @@ import SafeAreaView from 'react-native-safe-area-view';
 import AppNavigator from './Navigator';
 import DropdownAlert from 'react-native-dropdownalert';
 
-// // import NotifService from './NotifService';
-// // const GLOBAL = require('./Global');
-// import appConfig from './app.json';
-// import PushNotification from 'react-native-push-notification';
+import NotifService from './NotifService';
+const GLOBAL = require('./Global');
+import appConfig from './app.json';
+import PushNotification from 'react-native-push-notification';
 
 type Props = {};
 
@@ -31,9 +31,12 @@ export default class App extends Component<Props> {
       this.state = {
         gotNotif:0,
         isConnected:false,
+        senderId: appConfig.senderID,
         netalert : 0,
       };
-//      console.disableYellowBox = true;
+      this.notif = new NotifService(this.onRegister.bind(this), this.onNotif.bind(this));
+
+      // console.disableYellowBox = true;
     }
 
     componentDidMount(){
@@ -66,6 +69,25 @@ export default class App extends Component<Props> {
 
     );
   }
+
+
+  onRegister(token) {
+      AsyncStorage.setItem('token', token.token);
+      GLOBAL.firebaseToken= token.token
+      console.log( 'TOKEN:', token );
+      this.setState({ registerToken: token.token, fcmRegistered: true });
+    }
+
+    onNotif(notif) {
+      console.log(notif);
+//      Alert.alert(notif.title, notif.message);
+      this.setState({gotNotif: 1})
+    }
+
+    handlePerm(perms) {
+      Alert.alert("Permissions", JSON.stringify(perms));
+    }
+
 
   }
 

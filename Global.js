@@ -2,7 +2,8 @@ module.exports = {
     screen :'',
     time : 0,
     BASE_URL: 'http://139.59.76.223/kundali_expert/api/',
-
+    firebaseToken:'',
+    helpline_number:'',
     ASTRO_API_BASE_URL: 'http://139.59.76.223/kundali_expert/astrology_api/global_api',
 
     ASTRO_APIS_URL: 'https://json.astrologyapi.com/v1/',
@@ -16,6 +17,7 @@ module.exports = {
     loginmobile:'',
     loginOTP:'',
 
+    opentok_api_key:'46593922',
 
     gldate:'',
     glmonth:'',

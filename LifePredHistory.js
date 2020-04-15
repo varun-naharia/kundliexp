@@ -24,7 +24,8 @@ class LifePredHistory extends Component<Props> {
         const { navigation } = this.props;
         this.state = {
             istoggle:false,
-            predlist:[]
+            predlist:[],
+            limit:0
         }
     }
 
@@ -49,7 +50,7 @@ class LifePredHistory extends Component<Props> {
 
     getLifePred= () =>{
         const url = GLOBAL.BASE_URL + "booking_lifeprediction_history";
-       this.showLoading()
+//       this.showLoading()
       fetch(url, {
         method: "POST",
         headers: {
@@ -57,26 +58,28 @@ class LifePredHistory extends Component<Props> {
         },
         body: JSON.stringify({
           user_id: GLOBAL.user_id,
-          limit_from:"0"
+          limit_from: this.state.limit
 
         })
       })
         .then(response => response.json())
         .then(responseJson => {
-                 this.hideLoading()
+  //               this.hideLoading()
        
           console.log(JSON.stringify(responseJson))
 
           if (responseJson.status == true) {
+          var resu = this.state.predlist
+          this.setState({predlist : [...resu ,...responseJson.lists]})
 
-            this.setState({predlist : responseJson.lists})
+//            this.setState({predlist : responseJson.lists})
           } else {
 
           }
         })
         .catch(error => {
           console.error(error);
-          this.hideLoading()
+    //      this.hideLoading()
         });
 
     }
@@ -84,7 +87,7 @@ class LifePredHistory extends Component<Props> {
 
     selectedPred=(item, index)=>{
 //        alert(JSON.stringify(item.item))
-        this.props.navigation.navigate('LifePredHistoryDetails', {params: item.item})
+        this.props.navigation.navigate('LifePredHistoryDetails', {params:{get : item}})
     }
 
     _renderItempreds = (itemData, index) => {
@@ -118,10 +121,26 @@ class LifePredHistory extends Component<Props> {
         {itemData.item.problem}</Text>
        </Text>
 
+              <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
+                Id: #{itemData.item.id}
+               </Text>
+
         </View>
 
     </TouchableOpacity>
         )
+    }
+
+    handleLoadMore=()=>{
+        // this.setState({limit: this.state.limit + 6})
+        // this.loadBookings()
+//        alert('ads')
+     this.setState({
+          limit: this.state.limit + 6
+        }, () => {
+          this.getLifePred();
+        });
+
     }
 
 
@@ -145,11 +164,13 @@ class LifePredHistory extends Component<Props> {
         <View style={{width:wp(100),flex:1,backgroundColor:'transparent',flexDirection:'column',
         marginTop:hp(1), alignSelf:'center'}}>
 
-                    <FlatList style= {{flexGrow:0,marginBottom:hp(2)}}
+                    <FlatList style= {{marginBottom:hp(2)}}
                               data={this.state.predlist}
                               keyExtractor = { (item, index) => index.toString() }
                               renderItem={this._renderItempreds}
-                              extraData={this.state}
+                              extaData={this.state}
+                              onEndReached={this.handleLoadMore}
+                              onEndReachedThreshold={0.01}
                     />
 
 

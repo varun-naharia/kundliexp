@@ -8,8 +8,9 @@ import Header from 'react-native-custom-headers';
 const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import IndicatorCustom from './IndicatorCustom'
 type Props = {};
+
 class MyOrders extends Component<Props> {
 
     static navigationOptions = ({ navigation }) => {
@@ -59,7 +60,7 @@ class MyOrders extends Component<Props> {
 
 
             body: JSON.stringify({
-                "user_id": '1',
+                "user_id": GLOBAL.user_id,
                 "limit_from": this.state.limit,
 
             }),
@@ -90,7 +91,7 @@ class MyOrders extends Component<Props> {
 
 
     selectedProduct=(item, index)=>{
-        this.props.navigation.navigate('OrderDetails')
+        this.props.navigation.navigate('MyOrdersDetails', {params: item})
     }
 
     _renderItemproducts = ({item, index}) => {
@@ -106,7 +107,7 @@ class MyOrders extends Component<Props> {
 
        <Image style={{width:80, height:80, borderRadius:5,borderWidth:1, borderColor:'#FF0000',margin:15}}
         source={{uri : o_item.image}}/>
-       <View style={{ flexDirection:'column', marginTop:15, width:'71%', }}>
+       <View style={{ flexDirection:'column', marginTop:15, width:'71%', marginBottom:10}}>
                <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',}}>
                 {o_item.name}
                </Text>
@@ -116,6 +117,18 @@ class MyOrders extends Component<Props> {
                <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'black',}}>
                 Qty: {o_item.quantity} unit(s)
                </Text>
+               <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'black',}}>
+                Carat: {o_item.Carat}
+               </Text>
+               <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'black',}}>
+                Ratti: {o_item.Ratti}
+               </Text>
+
+               {o_item.refund_status == 1 && (
+               <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#E60000',}}>
+                Refund Status : 
+               </Text>
+                )}
 
         </View>
 
@@ -133,12 +146,16 @@ class MyOrders extends Component<Props> {
                 Order No. #{order_arr.id}
                </Text>
                <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#bfbfbf',marginLeft:15,}}>
-                03: PM ,{order_arr.booking_date}
+                Date: {order_arr.booking_date}
+               </Text>
+
+               <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'black',marginLeft:15,}}>
+                Total Amount: ₹ {order_arr.order_amount}/-
                </Text>
 
                {order_items}
                <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'#00C809',position:'absolute', right:10, top:13}}>
-                Success
+               {order_arr.trxn_status}
                </Text>
 
         </View>
@@ -147,15 +164,23 @@ class MyOrders extends Component<Props> {
         )
     }
 
+
+    handleLoadMore=()=>{
+        // this.setState({limit: this.state.limit + 6})
+        // this.loadBookings()
+//        alert('ads')
+     this.setState({
+          limit: this.state.limit + 6
+        }, () => {
+          this.getMyOrders();
+        });
+
+    }
+
     render() {
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-
-                                       size={50} color="#E9128B" />
-
-                </View>
+            <IndicatorCustom/>
             )
         }
         return (
@@ -169,13 +194,15 @@ class MyOrders extends Component<Props> {
                        headerName={'MY ORDERS'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-                <View style={{width:'95%',  margin:10, borderRadius:7}}>
+                <View style={{width:'95%',  margin:10, borderRadius:7, flex:1}}>
 
-                    <FlatList style= {{flexGrow:0, marginBottom:50}}
+                    <FlatList style= {{marginBottom:10}}
                               data={this.state.myorder_list}
                               keyExtractor = { (item, index) => index.toString() }
                               renderItem={this._renderItemproducts}
-                              extraData={this.state}
+                              extaData={this.state}
+                              onEndReached={this.handleLoadMore}
+                              onEndReachedThreshold={0.01}
                     />
 
 

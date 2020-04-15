@@ -10,6 +10,8 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom'
+import * as Animatable from 'react-native-animatable';
+
 type Props = {};
 export default class ProductList extends Component<Props> {
 
@@ -100,9 +102,13 @@ export default class ProductList extends Component<Props> {
             <TouchableOpacity style={{width:wp('45%'), margin:7,height:hp('24%'),backgroundColor:'white',}}
             activeOpacity={0.99}
             onPress={()=> this.selectedFirst(itemData)}>
-              <View style  = {{width:wp('45%'), height:hp('24%'),backgroundColor:'#f7f7f7',shadowColor: "#000",
+              <Animatable.View style  = {{width:wp('45%'), height:hp('24%'),backgroundColor:'#f7f7f7',shadowColor: "#000",
                   elevation:4, flexDirection:'column',alignItems:'center',borderRadius:5, 
-              }}>
+              }}
+                    animation='slideInLeft'
+
+      useNativeDriver={true}
+>
             <Image style={{width:wp(40), height:hp('13.5%'), resizeMode:'contain',marginTop:hp(3)}} source={{uri : itemData.item.image}}/>
             <View style={{backgroundColor:'white', width:wp('45%'), height:hp('5%'), flexDirection:'column', marginTop:hp(2), borderBottomLeftRadius:5, borderBottomRightRadius:5}}>
                   <Text style = {{fontSize:15,fontFamily:'Nunito-Regular',color:'#000000',marginLeft:wp(3), marginTop:hp(1)}}
@@ -110,7 +116,7 @@ export default class ProductList extends Component<Props> {
                       {itemData.item.name}
                   </Text>
               </View>
-              </View>
+              </Animatable.View>
             </TouchableOpacity>  
                                         
         )
@@ -144,7 +150,7 @@ export default class ProductList extends Component<Props> {
            headerName={'CATEGORIES'}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-                    <FlatList style= {{marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
+                    <FlatList style= {{marginVertical:hp(1), marginHorizontal:wp(1.5)}}
                               data={this.state.pdList}
                               numColumns={2}
                               keyExtractor = { (item, index) => index.toString() }

@@ -18,7 +18,6 @@ import NetInfo from "@react-native-community/netinfo";
 import VideoPlayer from 'react-native-video-controls';
 const GLOBAL = require('./Global');
 import HTML from 'react-native-render-html';
-const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const { width, height } = Dimensions.get('window');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Header from 'react-native-custom-headers';
@@ -27,6 +26,8 @@ import getYouTubeID from 'get-youtube-id';
 import IndicatorCustom from './IndicatorCustom.js';
 const equalWidth =  (width -20 )
 const YOUTUBE_API = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${`UCwobzUc3z-0PrFpoRxNszXQ`}&eventType=live&type=video&key=${GLOBAL.YOUTUBE_API}`
+import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
+import {PulseIndicator} from 'react-native-indicators'
 
 export default class LiveStream extends Component {
 
@@ -38,9 +39,39 @@ static navigationOptions = {
 
   constructor(props) {
     super(props)
+
+    var gets = this.props.navigation.state.params.params.params
+    this.apiKey = GLOBAL.opentok_api_key;
+    this.sessionId = gets.session_id;
+    this.token = gets.token;
+
+    this.subscriberProperties = {
+        subscribeToAudio: true,
+        subscribeToVideo: true,
+    };
+    this.subscriberEventHandlers = {
+        error: (error) => {
+              console.log(`There was an error with the subscriber: ${error}`);
+      },
+    };
+
+    this.sessionEventHandlers = {
+        streamCreated: event => {
+          const streamProperties = {...this.state.streamProperties, [event.streamId]: {
+            subscribeToAudio: true,
+            subscribeToVideo: true,
+            style: {
+              width: width,
+              height: height,
+            },
+          }};
+          this.setState({ streamProperties });
+        },
+    };
     this.state = {
       loading:'',
-      about:'',video_details:GLOBAL.videoDetails, playVideo:false, related:[]
+      about:'',video_details:GLOBAL.videoDetails, playVideo:false, related:[],
+      streamProperties: {},
     }
   }
 
@@ -54,80 +85,41 @@ static navigationOptions = {
 
 
     componentDidMount() {
-      this.showLoading()
-      console.log(YOUTUBE_API)
-    fetch(`${YOUTUBE_API}`)
-      .then((response) => response.json())
-      .then((responseJson) => {
+    this.showLoading()
+    this.timeoutCheck = setTimeout(() => {
         this.hideLoading()
-        if (responseJson && responseJson.items[0])
-        {
-          this.setState({ videoId: responseJson.items[0].id.videoId })
-//          alert(this.state.videoId)
-          alert('Live stream available')
+   }, 3000);
 
-        }else{
-          alert('Live stream shutdown by the host')
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+
+//      console.log(this.props.navigation.state.params)
+   //   this.showLoading()
+//       console.log(YOUTUBE_API)
+//     fetch(`${YOUTUBE_API}`)
+//       .then((response) => response.json())
+//       .then((responseJson) => {
+//         this.hideLoading()
+//         if (responseJson && responseJson.items[0])
+//         {
+//           this.setState({ videoId: responseJson.items[0].id.videoId })
+// //          alert(this.state.videoId)
+//           alert('Live stream available')
+
+//         }else{
+//           alert('Live stream shutdown by the host')
+//         }
+//       })
+//       .catch((error) => {
+//         console.error(error)
+//       })
   }
 
 
 
-  _keyExtractor = (item, index) => item.productID;
-
-
-openVideo=(itemData)=>{
-//  alert(JSON.stringify(itemData))
-  GLOBAL.postId = itemData.item.post_id
-  this.props.navigation.push('ViewVideo')
-}
-
-  renderItem = (itemData) => {
-//    alert(JSON.stringify(itemData))
-    return (
-      <TouchableNativeFeedback onPress={()=> this.openVideo(itemData)}>
-      <View style={{ shadowColor: '#f7f7f7',
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowRadius: 0.5,flexDirection:'row',height: 'auto',
-    shadowOpacity: 0.5,flex : 1, backgroundColor:'white',borderRadius:8,  width : width-20 ,marginLeft : 10,marginRight:10,marginTop:10,marginBottom:1, elevation:5}}>
-
-    <Image style={{width:130, height:130, borderColor: 'transparent', borderWidth: 1, borderRadius: 8}} source={{uri: itemData.item.thumbnail}}/>
-    <View style={{width: 130, position: 'absolute', alignSelf: 'center',}}>
-    <Image style={{width:80, height:40, resizeMode: 'contain', alignSelf: 'center', }} source={require('./resources/b1.png')}/>
-    </View>
-
-    <View style={{flexDirection:'column', margin:10, width: '62%',}}>
-    <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
-     <Text style={{fontSize:15, color:'#4C5361',fontFamily: 'AvenirLTStd-Roman', width: '85%'}}
-     numberOfLines={3}>{itemData.item.subject}</Text>
-{/*
-     <TouchableOpacity>
-     <Image style={{width: 25, height: 25, resizeMode: 'contain'}} source={require('./resources/favo.png')}/>
-     </TouchableOpacity>
-     */}
-     </View>
-     <Text style={{fontSize:13, marginRight:10,  marginTop: 10, fontFamily: 'AvenirLTStd-Book'}} numberOfLines={3}>{itemData.item.body}</Text>
-
-
-</View>
-</View>
-
-</TouchableNativeFeedback>
-
-    )
-  }
 
 
 componentWillUnmount(){
 //  alert('unmount')
-  this.setState({playVideo:false})
+
 }
 
 playVideo=(value)=>{
@@ -136,11 +128,11 @@ playVideo=(value)=>{
 
 
   render() {
-      var yeah = this.state.video_details
-//      console.log(JSON.stringify(yeah))
+       var yeah = this.props.navigation.state.params.params
+       console.log(JSON.stringify(yeah.params))
 
-      var videoid = getYouTubeID(yeah.youtube_url, {fuzzy: false});
-  //    console.log(videoid);      
+//       var videoid = getYouTubeID(yeah.youtube_url, {fuzzy: false});
+//   //    console.log(videoid);      
 
        if(this.state.loading){
       return(
@@ -158,44 +150,45 @@ playVideo=(value)=>{
            headerName={'LIVE STREAM'}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-      <ScrollView>
-     <View style={{flex:1, flexDirection:'column',backgroundColor:'white'}}>
+
+      <View style={{ flex: 1, flexDirection: 'row',}}>
 
 
-      <View style={{backgroundColor:'white',flexDirection:'column' , flex: 1 ,margin: 10, height: hp(40),borderRadius:6,width : wp(95), shadowColor: '#D3D3D3',
-        shadowOffset: { width: 0, height: 1 },shadowOpacity: 0.6,shadowRadius: 2,elevation: 5}}>
+        <OTSession apiKey={GLOBAL.opentok_api_key} sessionId={yeah.params.session_id} token={yeah.params.token}
+        eventHandlers={this.sessionEventHandlers}>
+          <OTSubscriber style={{ width: width, height: height , backgroundColor:'pink'}}
+              properties={this.subscriberProperties}
+              eventHandlers={this.subscriberEventHandlers}
+              streamProperties={this.state.streamProperties}     
 
- {/*     <VideoPlayer style={{ height:hp(20),width:wp('95%'),borderTopLeftRadius:6, borderTopRightRadius:6}}
-      onEnd={()=> this.setState({playVideo:false})}
-      source={{ uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }}
-      navigator={ this.props.navigator }
-      />
-*/}
-      <YouTube
-              style={{ height:hp(20),width:wp('95%'),borderTopLeftRadius:6, borderTopRightRadius:6 }}
-              apiKey={GLOBAL.YOUTUBE_API}
-              videoId= {this.state.videoId}  // The YouTube video ID
-              play={false}             // control playback of video with true/false
-              fullscreen={false}       // control whether the video should play in fullscreen or inline
-              loop={false}             // control whether the video should loop when ended
-              controls={1}
-              onReady={e => this.setState({ isReady: true })}
-              onChangeState={e => this.setState({ status: e.state })}
-              onChangeQuality={e => this.setState({ quality: e.quality })}
-              onError={e => this.setState({ error: e.error })}
+           />
 
-              style={{ height: '85%', width: '100%'}}/>
-
-
-      <Text style={{fontSize:15,backgroundColor:'rgba(0,0,0,0.2)',borderBottomLeftRadius:6,borderBottomRightRadius:6,fontFamily:'Nunito-SemiBold',color:'white',padding:10}}
-      numberOfLines={2}>YouTube LiveStream</Text>
-      </View>
+        </OTSession>
 
 
         </View>
 
 
-            </ScrollView>
+        <View style={{position:'absolute', right:10, bottom:10}}>
+              <Image style={{width:70, height:70, borderRadius:35}}
+              source={{uri : yeah.params.image}}
+              />
+
+              <Text style = {{marginTop:5,color : 'black',fontSize: 17, height:'auto',
+              fontFamily:'Nunito-Light'}} >
+              {yeah.params.name}
+              </Text>
+
+              <View style={{flexDirection:'row',width:wp(18),marginLeft:-10, }}>
+            <PulseIndicator color='#E60000' size={25} style={{}}/>
+
+              <Text style = {{color : 'black',fontSize: 17, height:'auto',marginLeft:-10,
+              fontFamily:'Nunito-Light'}} >
+              LIVE
+              </Text>
+              </View>
+
+            </View>
 
             </View>
           );
@@ -211,8 +204,4 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor:'#EEEEF0'
   },
- appBar: {
-   backgroundColor:'black',
-   height: APPBAR_HEIGHT,
- },
 });

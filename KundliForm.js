@@ -82,20 +82,38 @@ selectedFirst=(item,indexs)=>{
 }
 
 
-
-buttonClickListener=()=>{
-  console.warn(this.state.time)
-  var d =  new Date(this.state.date);  // i assume your date as 01-11-1933
+setDate=(date)=>{
+    this.setState({date: date})
+    var d =  new Date(date);  // i assume your date as 01-11-1933
     GLOBAL.gldate = d.getDate(); // 11
     GLOBAL.glmonth =  d.getMonth()+1; // 0  month is like array so you have to do +1 for correct month
     GLOBAL.glyear =  d.getFullYear(); // 1933
 
+}
 
-  var times = new Date('1970-01-01T' + this.state.time + 'Z')
+setTime=(time)=>{
+  this.setState({time: time})
+  var times = new Date('1970-01-01T' + time + 'Z')
   console.warn(times)
   var dis = times.toLocaleTimeString();
   GLOBAL.glhour = times.getUTCHours();
   GLOBAL.glminute = times.getUTCMinutes();
+
+}
+
+buttonClickListener=()=>{
+  console.warn(this.state.time)
+  // var d =  new Date(this.state.date);  // i assume your date as 01-11-1933
+  //   GLOBAL.gldate = d.getDate(); // 11
+  //   GLOBAL.glmonth =  d.getMonth()+1; // 0  month is like array so you have to do +1 for correct month
+  //   GLOBAL.glyear =  d.getFullYear(); // 1933
+
+
+  // var times = new Date('1970-01-01T' + this.state.time + 'Z')
+  // console.warn(times)
+  // var dis = times.toLocaleTimeString();
+  // GLOBAL.glhour = times.getUTCHours();
+  // GLOBAL.glminute = times.getUTCMinutes();
 
 //  alert(GLOBAL.glhour + ': '+GLOBAL.glminute)
   GLOBAL.glzone ="5.5"
@@ -123,6 +141,12 @@ buttonClickListener=()=>{
        this.props.navigation.navigate('SadeSati')
   }else if(navigation.astroReportType == 'gemstone_sugges'){
        this.props.navigation.navigate('GemstoneSuggestion')
+  }else if(navigation.astroReportType == 'chaughadive'){
+       this.props.navigation.navigate('Chaughadive')
+  }else if(navigation.astroReportType == 'year_pred'){
+       this.props.navigation.navigate('YearlyPrediction')
+  }else if(navigation.astroReportType == 'kp_system'){
+       this.props.navigation.navigate('KpSystem')
   }
 
 
@@ -279,8 +303,7 @@ buttonClickListener=()=>{
               }                            
             }}
             onDateChange={(date) => {
-             // alert(date)
-              this.setState({date: date})
+              this.setDate(date)
             }}
           />
           <View style={{width:wp(92), height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(0.4),marginBottom: hp(2) ,}}/>
@@ -307,7 +330,7 @@ buttonClickListener=()=>{
               }                            
             }}
             onDateChange={(time) => {
-              this.setState({time: time})
+              this.setTime(time)
             }}
           />
           <View style={{width:wp(92), height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(0.4),marginBottom: hp(2) ,}}/>

@@ -9,7 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import Carousel,{ Pagination } from 'react-native-snap-carousel';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import IndicatorCustom from './IndicatorCustom'
 type Props = {};
 export default class ProductDetails extends Component<Props> {
 
@@ -111,7 +111,7 @@ export default class ProductDetails extends Component<Props> {
       .then(response => response.json())
       .then(responseJson => {
         //       this.hideLoading()
-      alert(JSON.stringify(responseJson))
+//      alert(JSON.stringify(responseJson))
         if (responseJson.status == true) {
             alert('Added to cart')
             this.setState({checkincart : '1'})
@@ -133,14 +133,11 @@ export default class ProductDetails extends Component<Props> {
     }
 
     render() {
-        alert(JSON.stringify(GLOBAL.prodDetails))
+ //       alert(JSON.stringify(GLOBAL.prodDetails))
         var yeah = GLOBAL.prodDetails
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-                                       size={50} color="#E9128B" />
-                </View>
+                <IndicatorCustom/>
             )
         }
         return (
@@ -176,7 +173,7 @@ export default class ProductDetails extends Component<Props> {
         contentContainerStyle={{backgroundColor:'transparent',}}>
 
         <Text style = {{color:'black',fontSize: 20,fontFamily:'Nunito-Bold', alignSelf:'flex-end', marginRight:wp(8), marginTop:hp(-6.5)}}>
-        {yeah.base_price}/-
+        ₹ {yeah.base_price}/-
         </Text>
 
         <TouchableOpacity style={{width:55, height:55,alignSelf:'flex-end',marginTop:hp(1),marginRight:wp(9)}}

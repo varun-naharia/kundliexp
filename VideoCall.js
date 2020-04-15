@@ -9,6 +9,7 @@ import {Surface, ActivityIndicator} from 'react-native-paper'
 import {RtcEngine, AgoraView} from 'react-native-agora'
 
 import {APPID} from './videosettings'
+const GLOBAL = require('./Global');
 
 const {Agora} = NativeModules
 console.log(Agora)
@@ -188,7 +189,60 @@ class VideoCall extends Component<Props> {
         RtcEngine.init(config);
     }
 
+
+    getlog = ()=>{
+
+
+      const url = GLOBAL.BASE_URL +  'online_counsult_timer'
+                     fetch(url, {
+                         method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json',
+                         },
+                         body: JSON.stringify({
+                             booking_id : GLOBAL.booking_id,
+                         }),
+                     }).then((response) => response.json())
+                         .then((responseJson) => {
+
+                             if (responseJson.status == true) {
+
+
+                               if (responseJson.start_or_end == 1){
+                                    this.getlog() 
+                               }else{
+
+                                alert('Your Session Expired')
+                                this.props.navigation.goBack()
+                               }
+
+
+
+                                 // this.setState({name :responseJson.user_details.name})
+                                 // this.setState({address: responseJson.user_details.address})
+                                 // this.setState({area: responseJson.user_details.area})
+                                 // this.setState({city: responseJson.user_details.city})
+                                 // this.setState({description :responseJson.user_details.email})
+                                 // this.setState({image :responseJson.user_details.image})
+                                 // this.setState({username: responseJson.user_details.username})
+                                 // if(responseJson.user_details.dob==''){
+                                 //     this.setState({dob:'Select Date of Birth'})
+                                 // }else{
+                                 //     this.setState({dob: responseJson.user_details.dob})
+                                 // }
+
+                             }else {
+                                 alert('An error occurred while starting session')
+                             }
+                         })
+                         .catch((error) => {
+                             console.error(error);
+                         });
+
+    }
+
     componentDidMount () {
+        this.getlog()
         RtcEngine.getSdkVersion((version) => {
             console.log('[RtcEngine] getSdkVersion', version);
         })

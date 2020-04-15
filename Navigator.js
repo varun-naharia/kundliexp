@@ -70,6 +70,17 @@ import HoroMatchHistory from './HoroMatchHistory.js';
 import HoroMatchHistoryDetails from './HoroMatchHistoryDetails.js';
 import LiveStream from './LiveStream';
 import HistoryInperson from './HistoryInperson.js';
+import Support from './Support'
+import MyOrdersDetails from './MyOrdersDetails'
+import HistoryDetails from './HistoryDetails'
+import Chaughadive from './Chaughadive'
+import AudioCall from './AudioCall'
+import SavedKundli from './SavedKundli'
+import Animations from './Animations'
+import GandMool from './GandMool'
+import KundliListNew from './KundliListNew'
+import YearlyPrediction from './YearlyPrediction'
+import KpSystem from './KpSystem'
 
 import React, {Component} from 'react';
 
@@ -99,7 +110,7 @@ const DrawerNavigator = createDrawerNavigator({
 
 const StackNavigator = createStackNavigator({
 
-//     HoroscopeMatching:{screen:HoroscopeMatching},
+    // Animations:{screen:Animations},
 
   //     Settings:{screen:Settings},
 
@@ -169,7 +180,17 @@ const StackNavigator = createStackNavigator({
         HoroMatchHistoryDetails:{screen:HoroMatchHistoryDetails},
         LiveStream:{screen:LiveStream},
         History:{screen:History},
-        HistoryInperson:{screen:HistoryInperson}
+        HistoryInperson:{screen:HistoryInperson},
+        Support:{screen:Support},
+        MyOrdersDetails:{screen:MyOrdersDetails},
+        HistoryDetails:{screen:HistoryDetails},
+        Chaughadive:{screen:Chaughadive},
+        AudioCall:{screen:AudioCall},
+        SavedKundli:{screen:SavedKundli},
+        GandMool:{screen:GandMool},
+        KundliListNew:{screen:KundliListNew},
+        YearlyPrediction:{screen:YearlyPrediction},
+        KpSystem:{screen:KpSystem}
     },
 
     {headerMode :'none'},
