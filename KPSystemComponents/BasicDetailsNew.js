@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
-const windowW= Dimensions.get('window').width
-const windowH = Dimensions.get('window').height
+import {StyleSheet,ScrollView, Text, View,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from 'react-native-button';
 import Header from 'react-native-custom-headers';
@@ -75,7 +73,7 @@ export default class BasicDetailsNew extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -126,7 +124,7 @@ export default class BasicDetailsNew extends Component<Props> {
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -171,8 +169,8 @@ export default class BasicDetailsNew extends Component<Props> {
 
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>What is KP?</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>What is KP?</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
     KP or Krishnamurti Paddhati is an excellent system of astrological predictions, conceived and
     created by the great Indian astrology master late Prof. K.S. Krishnamurti. KP System is based on
@@ -217,7 +215,7 @@ export default class BasicDetailsNew extends Component<Props> {
 
 
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center',marginTop:hp(2), flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#e60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center',marginTop:hp(2), flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'80%',backgroundColor:'transparent', fontSize:18, color:'white', marginLeft:wp(3.5), textAlign:'left'}}>Panchang at Birth</Text>
     </View>
 
@@ -235,17 +233,6 @@ export default class BasicDetailsNew extends Component<Props> {
     value={this.state.nakshatra}/>
     </View>
 
-
-    <View style={{flexDirection:'row', width:'100%'}}>
-    <DataFields giveStyle={{width:'50%'}}
-    title={'Karan'}
-    value={this.state.karan}/>
-
-    <DataFields giveStyle={{width:'50%'}}
-    title={'Yog'}
-    value={this.state.yog}/>
-    </View>
-
     <View style={{flexDirection:'row', width:'100%'}}>
     <DataFields giveStyle={{width:'50%'}}
     title={'Sunrise'}
@@ -258,13 +245,14 @@ export default class BasicDetailsNew extends Component<Props> {
 
     <View style={{flexDirection:'row', width:'100%'}}>
     <DataFields giveStyle={{width:'50%'}}
-    title={'Amanta'}
-    value={this.state.amanta}/>
+    title={'Karan'}
+    value={this.state.karan}/>
 
     <DataFields giveStyle={{width:'50%'}}
-    title={'Purnimanta'}
-    value={this.state.purnimanta}/>
+    title={'Yog'}
+    value={this.state.yog}/>
     </View>
+
 
     <View style={{flexDirection:'row', width:'100%'}}>
     <DataFields giveStyle={{width:'50%'}}
@@ -275,6 +263,17 @@ export default class BasicDetailsNew extends Component<Props> {
     title={'Skak'}
     value={this.state.shaka}/>
     </View>
+
+    <View style={{flexDirection:'row', width:'100%'}}>
+    <DataFields giveStyle={{width:'50%'}}
+    title={'Amanta'}
+    value={this.state.amanta}/>
+
+    <DataFields giveStyle={{width:'50%'}}
+    title={'Purnimanta'}
+    value={this.state.purnimanta}/>
+    </View>
+
 
     </ScrollView>
     </View>
@@ -291,7 +290,7 @@ class DataFields extends Component{
       <View style={[{backgroundColor:'transparent', width:'100%', flexDirection:'column', borderColor:'#bfbfbf'
       , borderWidth:0.5}
       ,...[this.props.giveStyle]]}>
-    <Text style={{fontSize:15, color:'#595959',marginLeft:10,marginTop:10,
+    <Text style={{fontSize:15, color:'#e57373',marginLeft:10,marginTop:10,
      fontFamily:'Nunito-Regular'}}>{this.props.title}</Text>   
     <Text style={{fontFamily:'Nunito-SemiBold', fontSize:17,marginLeft:10,marginTop:3, marginBottom:5}}>
     {this.props.value}</Text>

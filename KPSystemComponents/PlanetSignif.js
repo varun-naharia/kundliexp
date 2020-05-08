@@ -40,6 +40,15 @@ export default class PlanetSignif extends Component{
    this.getPlanetSignif()
   }
 
+  // componentDidUpdate(prevProps, nextProps){
+   
+  //   console.log(JSON.stringify(prevProps))
+  //   if(prevProps== this.props){
+  //       alert('hi')
+
+  //   }
+  // }
+
   componentWillReceiveProps(){
     this.getPlanetSignif()
   }
@@ -55,7 +64,7 @@ export default class PlanetSignif extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -221,8 +230,8 @@ export default class PlanetSignif extends Component{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Planetary Significators</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Planetary Significators</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
     A planet signifies various houses in the order of strength as follows - {`\n`}
     Level 1 - House occupied by the star lord of the planet{`\n`}
@@ -234,7 +243,7 @@ export default class PlanetSignif extends Component{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#e60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'23%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(0.5), textAlign:'left'}}>Planet</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'15%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>I</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'15%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left',}}>II</Text>

@@ -261,6 +261,17 @@ openMembers=()=>{
                             </Text>
                         </View>
 
+
+                        <View style={styles.menuItem}>
+
+                            <Image style={styles.drawericon}
+                                   source={require('./resources/drawer/d_pdf.png')} />
+                            <Text style = {styles.drawerTexts}
+                                  onPress={()=>this.props.navigation.navigate('PdfYours')}>
+                                  Your PDF's
+                            </Text>
+                        </View>
+
                         <View style={styles.menuItem}>
 
                             <Image style={styles.drawericon}
@@ -272,7 +283,7 @@ openMembers=()=>{
                         </View>
 
 
-
+{/*
                         <View style={styles.menuItem}>
 
                             <Image style={styles.drawericon}
@@ -282,7 +293,7 @@ openMembers=()=>{
                                   Transaction History
                             </Text>
                         </View>
-
+                      */}
 
                         <View style={styles.menuItem}>
 

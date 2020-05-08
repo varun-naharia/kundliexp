@@ -26,7 +26,7 @@ class SavedKundli extends Component<Props> {
             kundliList:[],
             limit:0,
             allKundliList:[],
-            is_sel:0
+            is_sel:parseInt(GLOBAL.isSavedKundli)
         }
     }
 
@@ -45,7 +45,21 @@ class SavedKundli extends Component<Props> {
     componentDidMount(){
 
 //        this.props.navigation.addListener('willFocus',this._handleStateChange);
+      var getSaved = GLOBAL.savedKundliDetails
+      if(this.state.is_sel == 1){
+        this.setState({
+          name : getSaved.name,
+          hour: getSaved.hour,
+          minute: getSaved.minute,
+          date: getSaved.date,
+          month: getSaved.month,
+          year: getSaved.year,
+          id: getSaved.id,
+          url: getSaved.base_url +getSaved.image
+        })
+      }else{
 
+      }
       this.getSavedKundli()
     }
 
@@ -95,6 +109,8 @@ class SavedKundli extends Component<Props> {
           id: item.id
         })
 
+        GLOBAL.isSavedKundli='1'
+        GLOBAL.savedKundliDetails = item
     }
 
 

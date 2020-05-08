@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,BackHandler,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
-const windowW= Dimensions.get('window').width
-const windowH = Dimensions.get('window').height
+import { StyleSheet,ScrollView, Text, View,FlatList,BackHandler,Image,TouchableOpacity ,Container,Linking ,TextInput , Dimensions} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from 'react-native-button';
 import Header from 'react-native-custom-headers';
@@ -9,16 +7,23 @@ import moment from 'moment';
 const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import GlobalCharts from './GlobalCharts.js';
-type Props = {};
-import Svg ,{SvgXml}  from 'react-native-svg';
-import NavmanshaChart from './ChartComponents/NavmanshaChart.js';
-import SunChart from './ChartComponents/SunChart.js';
-import HoraChart from './ChartComponents/HoraChart.js';
-import WebView from 'react-native-webview';
 import { TabView, SceneMap ,TabBar} from 'react-native-tab-view';
+// import KPCharts from './KPSystemComponents/KPCharts'
+import JaiminiDetails from './KundliComponents/JaiminiDetails'
+import PlanetaryPosition from './KundliComponents/PlanetaryPosition'
+import DashamBhav from './KundliComponents/DashamBhav'
+import Sarvashtak from './MedicalAstrology'
+import Ashtakvarga from './KundliComponents/Ashtakvarga'
+import FavourablePoints from './KundliComponents/FavourablePoints'
+import Vimshottari from './KundliComponents/Vimshottari'
+import CharDasha from './KundliComponents/CharDasha'
+import YoginiDasha from './KundliComponents/YoginiDasha'
+import KalsarpaDosha from './KundliComponents/KalsarpaDosha'
+import MangalDosha from './KundliComponents/MangalDosha'
+import PitraDosha from './KundliComponents/PitraDosha'
+import KundliCharts from './KundliComponents/KundliCharts'
 
-export default class KundliListNew extends Component<Props> {
+export default class KundliListNew extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -37,68 +42,25 @@ export default class KundliListNew extends Component<Props> {
             name: '',
             renderIndex:0,
       routes: [
-          { key: 'first', title: 'Birth Details' },
-          { key: 'second', title: 'Astro Details' },
-          { key: 'third', title: 'Charts' },
-          { key: 'fourth', title: 'Astro Details' },
+          { key: 'first', title: 'Basic Details' },
+          { key: 'second', title: 'Charts' },
+          { key: 'third', title: 'Planetary Positions' },
+          { key: 'fourth', title: 'Jamini Details' },
+          { key: 'fifth', title: 'Dasham Bhav Madhya' },
+          { key: 'sixth', title: 'Ashtakvarga' },
+          { key: 'seventh', title: 'Sarvashtak' },
+          // { key: 'eighth', title: 'Favorables' },
+          { key: 'ninth', title: 'Vimshottari' },
+          { key: 'tenth', title: 'Char Dasha' },
+          { key: 'eleventh', title: 'Yogini Dasha' },
+          { key: 'twelveth', title: 'Kalsarpa Dosha' },
+          { key: 'thirteenth', title: 'Mangal Dosha' },
+          { key: 'fourteenth', title: 'Pitra Dosha' },
       ],
 
             chartimage:``,
             g_index:0,
-            categories:[ 
-                {"key": "0",
-                 "name": "Basic Details",
-                 "is_selected":"1",
-                },
-                {"key": "1",
-                 "name": "Lagna Chart",
-                 "is_selected":"0",
-                },
-                {"key": "2",
-                 "name": "Moon Chart",
-                 "is_selected":"0"
-                },
-                {"key": "3",
-                 "name": "Navmansha Chart",
-                 "is_selected":"0"
-                },
-                {"key": "4",
-                 "name": "Sun Chart",
-                 "is_selected":"0"
-                },
-                {"key": "5",
-                 "name": "Hora Chart(D2)",
-                 "is_selected":"0"
-                },
-                {"key": "6",
-                 "name": "Dreshkan Chart(D3)",
-                 "is_selected":"0"
-                },
-                {"key": "7",
-                 "name": "Chathurthamasha Chart(D4)",
-                 "is_selected":"0"
-                },
-                {"key": "8",
-                 "name": "Panchmansha Chart(D5)",
-                 "is_selected":"0"
-                },
-                {"key": "9",
-                 "name": "Saptamansha Chart(D7)",
-                 "is_selected":"0"
-                },
-                {"key": "10",
-                 "name": "Ashtamansha Chart(D8)",
-                 "is_selected":"0"
-                },
-                {"key": "11",
-                 "name": "Dashamansha Chart(D10)",
-                 "is_selected":"0"
-                },
-                {"key": "12",
-                 "name": "Dwadasha Chart(D12)",
-                 "is_selected":"0"
-                },
-              ],index:0,
+            index:0,
             basicitems:[
               {
                 id: '1',
@@ -122,8 +84,7 @@ export default class KundliListNew extends Component<Props> {
               },
              ]             
         }
-            this.getMoonChartImage=this.getMoonChartImage.bind(this);
-            this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+
 
     }
 
@@ -132,34 +93,81 @@ export default class KundliListNew extends Component<Props> {
     _renderScene = ({ route }) => {
         switch (route.key) {
             case 'first': 
-            <View style={{flex:1}}>
-            <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
+            return <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
                       data={this.state.basicitems}
                       numColumns={2}
                       keyExtractor = { (item, index) => index.toString() }
                       renderItem={this._renderItem}
                       extraData={this.state}
-            />
-            </View>
-;
+            />;
+            break;
+
+            case 'second': return <KundliCharts/>
+            break;
+
+            case 'third': return <PlanetaryPosition/>
+            break;
+
+            case 'fourth': return <JaiminiDetails
+                                  compType={'JaiminiDetails'}/>
+            break;
+
+            case 'fifth': return <DashamBhav/>
+            break;
+
+            case 'sixth': return <Ashtakvarga/>
+            break;
+
+            case 'seventh': return <Sarvashtak/>
+            break;
+
+            case 'eighth': return <FavourablePoints/>
+            break;
+
+            case 'ninth': return <Vimshottari/>
+            break;
+
+            case 'tenth': return <CharDasha/>
+            break;
+
+            case 'eleventh': return <YoginiDasha/>
+            break;
+
+            case 'twelveth': return <KalsarpaDosha/>
+            break;
+
+            case 'thirteenth': return <MangalDosha/>
+            break;
+
+            case 'fourteenth' : return <PitraDosha/>
+            break;
 
             default:
-                return             <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
-                      data={this.state.basicitems}
-                      numColumns={2}
-                      keyExtractor = { (item, index) => index.toString() }
-                      renderItem={this._renderItem}
-                      extraData={this.state}
-            />
-;
+                return null;
         }
     };
-    renderTabBar(props) {
+
+ renderTabBar(props) {
         return (<TabBar
-                style={{backgroundColor: 'white', elevation: 0, borderColor: 'transparent', height:70,}}
-                labelStyle={{color: 'rgba(0,0,0,0.5)', fontSize: 13, fontFamily:'Nunito-Regular', textAlign:'center'}}
+                style={{backgroundColor: 'white', elevation: 0, borderColor: 'transparent', height:50,}}
+                labelStyle={{color: 'rgba(0,0,0,0.5)', fontSize: 13, fontFamily:'Nunito-Regular', textAlign:'left',}}
 
                 {...props}
+
+               renderLabel={({ route, focused, color }) => {
+                var decide
+                if(focused)
+                  decide='black'
+                else
+                  decide= 'rgba(0,0,0,0.5)'
+                return(
+                  <Text style={{color: decide, fontSize: 13, fontFamily:'Nunito-Bold', textAlign:'left',}}>
+                    {route.title}
+                  </Text>
+                )}}
+                scrollEnabled ={true}
+                tabStyle={{width:'auto'}}
+                pressColor={'grey'}
                 indicatorStyle={{backgroundColor: '#E60000', height: 2.5,}}
             />
         );
@@ -221,72 +229,6 @@ selectedFirst=(item,index)=>{
   }
 }
 
-   _handleCategorySelect = (item,indexs) => {
-       var a = this.state.categories
-        for (var i = 0;i<this.state.categories.length ;i ++){
-
-            this.state.categories[i].is_selected = '0'
-        }
-        var index = a[indexs]
-        if (index.is_selected == "0"){
-            index.is_selected = "1"
-            this.setState({catid : item.key})
-
-        }else{
-            index.is_selected = "0"
-        }
-        this.state.categories[indexs] = index
-
-      //  alert(indexs)
-//        this.setState({renderIndex: indexs})
-
-               this.setState({renderIndex: indexs },() => {
-                      console.log('seetted'); // this.will give counter value as 1
-                  });
-
-   //  this.timeoutCheck = setTimeout(() => {
-   //      this.getMoonChartImage(indexs)
-   // }, 5000);
-
-
-        this.setState({categories:this.state.categories,
-          g_index: indexs})
-        this.sexa(indexs)
-    }
-
-
-    _renderItemCateg = (item,index)=>{
-        return (
-            <TouchableOpacity
-                onPress={() => this._handleCategorySelect(item.item,item.index)}
-                activeOpacity={0.9}>
-
-                {item.item.is_selected == 1 && (
-                    <View style = {{margin :10 ,height :50,backgroundColor:'white',padding:5,alignSelf: 'center',
-                        borderColor:'black',
-                        borderRadius:25, justifyContent:'center'}}>
-
-                        <Text style = {{fontSize: 14,color:'black',alignSelf: 'center',paddingLeft:15, paddingRight:15,fontFamily:'Nunito-Bold',}}>
-                            {item.item.name}
-                        </Text>
-
-                    </View>
-
-                )}
-
-                {item.item.is_selected != 1 && (
-                       <View style = {{margin :10 ,height :50,backgroundColor:'#E60000',padding:5,alignSelf: 'center',
-                        borderColor:'white',borderWidth:1.5,
-                        borderRadius:25,justifyContent:'center'}}>
-
-                    <Text style = {{fontSize: 14,alignSelf: 'center',color:'white',paddingLeft:15, paddingRight:15,fontFamily:'Nunito-SemiBold',} }>
-                        {item.item.name}
-                    </Text>
-                    </View>
-                )}
-            </TouchableOpacity>
-        )
-    }
 
 
     _renderItem = ({item, index}) => {
@@ -334,7 +276,7 @@ selectedFirst=(item,index)=>{
           compos=  null
         }else{
            const xml = `${this.state.chartimage}`;
-           console.log('adssdd'+ this.state.chartimage)
+           // console.log('adssdd'+ this.state.chartimage)
             compos= 
 
             <SvgXml xml={xml} 

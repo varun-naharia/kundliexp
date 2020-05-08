@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {Platform, StyleSheet, Text, View,FlatList,ImageBackground,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
 const windowW= Dimensions.get('window').width
 const windowH = Dimensions.get('window').height
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -40,28 +40,10 @@ class SubscribeList extends Component<Props> {
             username:'',
             wallet:'',
             referral:'',
-            pdList:[
- {"key": "1",
-     "name": "Basic Astrology Classes",
-     "image": require('./resources/pinkscreen.png'),
-     "add2": "3 Months Subscription at ₹22000/-",
-     "add3": "About Program",
-     "is_selected":"0",
-
-    },
-    {"key": "2",
-     "name": "Advance Astrology Classes",
-     "image": require('./resources/bluescreen.png'),
-     "add2": "1 Year Subscription at ₹65000/-",
-     "add3": "About Program",
-     "is_selected":"0"
-    },
-]
+            pdList:[],
+            taxes:''
         }
     }
-
-    _keyExtractor = (item, index) => item.productID;
-
 
 
     showLoading() {
@@ -103,9 +85,11 @@ class SubscribeList extends Component<Props> {
 
           if (responseJson.status == true) {
 
-            this.setState({pdList : responseJson.response})
+            this.setState({pdList : responseJson.response,
+              taxes: responseJson.tax
+            })
           } else {
-
+            alert('No astrology classes found!')
           }
         })
         .catch(error => {
@@ -125,15 +109,15 @@ selectedFirst=(item,indexs)=>{
        var a = this.state.pdList
         for (var i = 0;i<this.state.pdList.length ;i ++){
 
-            this.state.pdList[i].is_active = 0
+            this.state.pdList[i].is_selected = ''
         }
         var index = a[indexs]
-        if (index.is_active == 0){
-            index.is_active = 1
+        if (index.is_selected == ''){
+            index.is_selected = '1'
             this.setState({catid : item.id})
 
         }else{
-            index.is_active = 0
+            index.is_selected = ''
         }
         this.state.pdList[indexs] = index
         this.setState({pdList:this.state.pdList})
@@ -142,9 +126,13 @@ selectedFirst=(item,indexs)=>{
    //  this.props.navigation.navigate('SubscribeListIn')
    // }, 200);
         this.timeoutCheck = setTimeout(() => {
-    this.props.navigation.navigate('Payment', {
-          params: {previous_screen: 'astro_classes', item},
-        })
+          if(item.is_active==1){
+            alert('You are already subscribed to this package.')
+          }else{
+          this.props.navigation.navigate('Payment', {
+                params: {previous_screen: 'astro_classes', item},
+              })
+          }
    }, 200);
 //   alert(JSON.stringify(item))
 }
@@ -152,10 +140,16 @@ selectedFirst=(item,indexs)=>{
 
   _renderItem=({item,index}) => {
  
-    var bg;
- if(index%2==0)
+    var bg,col;
+ if(index%2==0){
+    col = '#f33d54'
     bg = require('./resources/pinkscreen.png')
-else bg = require('./resources/bluescreen.png')
+ }else{
+    col = '#3cf0f5'
+    bg = require('./resources/bluescreen.png')
+ }
+
+
         return (
         <TouchableOpacity style={{width:wp('90%'),alignSelf:'center',backgroundColor:'#e3e3e3',marginTop:hp(2.5),borderRadius:8}}
         onPress={() => this.selectedFirst(item, index)}
@@ -176,25 +170,35 @@ else bg = require('./resources/bluescreen.png')
 
                <View style={{flexDirection:'column',width:wp('60%'), backgroundColor:'transparent'}}>
                <Text style={{fontSize:24,fontFamily:'Nunito-SemiBold',color:'white',}} multiline={true}>{item.package_name}</Text>
-               <Text style={{fontSize:21,fontFamily:'Nunito-SemiBold',color:'white',marginTop:hp(5),marginBottom:hp('2%')}} multiline={true}>{item.description} in Rs.{item.base_price} for {item.duration} {item.duration_type}</Text>
+               <Text style={{fontSize:21,fontFamily:'Nunito-SemiBold',color:'white',marginTop:hp(5),marginBottom:hp('2%')}} multiline={true}>{item.description} in Rs.{item.base_price} for {item.duration} {item.duration_type} ( + Service Tax Rs.{this.state.taxes}/-)</Text>
                </View>
 
-               {item.is_active == 0 && (
+{/*               {item.is_selected == '' && (
 
                 <View style={{backgroundColor:'transparent'}}/>
 
                 )}
 
-               {item.is_active==1 && (
+               {item.is_selected=='1' && (
 
                <Image source={require('./resources/tick1.png')}
-                style={{height:35,width:35,resizeMode:'contain'}}/>
+                style={{height:25,width:25,resizeMode:'contain'}}/>
 
                 )}
+*/}
+             {item.is_active != 1 &&(
 
+              <View style={{backgroundColor:'white', height:hp(6),borderRadius:3,borderWidth:0,borderColor:'transparent', width:wp(20), justifyContent:'center',position:'absolute', bottom:10, right:-10}}>
+               <Text style={{fontSize:14,fontFamily:'Nunito-ExtraBold',color:col,alignSelf:'center'}} >Enroll Now</Text>
+              </View>
+              )}
              </View>
 
-
+             {item.is_active == 1 &&(
+              <View style={{backgroundColor:'white', height:hp(3),borderRadius:3,borderWidth:0,borderColor:'transparent', width:wp(14), position:'absolute',justifyContent:'center', bottom:10, right:10}}>
+               <Text style={{fontSize:12,fontFamily:'Nunito-ExtraBold',color:col,alignSelf:'center'}} >Active</Text>
+              </View>
+              )}
 
            </ImageBackground>
         </TouchableOpacity>
@@ -225,6 +229,7 @@ else bg = require('./resources/bluescreen.png')
                               numColumns={1}
                               keyExtractor = { (item, index) => index.toString() }
                               renderItem={this._renderItem}
+                              extraData={this.state}
                     />
 
             </View>

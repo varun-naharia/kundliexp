@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import {
   Platform,
   StyleSheet,
-  AsyncStorage,
   Text,
   View,
   FlatList,
-  ImageBackground,
   ActivityIndicator,
   StatusBar,
   Image,
@@ -185,7 +183,12 @@ walletStateChange = () => {
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
 
-      console.log('from cart', this.props.navigation.state.params.params)
+      console.log('audio call book', this.props.navigation.state.params.params)
+    }else if(this.props.navigation.state.params.params.previous_screen =='paid_pdf'){
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = responseJson.response.varshphal_pdf;
+
+      console.log('paid pdf', this.props.navigation.state.params.params)
     }
 //    alert(get_price)
     this.setState({finalCheckoutPrice: get_price,
@@ -325,7 +328,7 @@ walletStateChange = () => {
             }
 
             else if(navigation.state.params.params.previous_screen=='life_pred'){
-              alert('life_pred')
+//              alert('life_pred')
 
               decide_for = '5';
               decide_module = 'lifeprediction';
@@ -1057,6 +1060,127 @@ walletStateChange = () => {
                   });
               }
 
+      }else if(navigation.state.params.params.previous_screen=='paid_pdf'){
+
+              decide_for = '8';
+              decide_module = 'varshfhal';
+              get_price = this.state.prices.varshphal_pdf;
+              var FULL_DOB = GLOBAL.glyear +'-'+GLOBAL.glmonth +'-'+GLOBAL.gldate
+              var FULL_TOB = GLOBAL.glhour + ':'+ GLOBAL.glminute
+
+              console.log(JSON.stringify(GLOBAL.userDetails))
+              if(this.state.finalCheckoutPrice == 0){
+                const url = GLOBAL.BASE_URL + "add_permanent_booking";
+
+                var body = {
+                    user_id: GLOBAL.user_id,
+                    for: decide_for,
+                    module: decide_module,
+
+                    name: GLOBAL.userDetails.name,
+                    dob: FULL_DOB,
+                    tob: FULL_TOB,
+                    pob: GLOBAL.glLocationName,
+                    lat: GLOBAL.gllat,
+                    long: GLOBAL.gllong,
+                    lat_long_address: GLOBAL.glLocationName,
+                    timezone: GLOBAL.glzone,
+                    mobile: GLOBAL.userDetails.phone,
+                    email: GLOBAL.userDetails.email,
+
+                    coupan_code: this.state.coupan_code,
+                    coupan_code_id: this.state.coupan_code_id,
+                  
+                    from_payment_gateway:"0",
+                    payment_from:"normal",
+                    discount_amount: '0',                    
+                    order_amount: get_price.toString(),
+                    wallet_amount: this.state.finalWall.toString(),
+                    referral_amount: this.state.finalRef.toString(),
+                  }
+
+
+                console.log(JSON.stringify(body))
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(body)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+                      this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+
+              }else{
+
+                const url = GLOBAL.BASE_URL + "add_temporary_booking";
+                var body = {
+                    user_id: GLOBAL.user_id,
+                    for: decide_for,
+                    module: decide_module,
+
+                    name: GLOBAL.userDetails.name,
+                    dob: FULL_DOB,
+                    tob: FULL_TOB,
+                    pob: GLOBAL.glLocationName,
+                    lat: GLOBAL.gllat,
+                    long: GLOBAL.gllong,
+                    lat_long_address: GLOBAL.glLocationName,
+                    timezone: GLOBAL.glzone,
+                    mobile: GLOBAL.userDetails.phone,
+                    email: GLOBAL.userDetails.email,
+
+                    coupan_code: this.state.coupan_code,
+                    coupan_code_id: this.state.coupan_code_id,
+                  
+                    payment_from:"normal",
+                    discount_amount: '0',                    
+                    total_amount: get_price.toString(),
+                    wallet_amount: this.state.finalWall.toString(),
+                    referral_amount: this.state.finalRef.toString(),
+                  }
+
+                console.log("temp"+JSON.stringify(body))
+
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(body)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+                      var commonHtml = `${GLOBAL.user_id}|${'pdfbooking'}|${responseJson.id}`;
+
+                       this.rajorPay(commonHtml)
+
+//                      this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+
+
+              }
+
       }
 
 
@@ -1117,6 +1241,8 @@ walletStateChange = () => {
       get_price = getItem.price;
 
       console.log('from cart', this.props.navigation.state.params.params)
+    }else if(this.props.navigation.state.params.params.previous_screen =='paid_pdf'){
+      get_price = this.state.prices.varshphal_pdf;
     }
 
     if(this.state.wallet == false && this.state.debit== false && this.state.refer ==false){

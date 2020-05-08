@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     Text,
-    TextInput,
     View,
     Image,
     Alert,
@@ -10,12 +9,12 @@ import {
     Dimensions,
     TouchableOpacity,
     ActivityIndicator,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     ImageBackground,
     Linking,
-    Platform
+    Platform,
+    BackHandler
 } from 'react-native';
 var status ;
 import AsyncStorage from '@react-native-community/async-storage';
@@ -34,6 +33,7 @@ import { Dialogs_ex, DialogContent_ex, DialogComponent, DialogTitle } from 'reac
 import moment from 'moment'
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import { withNavigationFocus } from 'react-navigation';
 
 var myBanners=[{
     id: '1',
@@ -55,7 +55,7 @@ var myBanners=[{
 
 
 
-export default class Home extends Component {
+class Home extends Component {
     state = {
       activeSlide:0,
       myBanners:[],
@@ -357,10 +357,10 @@ _renderItemallrashi=(itemData)=>{
         return (
 
 
-            <TouchableOpacity style={{width:wp('47.3%'), margin:4, height:hp('13.5%')}}
+            <TouchableOpacity style={{width:wp('47.3%'), margin:5, height:hp('13.5%')}}
             onPress={() => this.selectedFirst(item.id)}
             activeOpacity={0.99}>
-{/*                <View   style  = {{width:'100%', height:'100%',backgroundColor:'white',shadowColor: "#000",
+                <View   style  = {{width:'100%', height:'100%',backgroundColor:'white',shadowColor: "#000",
                     shadowOffset: {
                         width: 0,
                         height: 2,
@@ -369,44 +369,35 @@ _renderItemallrashi=(itemData)=>{
                     shadowRadius: 3.84,elevation:4, flexDirection:'column',alignItems:'center', justifyContent:'center'
                 }}
                 >
-                    <Image source={itemData.item.artwork}
+                    <Image source={item.artwork}
                            style  = {{width:45, height:45,alignSelf:'center',resizeMode:'contain'}}/>
 
                     <Text style = {{fontSize:14,marginTop:10,fontFamily:'Nunito-Bold',color:'#293440',textAlign:'center',width:'95%'}}>
-                        {itemData.item.title}
+                        {item.title}
                     </Text>
 
                 </View>
- */}
 
-<LinearGradient colors={item.colors}
+{/*<LinearGradient colors={item.colors}
 start={{x: 0, y: 0}} end={{x: 1, y: 0}}
  style={{width:'100%', height:'100%', borderRadius:5, margin:3,
-  justifyContent:'space-between', flexDirection:'row', alignItems:'center'}}
+  justifyContent:'center', flexDirection:'row', alignItems:'center'}}
  >
-<View style={{flexDirection:'column', width:'65%'}}>
- <Text style={{fontSize:18, color:'white', marginLeft:10, fontFamily:'Nunito-ExtraBold'}}>{item.title}</Text>
 
-</View>
-      <Animatable.Image style={{width:50, height:50, resizeMode:'contain', marginRight:9, zIndex:0}}
-      source={item.artwork}
-      animation={item.animation}
-      easing='linear'      
+ <Text style={{fontSize:25, color:'white',  fontFamily:'Nunito-ExtraBold', alignSelf:'center', textAlign:'center'}}>{item.title}</Text>
+
+ <Animatable.Text style={{fontSize:30, width:'100%',color:'rgba(255,255,255,0.2)',textAlign:'center', fontFamily:'Nunito-ExtraBold', 
+ position:'absolute', alignSelf:'center'}}
+animation='pulse'
+      easing='ease-out-sine'
+      direction ='alternate-reverse'
       iterationCount="infinite"
-      duration={5500}/>
+      delay={1600} >
+ {item.title}</Animatable.Text>
 
-       <Animatable.Image style={{height:'100%', width:7, position:'absolute',
-       right:75}}
-      animation='slideInLeft'
-      iterationCount="infinite"
-      easing='linear'
-      imageOpacity={0.5}      
-      duration={item.duration}
-      useNativeDriver={true}
 
-      source={require('./resources/line.png')}
-      />
 </LinearGradient> 
+ */}
 
             </TouchableOpacity>
         )
@@ -628,7 +619,7 @@ _renderItemNewsImageList=(itemData)=>{
       })
         .then(response => response.json())
         .then(responseJson => {
-          console.log(JSON.stringify(responseJson.live_details));
+          console.log(JSON.stringify(responseJson.user_detail));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
@@ -655,14 +646,14 @@ _renderItemNewsImageList=(itemData)=>{
                     wall : responseJson.user_detail.wallet,
                     live_details : responseJson.live_details
                    })
-                  // this.setState({ videos : resultant})
-                  // this.setState({ newslist : responseJson.news_list})
-                  // this.setState({ allrashi : responseJson.gems})
-                  // this.setState({wall : responseJson.user_detail.wallet })
+
                   GLOBAL.all_settings = responseJson.get_Settings
                   GLOBAL.userDetails = responseJson.user_detail
                   GLOBAL.helpline_number = responseJson.helpline_number
                   GLOBAL.walletAmount = responseJson.user_detail.wallet
+                  GLOBAL.freePDF = responseJson.common_pdf
+                  GLOBAL.glLanguage = responseJson.user_detail.language
+                  GLOBAL.glChartStyle= responseJson.user_detail.chart_style
 //                  alert(JSON.stringify(GLOBAL.all_settings))
           } else {
             alert(
@@ -722,6 +713,8 @@ _renderItemNewsImageList=(itemData)=>{
 
 //        this.dialogComponents.show()
 //        this.loadHome()
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+
     }
 
 
@@ -736,10 +729,34 @@ _renderItemNewsImageList=(itemData)=>{
     }
 
     componentWillUnmount() {
-
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
       //  NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
     }
 
+
+handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit KundliExpert app?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
+  };
     openWallet=()=>{
       this.props.navigation.navigate('Wallet')
 
@@ -1026,6 +1043,7 @@ buttonOkJoin=()=>{
         );
     }
 }
+export default withNavigationFocus(Home);
 
 const styles = StyleSheet.create({
     container: {

@@ -41,7 +41,7 @@ export default class HouseCusps extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -133,8 +133,8 @@ degreeMinSec=(dec)=>{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>KP House Cusps</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>KP House Cusps</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
     The point at which two houses meet is called a Cusp. Starting point of a house is called the cusp of that
     house. The planet that owns the sign that falling on the cusp of a house is called the owner or the lord
@@ -143,7 +143,7 @@ degreeMinSec=(dec)=>{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'18%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(0.5), textAlign:'left'}}>House</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'30%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Degree</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'8%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left',}}>SL</Text>

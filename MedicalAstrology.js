@@ -46,9 +46,9 @@ export default class MedicalAstrology extends Component<Props>{
 
   getMedicalAstro=()=>{
 
-           console.log('did')
+//           console.log('did')
  
-    this.showLoading()
+//    this.showLoading()
         const url = GLOBAL.ASTRO_API_BASE_URL
 
         fetch(url, {
@@ -60,7 +60,7 @@ export default class MedicalAstrology extends Component<Props>{
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -73,7 +73,7 @@ export default class MedicalAstrology extends Component<Props>{
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
-                this.hideLoading()
+  //              this.hideLoading()
               console.log(JSON.stringify(responseJson.ashtak_points))
                 if (responseJson.status == true) {
 
@@ -93,16 +93,7 @@ export default class MedicalAstrology extends Component<Props>{
                       responsePisces : responseJson.ashtak_points.pisces
                   })
                      // this.setState({responseTaurus : responseJson.ashtak_points.taurus})
-                     // this.setState({responseGemini : responseJson.ashtak_points.gemini})
-                     // this.setState({responseCancer : responseJson.ashtak_points.cancer})
-                     // this.setState({responseLeo : responseJson.ashtak_points.leo})
-                     // this.setState({responseVirgo : responseJson.ashtak_points.virgo})
-                     // this.setState({responseLibra : responseJson.ashtak_points.libra})
-                     // this.setState({responseScorpio : responseJson.ashtak_points.scorpio})
-                     // this.setState({responseSagittarius : responseJson.ashtak_points.sagittarius})
-                     // this.setState({responseCapricorn : responseJson.ashtak_points.capricorn})
-                     // this.setState({responseAquarius : responseJson.ashtak_points.aquarius})
-                     // this.setState({responsePisces : responseJson.ashtak_points.pisces})
+    
 
 
                      var collect = [];
@@ -118,7 +109,7 @@ export default class MedicalAstrology extends Component<Props>{
             })
             .catch((error) => {
                 console.error(error);
-                this.hideLoading()
+    //            this.hideLoading()
             });
 
 
@@ -173,29 +164,36 @@ appendObjTo(thatArray, newObj) {
 
     return(
         <View style={{flex:1, flexDirection:'column', backgroundColor:'white'}}>
-           <Header navigation={this.props.navigation}
+{/*           <Header navigation={this.props.navigation}
            showHeaderImage={false}
            headerColor ={'#E60000'}
            backImagePath={require('./resources/back.png')}
-           headerName={'ASHTAKVARGA'}
+           headerName={'ASTAKVARGA'}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
-
+*/}
           <ScrollView>
 
-          <View style={{width:wp(99), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', marginTop:hp(1) }}>
-          <Text style={{fontSize:16, color:'#E60000', marginLeft:wp(3), fontFamily:'Nunito-Bold'}}>RN</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>SU</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>MO</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>MA</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>ME</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>JU</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>VE</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>SA</Text>
-          <Text style={{fontSize:16, color:'#E60000', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>TOT</Text>
+      <View style={{width: wp(92), margin:15,}}>
+      <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Sarvashtak Varga</Text>
+      <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
+      Sarvashtak is a combination or sum of all the Astakvarga. The houses which has more than 28
+      points are considered powerful and strenghthen the house significators.
+      </Text>
+      
+      </View>
+
+
+          <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', marginTop:hp(1) }}>
+          <Text style={{fontSize:16, color:'white', marginLeft:wp(3), fontFamily:'Nunito-Bold'}}>RN</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>SU</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>MO</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>MA</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>ME</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>JU</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>VE</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>SA</Text>
+          <Text style={{fontSize:16, color:'white', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Bold'}}>TOT</Text>
           </View>
-
-          <View style={{width:wp(100), height:hp(0.2), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(1)}}/>
-
 
 
 {/*          <FlatList data ={this.state.ashtakPoints}

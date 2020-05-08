@@ -66,7 +66,8 @@ export default class AstroDetails extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lat_long_address": GLOBAL.glLocationName,            
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,

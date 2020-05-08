@@ -218,18 +218,6 @@ class VideoCall extends Component<Props> {
 
 
 
-                                 // this.setState({name :responseJson.user_details.name})
-                                 // this.setState({address: responseJson.user_details.address})
-                                 // this.setState({area: responseJson.user_details.area})
-                                 // this.setState({city: responseJson.user_details.city})
-                                 // this.setState({description :responseJson.user_details.email})
-                                 // this.setState({image :responseJson.user_details.image})
-                                 // this.setState({username: responseJson.user_details.username})
-                                 // if(responseJson.user_details.dob==''){
-                                 //     this.setState({dob:'Select Date of Birth'})
-                                 // }else{
-                                 //     this.setState({dob: responseJson.user_details.dob})
-                                 // }
 
                              }else {
                                  alert('An error occurred while starting session')

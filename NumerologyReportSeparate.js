@@ -54,12 +54,15 @@ export default class NumerologyReportSeparate extends Component<Props>{
     }
 
     var decideTitle='';
+    var decideSubTitle=''
     if(GLOBAL.isDailyPres=='1'){
       decideTitle = 'KNOW YOUR LUCKY NUMBER'
+      decideSubTitle = '*For more info visit Numerology section'
     }else if(GLOBAL.isDailyPres == '2'){
       decideTitle = 'DAILY PREDICTION'
     }else if(GLOBAL.isDailyPres == '3'){
       decideTitle = 'KNOW YOUR LUCKY COLOR'
+      decideSubTitle = '*For more info visit Numerology section'
     }else if(GLOBAL.isDailyPres == '4'){
       decideTitle = 'MANTRA SUGGESTION'
     }
@@ -76,6 +79,7 @@ export default class NumerologyReportSeparate extends Component<Props>{
 
           <ScrollView>
       {GLOBAL.isDailyPres=='1' && (
+        <>
         <View   style  = {{width:wp('95%'), backgroundColor:'white',shadowColor: "#000",
             shadowOffset: {
                 width: 0,
@@ -95,7 +99,11 @@ export default class NumerologyReportSeparate extends Component<Props>{
           </Text>
 
         </View>
+          <Text style = {{fontSize:16,marginBottom:0,fontFamily:'Nunito-SemiBoldItalic',color:'grey',marginLeft:wp(3)}}>
+          {decideSubTitle}
+          </Text>
 
+        </>
         )}
 
       {GLOBAL.isDailyPres=='2' && (
@@ -189,6 +197,7 @@ export default class NumerologyReportSeparate extends Component<Props>{
       )}
 
       {GLOBAL.isDailyPres=='3' && (
+        <>
         <View   style  = {{width:wp('95%'), backgroundColor:'white',shadowColor: "#000",
             shadowOffset: {
                 width: 0,
@@ -208,7 +217,11 @@ export default class NumerologyReportSeparate extends Component<Props>{
           </Text>
 
         </View>
+          <Text style = {{fontSize:16,marginBottom:0,fontFamily:'Nunito-SemiBoldItalic',color:'grey',marginLeft:wp(3)}}>
+          {decideSubTitle}
+          </Text>
 
+        </>
         )}
 
       {GLOBAL.isDailyPres=='4' && (

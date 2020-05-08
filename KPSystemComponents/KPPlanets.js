@@ -41,7 +41,7 @@ export default class KPPlanets extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -107,7 +107,7 @@ degreeMinSec=(dec)=>{
 
     var dec_color, dec_p_color
     if(index==0){
-      dec_color = '#fed9e1'
+      dec_color = '#e9e1da'
       dec_p_color = '#e91e63'
     }else if(index ==1){
       dec_color = '#fff5d2' 
@@ -163,8 +163,8 @@ degreeMinSec=(dec)=>{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>KP Planetary Positions</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>KP Planetary Positions</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
     Krishnamurty Paddhati planets are calculated based on KP ayanamsha. The sub lord and other details
     are based on your KP Kundli.
@@ -172,7 +172,7 @@ degreeMinSec=(dec)=>{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'18%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(0.5), textAlign:'left'}}>Planet</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'30%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Degree</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'8%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left',}}>SL</Text>

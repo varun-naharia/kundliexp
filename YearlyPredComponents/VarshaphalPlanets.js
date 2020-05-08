@@ -12,11 +12,11 @@ export default class VarshaphalPlanets extends Component{
         this.state = {
             response:[],
         }
-        console.log('--varshaphal_planets')
+        // console.log('--varshaphal_planets')
     }
 
   componentDidMount(){
-        console.log(JSON.stringify(this.props.response))
+//        console.log(JSON.stringify(this.props.response))
 //    this.getVarshphalPlanets()
 
    // this.props.navigation.addListener('willFocus',this._handleStateChange);
@@ -48,7 +48,7 @@ export default class VarshaphalPlanets extends Component{
   // }
 
   getVarshphalPlanets=()=>{
-    console.log('-----> varshaphal_planets')
+    // console.log('-----> varshaphal_planets')
       // console.log({"user_id":GLOBAL.user_id,"lang":"en","date":GLOBAL.gldate,"month":GLOBAL.glmonth,"year":GLOBAL.glyear,"hour":GLOBAL.glhour,
       //       "minute":GLOBAL.glminute,"latitude":GLOBAL.gllat,"longitude":GLOBAL.gllong,"timezone":GLOBAL.glzone,"api-condition":"varshaphal_details","varshaphal_year": GLOBAL.gl_currYear})
  //     this.showLoading()
@@ -61,7 +61,7 @@ export default class VarshaphalPlanets extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -104,7 +104,7 @@ degreeMinSec=(dec)=>{
         $tempma = $tempma * 3600; 
         let $min = Math.floor($tempma / 60), 
         $sec =Math.round($tempma - ($min*60));  
-        console.log($vars[1]);
+//        console.log($vars[1]);
         if($deg < 10)
          $deg = '0'+$deg; 
         if($min < 10) 
@@ -171,15 +171,15 @@ degreeMinSec=(dec)=>{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Varshphal Planet Degrees</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Varshphal Planet Degrees</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>The Varshaphal or Vedic Solar Return system makes
     a progressed yearly kundali for you. The Varshaphala predicts how the your year is going to be.
     This is also known as birthday forecase as it is mainly from one birthday to next birthday.</Text>
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'20%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(1.5), textAlign:'left'}}>Planets</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'25%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Degree</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'7%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>SL</Text>

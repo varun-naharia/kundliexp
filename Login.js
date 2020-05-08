@@ -154,10 +154,10 @@ export default class Login extends Component {
 
     return (
       <View style={styles.container}>
-       <ImageBackground style = {{width :wp('100%') ,height : hp('100%'), flex:1,}}
-         source={require('./resources/background_image.png')}>
 
-    <KeyboardAwareScrollView keyboardShouldPersistTaps='handled'>
+
+    <KeyboardAwareScrollView keyboardShouldPersistTaps='handled'
+    >
 
 {/*    <Button
         containerStyle = {{position:'absolute', right:wp(10), top:hp(18), }}
@@ -168,21 +168,21 @@ export default class Login extends Component {
       </Button>
 */}
 
-         <View style={{flexDirection:'column',flex:1, alignItems:'center',}}>
+         <View style={{flexDirection:'column',alignItems:'center',}}>
 
 
-         <View style={{width:wp('100%'), marginTop:hp('10%'),}}>
+         <View style={{width:wp('100%'), marginTop:hp('0%'),}}>
 
 
-         <Image style = {{width:wp('50%'), height:hp('50%'), resizeMode:'contain', marginTop:hp('-5%'), alignSelf:'center'}} source={require('./resources/kundli_logo.png')}/>
-          <Text style = {{width:wp('70%'),color:'black',fontSize: 32,fontFamily:'Nunito-Bold',textAlign:'left',marginTop:hp('-15%'), marginLeft:wp('8%'), lineHeight:35}}>
+         <Image style = {{width:wp('50%'), height:hp('50%'), resizeMode:'contain', marginTop:hp('-8%'), alignSelf:'center'}} source={require('./resources/kundli_logo.png')}/>
+          <Text style = {{width:wp('70%'),color:'black',fontSize: 32,fontFamily:'Nunito-Bold',textAlign:'left',marginTop:hp('-11%'), marginLeft:wp('8%'), lineHeight:45}}>
           Login into your account</Text>
 
           <Text style = {{width:wp('75%'),color:'#909090',fontSize: 18,fontFamily:'Nunito-Regular',textAlign:'left', marginLeft:wp('8%'),marginTop:wp('2%')}}>
           Enter your mobile number to {'\n'}continue
           </Text>
 
-          <View style = {{flexDirection:'row',marginTop:hp('3%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
+          <View style = {{flexDirection:'row',marginTop:hp('7%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
         
         <PhoneInput style={{width:wp('78%'), height:hp('7%'), color:'#909090',marginLeft:wp('2%')}}
           ref={ref => {
@@ -202,13 +202,15 @@ export default class Login extends Component {
 
 
 
-          <TouchableOpacity style={{width:wp('24%'),borderRadius:50, marginTop:hp('5%'),marginRight:wp('9%'),
-           backgroundColor:'#E60000',height:hp('7%'),alignSelf:'flex-end',marginRight:wp('9%')}}
+          <TouchableOpacity style={{width:wp('82%'),borderRadius:5, marginTop:hp('5.5%'),
+           backgroundColor:'#E60000',height:hp('7%'),alignSelf:'center', marginRight:wp('2%')}}
            onPress={this.login}>
           
-          <View style={{width:wp('24%'), height:hp('7%'), justifyContent:'center',}}>
-          <Image style={{width:wp(40), height:hp(3.5), resizeMode:'contain',alignSelf:'center'}} source={require('./resources/rightArrow.png')}
-          />
+          <View style={{width:'100%', height:hp('7%'), justifyContent:'center',alignItems:'center'}}>
+          <Text style = {{color:'white',fontSize: 18,fontFamily:'Nunito-ExtraBold',
+          alignSelf:'center'}}>
+          Login
+          </Text>
           </View>
           
           </TouchableOpacity>
@@ -219,8 +221,11 @@ export default class Login extends Component {
         <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('12%')}}
         onPress={()=> this.props.navigation.navigate('Signup')}>
         <View style={{width:wp('100%'),  alignSelf:'center', alignItems:'center',}}>
-        <Text style = {{width:wp('90%'),color:'white',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular',}}>
-        Don't have an account? Sign up
+        <Text style = {{width:wp('90%'),color:'black',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular',}}>
+        Don't have an account?
+        <Text style = {{width:wp('90%'),color:'#E60000',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular', textDecorationLine:'underline'}}>
+         {' '}Sign up        
+        </Text>
         </Text>
         </View>
         </TouchableOpacity>
@@ -232,7 +237,7 @@ export default class Login extends Component {
          </KeyboardAwareScrollView>
 
 
-         </ImageBackground>
+
 
       </View>
     );
@@ -242,6 +247,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'white'
   },
   welcome: {
     fontSize: 20,

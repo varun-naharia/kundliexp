@@ -109,7 +109,7 @@ export default class AddressAdd extends Component<Props> {
         .then(response => response.json())
         .then(responseJson => {
           //       this.hideLoading()
-        alert(JSON.stringify(responseJson))
+//        alert(JSON.stringify(responseJson))
           if (responseJson.status == true) {
              this.dropDownAlertRef.alertWithType('success', 'Success', 'Address added successfully.');
              this.props.navigation.goBack()

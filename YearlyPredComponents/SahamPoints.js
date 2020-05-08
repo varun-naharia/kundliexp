@@ -40,7 +40,7 @@ export default class SahamPoints extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -78,15 +78,15 @@ export default class SahamPoints extends Component{
 //    console.log('render SahamPoints')
     var first = this.state.response.map((item, i) =>{
     return(
-    <>
+    <View key={i}>
     <View style={{width:wp(100), backgroundColor:'transparent', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}
-    key={i}>
+    >
     <Text style={{fontFamily:'Nunito-Regular',width:'25%',backgroundColor:'transparent', fontSize:14, color:'grey', marginLeft:wp(3), textAlign:'left'}}>{item.saham_id}</Text>
     <Text style={{fontFamily:'Nunito-Regular',width:'30%',backgroundColor:'transparent', fontSize:13, color:'grey', textAlign:'left'}}>{item.saham_name}</Text>
     <Text style={{fontFamily:'Nunito-Regular',width:'30%',backgroundColor:'transparent', fontSize:13, color:'grey', textAlign:'left', marginRight:wp(3)}}>{item.saham_degree}</Text>
     </View>
     <View style={{width:wp(100), height:hp(0.2), backgroundColor:'rgba(0,0,0,0.1)', alignSelf:'center',}}/>
-    </>     
+    </View>     
     )})
 
 
@@ -100,8 +100,8 @@ export default class SahamPoints extends Component{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Saham Degrees for year</Text>
+    <View style={{width: wp(92), margin:15,}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Saham Degrees for year</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>
     Sahamas are the significant points in the zodiac related to specific matters. For example,
     "raajya" means kingdom and "raajya sahama" is a significant point in the zodiac related to
@@ -110,7 +110,7 @@ export default class SahamPoints extends Component{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#e60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'25%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(2.5), textAlign:'left'}}>Entity</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'30%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Saham Name</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'30%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left', marginRight:wp(2.5)}}>Saham Degree</Text>

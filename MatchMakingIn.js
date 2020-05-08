@@ -234,7 +234,7 @@ var xml = `
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -310,7 +310,7 @@ var xml = `
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -379,7 +379,7 @@ var xml = `
            showHeaderImage={false}
            headerColor ={'#E60000'}
            backImagePath={require('./resources/back.png')}
-           headerName={'MATCH MAKING'}
+           headerName={'HOROSCOPE MATCHING'}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
           <View style={{width:wp('100%'), height:hp('10%'), backgroundColor:'#E60000'}}>
@@ -585,7 +585,7 @@ export class LagnaChart extends Component<Props>{
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,

@@ -34,15 +34,12 @@ export default class KundliForm extends Component<Props> {
         super(props)
         const { navigation } = this.props;
         this.state = {
-            name: GLOBAL.userDetails.name,
+            name: '',
             date:'',
             time:'',
             value:0,
         }
     }
-
-    _keyExtractor = (item, index) => item.productID;
-
 
 
     showLoading() {
@@ -56,30 +53,40 @@ export default class KundliForm extends Component<Props> {
 
 
     componentDidMount(){
+        var getSavedKundli = GLOBAL.savedKundliDetails
+        if(GLOBAL.isSavedKundli == '1'){
+          this.setState({
+            name: getSavedKundli.name,
+            pob: getSavedKundli.lat_long_address,
+            time: getSavedKundli.hour + getSavedKundli.minute,
+            date: getSavedKundli.year+'-'+getSavedKundli.month+'-'+getSavedKundli.date
+          })
+        }else{
+        this.setState({pob : GLOBAL.glLocationName,
+          name: GLOBAL.userDetails.name
+        })      
+
+        }
 
         this.props.navigation.addListener('willFocus',this._handleStateChange);
 
-//  this.getReviews()
         console.log(this.props.navigation.state.params)
-
     }
 
 
     _handleStateChange= state=>{
-        this.setState({pob : GLOBAL.glLocationName})      
+      console.log(JSON.stringify(GLOBAL.savedKundliDetails))
+
+      if(GLOBAL.isSavedKundli == '1'){
+
+      }else{
+        this.setState({pob : GLOBAL.glLocationName,
+          name: GLOBAL.userDetails.name
+        })         
+      }
+
     }
 
-    getReviews= () =>{
-
-    }
-
-
-
-
-
-selectedFirst=(item,indexs)=>{
-    this.props.navigation.navigate('ProductListIn')
-}
 
 
 setDate=(date)=>{
@@ -129,10 +136,23 @@ buttonClickListener=()=>{
 //  alert(gender)
    GLOBAL.glgender = gender
 
+   var getSavekundli= GLOBAL.savedKundliDetails
+   if(GLOBAL.isSavedKundli=='1'){
+      GLOBAL.gldate = getSavekundli.date
+      GLOBAL.glmonth = getSavekundli.month
+      GLOBAL.glyear =  getSavekundli.year
+      GLOBAL.glhour = getSavekundli.hour
+      GLOBAL.glminute = getSavekundli.minute
+      GLOBAL.glLocationName= getSavekundli.lat_long_address
+   }else{
+
+   }
+
+
   var navigation = this.props.navigation.state.params
 
   if(navigation.astroReportType == 'kundli'){
-      this.props.navigation.navigate('KundliList')    
+      this.props.navigation.navigate('KundliListNew')    
   }else if(navigation.astroReportType == 'medical_astro'){
         this.props.navigation.navigate('MedicalAstrology')
   }else if(navigation.astroReportType == 'lal_kitab'){
@@ -147,6 +167,16 @@ buttonClickListener=()=>{
        this.props.navigation.navigate('YearlyPrediction')
   }else if(navigation.astroReportType == 'kp_system'){
        this.props.navigation.navigate('KpSystem')
+  }else if(navigation.astroReportType == 'daily_panchang'){
+       this.props.navigation.navigate('DailyPanchang')
+  }else if(navigation.astroReportType == 'rudraksh_sugges'){
+       this.props.navigation.navigate('RudrakshSuggestion')
+  }else if(navigation.astroReportType == 'life_report'){
+       this.props.navigation.navigate('LifeReports')
+  }else if(navigation.astroReportType == 'paid_pdf'){
+       this.props.navigation.navigate('Payment', {
+                params: {previous_screen: 'paid_pdf', },
+      })
   }
 
 
@@ -240,7 +270,6 @@ buttonClickListener=()=>{
 
 }
     render() {
-      var yeah = GLOBAL.response
         if(this.state.loading){
             return(
                 <View style={{flex: 1}}>

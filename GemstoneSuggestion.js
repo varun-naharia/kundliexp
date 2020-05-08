@@ -53,7 +53,7 @@ export default class GemstoneSuggestion extends Component<Props>{
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -236,6 +236,10 @@ export default class GemstoneSuggestion extends Component<Props>{
           </Text>
 
         </View>
+
+          <Text style = {{fontSize:16,marginBottom:5,fontFamily:'Nunito-SemiBoldItalic',color:'grey',marginLeft:wp(3)}}>
+          *Consult your astrologer before wearing these gemstones
+          </Text>
 
         </ScrollView>
       </View>

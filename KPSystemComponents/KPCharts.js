@@ -8,6 +8,7 @@ import Svg ,{SvgXml}  from 'react-native-svg';
 import {
   BarIndicator,
 } from 'react-native-indicators';
+import AutoHeightWebView from 'react-native-autoheight-webview'
 
 
 export default class KPCharts extends Component{
@@ -168,25 +169,18 @@ export default class KPCharts extends Component{
   }
 
   componentWillReceiveProps(){
-        this.setState({
-      chartName: 'Cusp Chart',
-      chartDes: 'D1 - Cusp Chart based on KP Houses'
-    })
+    //     this.setState({
+    //   chartName: 'Cusp Chart',
+    //   chartDes: 'D1 - Cusp Chart based on KP Houses'
+    // })
 
-    this.getKpCharts('D1')
+//    this.getKpCharts('D1')
   }
 
   getKpCharts=(chartId)=>{
-    this.showLoading()
-        const url = GLOBAL.ASTRO_API_BASE_URL
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+    console.log('------->'+JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -196,7 +190,30 @@ export default class KPCharts extends Component{
             "longitude":GLOBAL.gllong,
             "timezone":GLOBAL.glzone,
             "api-condition":"horo_chart_image",
-            "chart_id":chartId
+            "chart_id":chartId,
+            "chartStyle": GLOBAL.glChartStyle
+            }))
+    this.showLoading()
+        const url = GLOBAL.ASTRO_API_BASE_URL
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":GLOBAL.glLanguage,
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"horo_chart_image",
+            "chart_id":chartId,
+            "chartType": GLOBAL.glChartStyle
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
@@ -269,9 +286,21 @@ export default class KPCharts extends Component{
                size={40} color="#E60000" />
               )}
               {this.state.loading == false && (
-              <SvgXml 
-                style={{alignSelf:'center'}}
-                xml={xml}/>
+
+                <>
+                <AutoHeightWebView source={{html : this.state.chartimage}} 
+                style={{width:window.width,}}
+                containerStyle={{margin:7 }}
+                scalesPageToFit={true}
+                scrollEnabled={false}
+                viewportContent={'name=viewport,width=90px , user-scalable =yes'}
+
+                />
+
+{/*              <SvgXml 
+                style={{alignSelf:'center',}}
+                xml={xml}/>*/}
+                </>
                 )}
                 </>
 

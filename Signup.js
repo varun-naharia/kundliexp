@@ -70,66 +70,68 @@ updateInfo() {
           special: false,
       });
 
+      if(this.state.name==''){
+        alert('Please enter name')
+      }else if(this.state.email == ''){
+        alert('Please enter email')
+      }else if(this.phone.isValidNumber() ==false){
+        alert('Invalid phone number')
+      }else{
+
+        const countryCode = this.phone.getCountryCode()
+        let phoneNumber = this.phone.getValue()
+        phoneNumber = phoneNumber.replace('+','')
+        phoneNumber = phoneNumber.replace(countryCode, '')
+
+        GLOBAL.signupName = this.state.name
+        GLOBAL.signupEmail = this.state.email
+        GLOBAL.signupMobile= phoneNumber
+        GLOBAL.signupCountryCode = this.phone.getCountryCode()
+        GLOBAL.signupDob = this.state.dob
+        GLOBAL.signupTob = this.state.tob
+        GLOBAL.signupPob = this.state.pob
+        GLOBAL.signupGender = this.state.gender
+        GLOBAL.signupReferCode =  this.state.refercode
+        GLOBAL.signupOtp = genOtp
+        GLOBAL.signupVerifyRefer = this.state.isverifyrefer
+        GLOBAL.signupApplyRefer = this.state.applied
 
 
+          const url = GLOBAL.BASE_URL +  'otp'
+        //  this.showLoading()
+          fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: this.state.email,
+        mobile: this.phone.getValue(),
+        otp: genOtp,
+        country_code: this.phone.getCountryCode()
 
-    if(this.phone.isValidNumber()){
-    const countryCode = this.phone.getCountryCode()
-    let phoneNumber = this.phone.getValue()
-    phoneNumber = phoneNumber.replace('+','')
-    phoneNumber = phoneNumber.replace(countryCode, '')
+      }),
+    }).then((response) => response.json())
+        .then((responseJson) => {
 
-    GLOBAL.signupName = this.state.name
-    GLOBAL.signupEmail = this.state.email
-    GLOBAL.signupMobile= phoneNumber
-    GLOBAL.signupCountryCode = this.phone.getCountryCode()
-    GLOBAL.signupDob = this.state.dob
-    GLOBAL.signupTob = this.state.tob
-    GLOBAL.signupPob = this.state.pob
-    GLOBAL.signupGender = this.state.gender
-    GLOBAL.signupReferCode =  this.state.refercode
-    GLOBAL.signupOtp = genOtp
-    GLOBAL.signupVerifyRefer = this.state.isverifyrefer
-    GLOBAL.signupApplyRefer = this.state.applied
+            console.log(JSON.stringify(responseJson))
+      //       this.hideLoading()
+           if (responseJson.status == true) {
+            alert('OTP sent to your entered mobile number.')
+    //      this.setState({ results: responseJson.user_detail })
+            this.props.navigation.replace('Otp', {params: 'SignupOtp'})
+           }
+           else{
+            alert('This mobile number is already registered with us.')
+           }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
-
-      const url = GLOBAL.BASE_URL +  'otp'
-    //  this.showLoading()
-      fetch(url, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    email: this.state.email,
-    mobile: this.phone.getValue(),
-    otp: genOtp,
-    country_code: this.phone.getCountryCode()
-
-  }),
-}).then((response) => response.json())
-    .then((responseJson) => {
-
-        console.log(JSON.stringify(responseJson))
-  //       this.hideLoading()
-       if (responseJson.status == true) {
-        alert('OTP sent to your entered mobile number.')
-//      this.setState({ results: responseJson.user_detail })
-        this.props.navigation.replace('Otp', {params: 'SignupOtp'})
-       }
-       else{
-        alert('This mobile number is already registered with us.')
-       }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      }
 
 
-    }else{
-
-      alert('Invalid Mobile Number')
-    }
 
   }
 
@@ -165,8 +167,9 @@ updateInfo() {
         console.log(JSON.stringify(responseJson));
         //       this.hideLoading()
         if (responseJson.status == true) {
-          this.setState({isverifyrefer : '1'})
-          this.setState({applied : responseJson.apply_to})
+          this.setState({isverifyrefer : '1',
+            applied : responseJson.apply_to
+        })
   //        GLOBAL.signupVerifyRefer = this.state.isverifyrefer
           alert('Referral code applied successfully!')
         } else {
@@ -188,8 +191,7 @@ updateInfo() {
   render() {
     return (
       <View style={styles.container}>
-       <ImageBackground style = {{width :wp('100%') ,height : hp('100%'), flex:1,}}
-         source={require('./resources/background_image.png')}>
+
 
     <KeyboardAwareScrollView keyboardShouldPersistTaps='handled'>
 
@@ -197,18 +199,18 @@ updateInfo() {
          <View style={{flexDirection:'column',flex:1, alignItems:'center',}}>
 
 
-         <View style={{width:wp('100%'), marginTop:hp('18%'),}}>
+         <View style={{width:wp('100%'), marginTop:hp('7%'),}}>
 
 
 
-          <Text style = {{width:wp('70%'),color:'#262626',fontSize: 32,fontFamily:'Nunito-Bold',textAlign:'left', marginLeft:wp('8%'), lineHeight:35}}>
-          Create Your {'\n'}Account</Text>
+          <Text style = {{color:'#262626',fontSize: 28,fontFamily:'Nunito-Bold',textAlign:'center', lineHeight:35, marginLeft:wp(-3)}}>
+          Create Your Account</Text>
 
 {/*          <Text style = {{width:wp('75%'),color:'#909090',fontSize: 18,fontFamily:'Nunito-Regular',textAlign:'left', marginLeft:wp('8%'),marginTop:wp('3%')}}>
           Enter your details
           </Text>
 */}
-          <View style = {{flexDirection:'row',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
+          <View style = {{flexDirection:'row',marginTop:hp('7%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
               <TextInput style = {{width:wp('78%'),color:'#909090', height:hp('7%'), fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(5)}}
                          placeholder = {'Name'}
                          placeholderTextColor = "#909090"
@@ -217,7 +219,7 @@ updateInfo() {
               />
           </View>
 
-          <View style = {{flexDirection:'row',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
+          <View style = {{flexDirection:'row',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
               <TextInput style = {{width:wp('78%'),color:'#909090', height:hp('7%'), fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(5)}}
                          placeholder = {'Email'}
                          placeholderTextColor = "#909090"
@@ -228,7 +230,7 @@ updateInfo() {
           </View>
 
 
-          <View style = {{flexDirection:'row',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
+          <View style = {{flexDirection:'row',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
         <PhoneInput style={{width:wp('75%'), height:hp('7%'), color:'#909090',marginLeft:wp('4%')}}
           ref={ref => {
             this.phone = ref;
@@ -258,7 +260,7 @@ updateInfo() {
           </View>
 
 
-{/*          <View style = {{flexDirection:'column',marginTop:hp('4%'),justifyContent:'center',width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
+{/*          <View style = {{flexDirection:'column',marginTop:hp('4%'),justifyContent:'center',width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
           <DatePicker
             style={{width: 200,}}
             date={this.state.date}
@@ -356,8 +358,8 @@ updateInfo() {
                          value={this.state.pob}
               />
 */}
-          <View style = {{flexDirection:'row',justifyContent:'space-between',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:30, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
-              <TextInput style = {{width:wp('60%'),color:'#909090', height:hp('7%'), fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(5)}}
+          <View style = {{flexDirection:'row',justifyContent:'space-between',marginTop:hp('4%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
+              <TextInput style = {{width:wp('60%'),color:'#909090', height:hp('7%'), fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(5),}}
                          placeholder = {'Referral Code (if any)'}
                          placeholderTextColor = "#909090"
                          autoCapitalize = "none"
@@ -376,26 +378,31 @@ updateInfo() {
 
 
 
-          <TouchableOpacity style={{width:wp('24%'),borderRadius:50, marginTop:hp('5%'),marginRight:wp('9%'),
-           backgroundColor:'#E60000',height:hp('7%'),alignSelf:'flex-end',marginRight:wp('9%')}}
+          <TouchableOpacity style={{width:wp('82%'),borderRadius:5, marginTop:hp('5%'),
+           backgroundColor:'#E60000',height:hp('7%'),alignSelf:'center',marginRight:wp('2%')}}
            onPress={this._handlePressSignup}>
           
-          <View style={{width:wp('24%'), height:hp('7%'), justifyContent:'center',}}>
-          <Image style={{width:wp(40), height:hp(3.5), resizeMode:'contain',alignSelf:'center'}} source={require('./resources/rightArrow.png')}
-          />
+          <View style={{width:'100%', height:hp('7%'), justifyContent:'center',alignItems:'center'}}>
+          <Text style = {{color:'white',fontSize: 18,fontFamily:'Nunito-ExtraBold',
+          alignSelf:'center'}}>
+          Signup
+          </Text>
           </View>
-          
           </TouchableOpacity>
 
 
          </View>
 
-        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('10%'), marginBottom:hp('2%')}}
+        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('18%'), marginBottom:hp('2%')}}
         onPress={()=> this.props.navigation.navigate('Login')}>
         <View style={{width:wp('100%'),  alignSelf:'center', alignItems:'center',}}>
-        <Text style = {{width:wp('90%'),color:'white',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular'}}>
-        Already have an account? Login Now
+        <Text style = {{width:wp('90%'),color:'black',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular'}}>
+        Already have an account? 
+        <Text style = {{color:'#E60000',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular', textDecorationLine:'underline'}}>
+        {' '}Login Now
         </Text>
+        </Text>
+
         </View>
         </TouchableOpacity>
 
@@ -406,7 +413,7 @@ updateInfo() {
          </KeyboardAwareScrollView>
 
 
-         </ImageBackground>
+
 
       </View>
     );
@@ -416,6 +423,7 @@ updateInfo() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'white'
   },
   welcome: {
     fontSize: 20,

@@ -14,6 +14,8 @@ import VarshaphalPlanets from './YearlyPredComponents/VarshaphalPlanets'
 import PanchvargiyaBala from './YearlyPredComponents/PanchvargiyaBala'
 import HarshaBala from './YearlyPredComponents/HarshaBala'
 import SahamPoints from './YearlyPredComponents/SahamPoints'
+import VarshaphalCharts from './YearlyPredComponents/VarshaphalCharts'
+import LinearGradient from 'react-native-linear-gradient';
 
 export default class YearlyPrediction extends Component<Props> {
 
@@ -30,9 +32,9 @@ export default class YearlyPrediction extends Component<Props> {
             renderIndex:0,
             routes: [
                 { key: 'first', title: 'Varshaphal Details' },
-                { key: 'second', title: 'Varshaphal Charts' },
+               { key: 'second', title: 'Varshaphal Charts' },
                 { key: 'third', title: 'Varshaphal Planets' },
-                { key: 'fourth', title: 'Varshaphal Monthly Charts' },
+  //              { key: 'fourth', title: 'Varshaphal Monthly Charts' },
                 { key: 'fifth', title: 'Panchvargiya Bala' },
                 { key: 'sixth', title: 'Harsha Bala' },
                 { key: 'seventh', title: 'Saham Points' },
@@ -44,7 +46,7 @@ export default class YearlyPrediction extends Component<Props> {
 
     }
 
-    _keyExtractor = (item, index) => item.productID;
+
 
     _renderScene = ({ route }) => {
 //          console.log(route.key)
@@ -188,7 +190,7 @@ console.log('Parent render')
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -257,8 +259,8 @@ class VarshaphalDetails extends Component{
   }
 
   getDetails=(sel_year)=>{
-    //  console.log({"user_id":GLOBAL.user_id,"lang":"en","date":GLOBAL.gldate,"month":GLOBAL.glmonth,"year":GLOBAL.glyear,"hour":GLOBAL.glhour,
-      //      "minute":GLOBAL.glminute,"latitude":GLOBAL.gllat,"longitude":GLOBAL.gllong,"timezone":GLOBAL.glzone,"api-condition":"varshaphal_details","varshaphal_year": sel_year})
+     console.log({"user_id":GLOBAL.user_id,"lang":"en","date":GLOBAL.gldate,"month":GLOBAL.glmonth,"year":GLOBAL.glyear,"hour":GLOBAL.glhour,
+           "minute":GLOBAL.glminute,"latitude":GLOBAL.gllat,"longitude":GLOBAL.gllong,"timezone":GLOBAL.glzone,"api-condition":"varshaphal_details","varshaphal_year": sel_year})
  //     this.showLoading()
         const url = GLOBAL.ASTRO_API_BASE_URL
 
@@ -269,7 +271,7 @@ class VarshaphalDetails extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -310,8 +312,8 @@ class VarshaphalDetails extends Component{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:21,marginTop:5}}>What is Varshphal?</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:21,marginTop:5, alignSelf:'center'}}>What is Varshphal?</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>The Varshaphal or Vedic Solar Return system makes
     a progressed yearly kundali for you. The Varshaphala predicts how the your year is going to be.
     This is also known as birthday forecase as it is mainly from one birthday to next birthday.</Text>
@@ -333,7 +335,7 @@ class VarshaphalDetails extends Component{
 
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'center'}}>
+    <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(6.5), justifyContent:'center'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:19, color:'white', marginLeft:wp(3)}}>Basic Details</Text>
     </View>
 
@@ -363,54 +365,63 @@ class VarshaphalDetails extends Component{
     value={data.varshaphala_date}/>
 
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6), justifyContent:'center', marginTop:30}}>
+    <View style={{width:wp(100), backgroundColor:'#E60000', height:hp(6), justifyContent:'center', marginTop:30}}>
     <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:19, color:'white', marginLeft:wp(3)}}>Panchadhikari (Five Planets)</Text>
     </View>
 
     <View style={{flexDirection:'row', width:'100%', marginTop:10,}}>
 
-    <DataBlocks customStyle={{width:'48%', backgroundColor:'#fff5d2'}}
+    <DataBlocks customStyle={{width:'98.5%',}}
+    colorsArray={['#41c6c2','#e8edca']}
     block_title={'Muntha Lord (Progressed Lord)'}
     block_value={panch_data.muntha_lord}
     />
 
 
-    <DataBlocks customStyle ={{width:'48%', backgroundColor: '#daebff',}}
+
+    </View>
+
+    <DataBlocks customStyle ={{width:'98.5%',}}
+    colorsArray={['#123865', '#dfdede']}
     block_title={'Birth Ascendant Lord'}
     block_value={panch_data.birth_ascendant_lord}
     />
 
-    </View>
+    <View style={{flexDirection:'row', width:'98.5%', marginTop:0,}}>
 
-    <View style={{flexDirection:'row', width:'100%', marginTop:0,}}>
-
-    <DataBlocks customStyle ={{width:'31.5%', backgroundColor: '#ffe2e4',}}
+    <DataBlocks customStyle ={{width:'100%', }}
+    colorsArray={['#9c0074','#ffd0bb']}
     block_title={'Year Ascendant Lord'}
     block_value={panch_data.year_ascendant_lord}
     />
-    <DataBlocks customStyle ={{width:'31.5%', backgroundColor: '#e2fbe5',}}
+
+    </View>
+
+    <DataBlocks customStyle ={{width:'98.5%', }}
+    colorsArray={['#ff866d','#ffd0bb']}
     block_title={'Dinratri Lord'}
     block_value={panch_data.dinratri_lord}
     />
-    <DataBlocks customStyle ={{width:'31.5%', backgroundColor: '#e4e1fe',}}
+    <DataBlocks customStyle ={{width:'98.5%', }}
+    colorsArray={['#3d0984','#ef9a9a']}
     block_title={'Trirashi Lord'}
     block_value={panch_data.trirashi_lord}
     />
 
-    </View>
-
-    <View style={{flexDirection:'row', width:'100%', marginTop:0,}}>
-    <DataBlocks customStyle ={{width:'48%', backgroundColor: '#f1defe',}}
+    <View style={{flexDirection:'row', width:'98.5%', marginTop:0,}}>
+    <DataBlocks customStyle ={{width:'100%',}}
+    colorsArray={['#014061', '#c1b7af']}
     block_title={'Varshphal Year Lord'}
     block_value={data.varshaphala_year_lord}
     />
 
-    <DataBlocks customStyle ={{width:'48%', backgroundColor: '#fed9e1',}}
+    </View>
+
+    <DataBlocks customStyle ={{width:'98.5%',}}
+    colorsArray={['#9a3439','#ffe791']}
     block_title={'Varshaphal Muntha'}
     block_value={muntha_data.muntha_sign}
     />
-
-    </View>
 
 
     </ScrollView>
@@ -419,36 +430,6 @@ class VarshaphalDetails extends Component{
   }
  
 }
-
-
-class VarshaphalCharts extends Component{
-  componentDidMount(){
-//      this.setState({ads:'asd'})
-
-  }
-  render(){
-
-  return(
-    <View style={{width: wp(100), flex:1}}>  
-
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Varshphal Charts</Text>
-    <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>The Varshaphal kundali is the chart for
-    the exact time when Sun is at the same degree as in your natal birth chart.
-    This is called Year Kundli as well.</Text>
-
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:20}}>Year Chart</Text>
-
-      
-
-    </View>
-    </View>
-  )   
-  }
- 
-}
-
-
 
 class DataColumn extends Component{
   render(){
@@ -469,11 +450,14 @@ class DataColumn extends Component{
 class DataBlocks extends Component{
   render(){
     return(
-    <View style={[{height:hp(15), margin:4,marginLeft:3, alignItems:'center', justifyContent:'center'}
+    <LinearGradient 
+    colors={this.props.colorsArray}
+    start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+    style={[{height:hp(10), margin:4,marginLeft:3, alignItems:'center', justifyContent:'center'}
     ,...[this.props.customStyle]]}>
-    <Text style={{fontSize:16, color:'#595959', textAlign:'center',width:'75%', fontFamily:'Nunito-SemiBold'}}>{this.props.block_title}</Text>   
-    <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:20,marginTop:5}}>{this.props.block_value}</Text>
-    </View>      
+    <Text style={{fontSize:16, color:'white', textAlign:'center',width:'75%', fontFamily:'Nunito-SemiBold'}}>{this.props.block_title}</Text>   
+    <Text style={{fontFamily:'Nunito-ExtraBold',color:'white', fontSize:20,marginTop:5}}>{this.props.block_value}</Text>
+    </LinearGradient>      
     )
   }
 }

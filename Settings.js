@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage, Text, View,FlatList,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
-const windowW= Dimensions.get('window').width
-const windowH = Dimensions.get('window').height
+import {StyleSheet,Text, View,FlatList,Image,ToastAndroid,TouchableOpacity ,Alert,Container,Linking , Dimensions} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from 'react-native-button';
 import Header from 'react-native-custom-headers';
@@ -10,10 +8,10 @@ const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ToggleSwitch from 'toggle-switch-react-native'
 import {NavigationActions,StackActions} from 'react-navigation';
+import { Dialog, DialogContent, DialogComponent, DialogTitle,DialogButton,SlideAnimation } from 'react-native-dialog-component';
+import IndicatorCustom from './IndicatorCustom'
 
-
-type Props = {};
-class Settings extends Component<Props> {
+class Settings extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -22,13 +20,91 @@ class Settings extends Component<Props> {
     }
 
     constructor(props){
+        var getLang=''
+        var getChartStyle=''
+        if(GLOBAL.glLanguage == 'hi'){
+            getLang ='Hindi'
+        }else if(GLOBAL.glLanguage == 'en'){
+            getLang='English'
+        }else if(GLOBAL.glLanguage == 'nn'){
+            getLang='Bengali'
+        }else if(GLOBAL.glLanguage == 'ma'){
+            getLang='Marathi'
+        }else if(GLOBAL.glLanguage == 'ta'){
+            getLang='Tamil'
+        }else if(GLOBAL.glLanguage == 'te'){
+            getLang='Telgu'
+        }else if(GLOBAL.glLanguage == 'ml'){
+            getLang='Malyalam'
+        }else if(GLOBAL.glLanguage == 'kn'){
+            getLang='Kannada'
+        }
+
+        GLOBAL.glChartStyle=='south'? getChartStyle='South': getChartStyle='North'
+
         super(props)
         const { navigation } = this.props;
         this.state = {
-            istoggle:false
+            istoggle:false,
+            visible:false,
+            langName:getLang,
+            chartStyleName:getChartStyle,
+            langs:[{
+                id:'1',
+                l_name:'Hindi',
+                l_code:'hi',
+            },
+            {
+                id:'2',
+                l_name:'English',
+                l_code:'en',
+            },
+            {
+                id:'3',
+                l_name:'Bengali',
+                l_code:'bn',
+            },
+            {
+                id:'4',
+                l_name:'Marathi',
+                l_code:'ma',
+            },
+            {
+                id:'5',
+                l_name:'Tamil',
+                l_code:'ta',
+            },
+            {
+                id:'6',
+                l_name:'Telgu',
+                l_code:'te',
+            },
+            {
+                id:'7',
+                l_name:'Malyalam',
+                l_code:'ml',
+            },
+            {
+                id:'8',
+                l_name:'Kannada',
+                l_code:'kn',
+            },
+            ],
+            chartStyles:[
+            {
+                id:'1',
+                chart_name:'North',
+                chart_key:'north'
+            },
+            {
+                id:'2',
+                chart_name:'South',
+                chart_key:'south'
+            }
+            ]
         }
     }
-    _keyExtractor = (item, index) => item.productID;
+
 
 
 
@@ -110,21 +186,141 @@ class Settings extends Component<Props> {
 
     }
 
+   async setLang(langItem){
+    const url = GLOBAL.BASE_URL + "update_user_configuration";
+    //  this.showLoading()
+   await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: GLOBAL.user_id,
+        for: 'language',
+        value: langItem.l_code
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        //       this.hideLoading()
+          console.log(JSON.stringify(responseJson))
+        if (responseJson.status == true) {
+
+            ToastAndroid.showWithGravity(
+              'Language changed successfully!',
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
+               50, 100,              
+            );
+           this.setState({langName : langItem.l_name})
+
+        } else {
+
+            alert("Something went wrong");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    }
+
+    selectLang=(item, index)=>{
+        this.setLang(item)
+
+        this.dialogComponents.dismiss()
+    }
+
+  _renderItems=({item, index})=>{
+    return(
+      <TouchableOpacity 
+      style={{width:'100%',margin:5,marginLeft:0, marginTop:hp(1), marginBottom:5}}
+      onPress={()=> this.selectLang(item, index)}>
+    <View style={{width: '100%',  flexDirection:'row', justifyContent:'space-between'
+    ,borderBottomColor:'#bfbfbf', borderBottomRadius:0, borderBottomWidth:1, }}>
+    <View style={{flexDirection:'column', width:'83%',  margin:8, marginLeft:15}}>
+    <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:19,marginTop:0,}}>{item.l_name}</Text>
+    <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'grey', }}>
+    {item.des}</Text>
+    </View>       
+    </View>       
+    </TouchableOpacity>
+      )
+  }
+
+
+   async setChartStyle(chartItem){
+    const url = GLOBAL.BASE_URL + "update_user_configuration";
+    //  this.showLoading()
+   await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: GLOBAL.user_id,
+        for: 'direction',
+        value: chartItem.chart_key
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        //       this.hideLoading()
+          console.log(JSON.stringify(responseJson))
+        if (responseJson.status == true) {
+
+            ToastAndroid.showWithGravity(
+              'Chart style changed successfully!',
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
+               50, 100,              
+            );
+           this.setState({chartStyleName : chartItem.chart_name})
+
+        } else {
+
+            alert("Something went wrong");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    }
+
+
+    selectChart=(item, index)=>{
+        this.setChartStyle(item)
+
+        this.dialogComponent.dismiss()
+    }
+
+  _renderItemss=({item, index})=>{
+    return(
+      <TouchableOpacity 
+      style={{width:'100%',margin:5,marginLeft:0, marginTop:hp(1), marginBottom:5}}
+      onPress={()=> this.selectChart(item, index)}>
+    <View style={{width: '100%',  flexDirection:'row', justifyContent:'space-between'
+    ,borderBottomColor:'#bfbfbf', borderBottomRadius:0, borderBottomWidth:1, }}>
+    <View style={{flexDirection:'column', width:'83%',  margin:8, marginLeft:15}}>
+    <Text style={{fontFamily:'Nunito-ExtraBold', fontSize:19,marginTop:0,}}>{item.chart_name}</Text>
+    <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'grey', }}>
+    {item.des}</Text>
+    </View>       
+    </View>       
+    </TouchableOpacity>
+      )
+  }
 
     render() {
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-
-                                       size={50} color="#E9128B" />
-
-                </View>
+                <IndicatorCustom/>
             )
         }
         return (
 
-        <View style={{flex:1, flexDirection:'column'}}>
+        <View style={{ flexDirection:'column'}}>
 
          <Header navigation={this.props.navigation}
                        showHeaderImage={false}
@@ -133,8 +329,42 @@ class Settings extends Component<Props> {
                        headerName={'SETTINGS'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-        <View style={{width:wp(91), height:hp(30) ,backgroundColor:'white',flexDirection:'column',
+        <View style={{width:wp(100), height:hp(100) ,backgroundColor:'white',flexDirection:'column',
+        alignSelf:'center'}}>
+
+        <View style={{width:wp(91), height:hp(40) ,backgroundColor:'white',flexDirection:'column',
         marginTop:hp(3), borderRadius:7, elevation:5, alignSelf:'center'}}>
+
+        <TouchableOpacity
+        onPress={()=> this.dialogComponents.show()}>
+        <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
+        <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
+        <Image style={{width:wp(6), height:hp(4), resizeMode:'contain'}}
+        source={require('./resources/lan.png')}/>
+        <Text style={{fontSize:15,color:'black',marginLeft:wp(4),fontFamily:'Nunito-SemiBold', alignSelf:'center'}}>Language ({this.state.langName})</Text>
+        </View>
+        <Image style={{marginRight:wp(4), width:18, height:18, resizeMode:'contain'}} source={require('./resources/right.png')}/>
+        </View>
+        <View
+        style={{borderBottomColor: 'rgba(0,0,0,.1)',borderBottomWidth: 1, marginTop:12, width:'90%', alignSelf:'center'}}>
+        </View>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity
+        onPress={()=> this.dialogComponent.show()}>
+        <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
+        <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
+        <Image style={{width:wp(6), height:hp(4), resizeMode:'contain'}}
+        source={require('./resources/chart.png')}/>
+        <Text style={{fontSize:15,color:'black',marginLeft:wp(4),fontFamily:'Nunito-SemiBold', alignSelf:'center'}}>Chart Style ({this.state.chartStyleName})</Text>
+        </View>
+        <Image style={{marginRight:wp(4), width:18, height:18, resizeMode:'contain'}} source={require('./resources/right.png')}/>
+        </View>
+        <View
+        style={{borderBottomColor: 'rgba(0,0,0,.1)',borderBottomWidth: 1, marginTop:12, width:'90%', alignSelf:'center'}}>
+        </View>
+        </TouchableOpacity>
 
         <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
         <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
@@ -200,10 +430,66 @@ class Settings extends Component<Props> {
         style={{borderBottomColor: 'rgba(0,0,0,.1)',borderBottomWidth: 1, marginTop:12, width:'90%', alignSelf:'center'}}>
         </View>
         </TouchableOpacity>
+    </View>
 
-                </View>
 
-            </View>
+        </View>
+    <DialogComponent
+        dialogStyle = {{backgroundColor:'transparent',}}
+        dismissOnTouchOutside={true}
+        dismissOnHardwareBackPress={true}
+        width={wp(80)}
+        height={hp(50)}
+        dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }        
+        dialogStyle={{width:wp(80), height:hp(50),borderRadius:5,}}
+        ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+      <DialogContent>
+
+    <View style={{flexDirection:'column', width:wp(80),alignSelf:'center'
+    ,backgroundColor:'white', height:hp(50),borderRadius:5, }}>
+
+      <FlatList data={this.state.langs}
+      renderItem={this._renderItems}
+      keyExtractor = { (item, index) => index.toString() }      
+      extraData={this.state}/>
+    <DialogButton text="DISMISS" align="center" textStyle ={{color:'red'}}
+    activeOpacity={0.99}
+    onPress={()=>{this.dialogComponents.dismiss()}}/>
+    </View>
+
+    </DialogContent>
+    </DialogComponent>
+
+
+    <DialogComponent
+        dialogStyle = {{backgroundColor:'transparent',}}
+        dismissOnTouchOutside={true}
+        dismissOnHardwareBackPress={true}
+        width={wp(80)}
+        height={hp(30)}
+        dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }        
+        dialogStyle={{width:wp(80), height:hp(30),borderRadius:5,}}
+        ref={(dialogComponent) => { this.dialogComponent = dialogComponent; }}>
+
+      <DialogContent>
+
+    <View style={{flexDirection:'column', width:wp(80),alignSelf:'center'
+    ,backgroundColor:'white', height:hp(30),borderRadius:5, }}>
+
+      <FlatList data={this.state.chartStyles}
+      renderItem={this._renderItemss}
+      keyExtractor = { (item, index) => index.toString() }      
+      extraData={this.state}/>
+    <DialogButton text="DISMISS" align="center" textStyle ={{color:'red'}}
+    activeOpacity={0.99}
+    onPress={()=>{this.dialogComponent.dismiss()}}/>
+    </View>
+
+    </DialogContent>
+    </DialogComponent>
+
+        </View>
         );
     }
 }

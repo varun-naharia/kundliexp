@@ -46,9 +46,6 @@ export default class PanchangDetails extends Component<Props> {
         }
     }
 
-    _keyExtractor = (item, index) => item.productID;
-
-
 
     showLoading() {
         this.setState({loading: true})
@@ -71,7 +68,8 @@ export default class PanchangDetails extends Component<Props> {
       this.showLoading()
         console.log({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lat_long_address": GLOBAL.glLocationName,            
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -93,7 +91,8 @@ export default class PanchangDetails extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lat_long_address": GLOBAL.glLocationName,
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,

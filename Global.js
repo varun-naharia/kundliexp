@@ -19,6 +19,10 @@ module.exports = {
 
     opentok_api_key:'46593922',
 
+    isSavedKundli:'0',
+    savedKundliDetails:{},
+    glLanguage:'en',
+    glChartStyle:'north',
     gldate:'',
     glmonth:'',
     glyear:'',
@@ -46,7 +50,7 @@ module.exports = {
     prodDetails:'',
     catDetails:'',
     all_settings:'',
-    userDetails:'',
+    userDetails:{},
     addressId:'',
 
 

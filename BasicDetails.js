@@ -55,7 +55,7 @@ export default class BasicDetails extends Component<Props> {
     getBasicDetails= () =>{
       console.log({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -79,7 +79,8 @@ export default class BasicDetails extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lat_long_address": GLOBAL.glLocationName,
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -97,9 +98,7 @@ export default class BasicDetails extends Component<Props> {
                 if (responseJson.status == true) {
               this.setState({response: responseJson },() => {
                   //    alert('gdsd'+JSON.stringify(this.state.response));
-                  });                
-                 // this.props.navigation.navigate('KundliList')
-                  
+                  });                  
                 }else{
 
                 }

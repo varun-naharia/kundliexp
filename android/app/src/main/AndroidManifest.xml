@@ -30,6 +30,7 @@
       android:allowBackup="false"
         android:usesCleartextTraffic="true"
       android:theme="@style/AppTheme"
+        android:screenOrientation="portrait"
         tools:ignore="GoogleAppIndexingWarning">
       <activity
         android:name=".MainActivity"

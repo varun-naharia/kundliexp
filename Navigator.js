@@ -81,6 +81,14 @@ import GandMool from './GandMool'
 import KundliListNew from './KundliListNew'
 import YearlyPrediction from './YearlyPrediction'
 import KpSystem from './KpSystem'
+import RahuKalam from './RahuKalam'
+import ViewPdf from './ViewPdf'
+import PdfYours from './PdfYours'
+import PdfYoursIn from './PdfYoursIn'
+import DailyPanchang from './DailyPanchang'
+import RudrakshSuggestion from './RudrakshSuggestion'
+import LifeReports from './LifeReports'
+import MatchMakingExtra from './MatchMakingExtra'
 
 import React, {Component} from 'react';
 
@@ -190,7 +198,15 @@ const StackNavigator = createStackNavigator({
         GandMool:{screen:GandMool},
         KundliListNew:{screen:KundliListNew},
         YearlyPrediction:{screen:YearlyPrediction},
-        KpSystem:{screen:KpSystem}
+        KpSystem:{screen:KpSystem},
+        RahuKalam:{screen:RahuKalam},
+        ViewPdf:{screen:ViewPdf},
+        PdfYours:{screen:PdfYours},
+        PdfYoursIn:{screen:PdfYoursIn},
+        DailyPanchang:{screen:DailyPanchang},
+        RudrakshSuggestion:{screen:RudrakshSuggestion},
+        LifeReports:{screen:LifeReports},
+        MatchMakingExtra:{screen:MatchMakingExtra}
     },
 
     {headerMode :'none'},

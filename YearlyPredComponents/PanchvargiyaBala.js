@@ -49,7 +49,7 @@ export default class PanchvargiyaBala extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -108,7 +108,7 @@ export default class PanchvargiyaBala extends Component{
   }
 
   render(){
-    console.log('render PanchvargiyaBala')
+   // console.log('render PanchvargiyaBala')
 //       console.log(JSON.stringify(this.props.response))
     var first = this.state.kshetra_bala.map(id =>{
       var str= id.toString()
@@ -184,8 +184,8 @@ export default class PanchvargiyaBala extends Component{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Panchvargiya Bala</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Panchvargiya Bala</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>Of the various methods of computing
     the strength of planets in an annual chart, the method of Panchvargiya Bala is of primary importance.
     In this method, five different sources of strength of planets are considered, hence the same Panchvargiya, 
@@ -193,7 +193,7 @@ export default class PanchvargiyaBala extends Component{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#e60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'18%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(0.5), textAlign:'left'}}>Bala</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'9%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Su</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'9%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Mo</Text>

@@ -24,11 +24,14 @@ class MatchMaking extends Component<Props> {
     constructor(props){
         super(props)
         const { navigation } = this.props;
+        var decTitle=''      
+        navigation.state.params.matchReportType=='horo_match'? decTitle = 'HOROSCOPE MATCHING': decTitle ='MATCH MAKING'
+
         this.state = {
             istoggle:false,
             b_name:'',
             f_name:'',
-
+            decTitle: decTitle
         }
     }
 
@@ -56,6 +59,7 @@ class MatchMaking extends Component<Props> {
 
 
     buttonClickListener=()=>{
+      console.log(this.props.navigation.state.params)
 
         var d = new Date(this.state.date)
         var mDate = d.getDate()
@@ -87,19 +91,43 @@ class MatchMaking extends Component<Props> {
         var fMin = ft.getUTCMinutes()
         console.warn('fhour '+fHour +'fmin' +fMin)
 
-
+      if(this.props.navigation.state.params.matchReportType == 'horo_match'){
         const url = GLOBAL.ASTRO_API_BASE_URL
+
+        console.log(JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":GLOBAL.glLanguage,
+            "b_name": this.state.name,
+            "f_name": this.state.names,
+            "m_date": mDate,
+            "m_month": mMon,
+            "m_year": mYear,
+            "m_hour": mHour,
+            "m_minute": mMin,
+            "m_latitude": this.state.m_lat,
+            "m_longitude": this.state.m_lon,
+            "m_timezone":GLOBAL.glzone,
+
+            "f_date": fDate,
+            "f_month": fMon,
+            "f_year": fYear,
+            "f_hour": fHour,
+            "f_minute": fMin,
+            "f_latitude": this.state.f_lat,
+            "f_longitude": this.state.f_lon,
+            "f_timezone":GLOBAL.glzone,
+
+            "api-condition":"match_ashtakoot_points"
+            }))
 
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-
-
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "b_name": this.state.name,
             "f_name": this.state.names,
             "m_date": mDate,
@@ -140,6 +168,31 @@ class MatchMaking extends Component<Props> {
                 this.hideLoading()
             });
 
+      }
+      else{
+        var matchData={
+          "boy_name": this.state.name,
+          "girl_name": this.state.names,
+          "m_date" : mDate,
+          "m_month" : mMon,
+          "m_year" : mYear,
+          "m_hour" : mHour,
+          "m_minute" : mMin,
+          "m_latitude" : this.state.m_lat,
+          "m_longitude" : this.state.m_lon,
+          "m_timezone" : GLOBAL.glzone,          
+
+          "f_date" : fDate,
+          "f_month" : fMon,
+          "f_year" : fYear,
+          "f_hour" : fHour,
+          "f_minute" : fMin,
+          "f_latitude" : this.state.f_lat,
+          "f_longitude" : this.state.f_lon,
+          "f_timezone" : GLOBAL.glzone
+        }
+           this.props.navigation.navigate('MatchMakingExtra', { wholeMatchData: matchData })
+      }
     }
 
 
@@ -167,7 +220,7 @@ class MatchMaking extends Component<Props> {
                        showHeaderImage={false}
                        headerColor ={'#E60000'}
                        backImagePath={require('./resources/back.png')}
-                       headerName={'MATCH MATCHING'}
+                       headerName={this.state.decTitle}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
 
@@ -409,7 +462,7 @@ class MatchMaking extends Component<Props> {
 
             <Button
             containerStyle={{width:wp('70%'),padding:16, height:hp(7.5), overflow:'hidden', borderRadius:40,
-             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(8), marginBottom:hp(3)}}
+             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(6), marginBottom:hp(3)}}
             style={{fontSize: 18, color: 'white', alignSelf: 'center', fontFamily:'Nunito-Bold'}}
             onPress={this.buttonClickListener}
             >

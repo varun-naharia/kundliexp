@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {StyleSheet,ScrollView, Text, View,FlatList,Image,TouchableOpacity ,Container,TextInput , Dimensions} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from 'react-native-button';
 import Header from 'react-native-custom-headers';
@@ -95,7 +95,7 @@ buttonClickListener=()=>{
 
       console.log('---->'+JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "name": this.state.name,
             "date": date,
             "month": month,
@@ -114,7 +114,7 @@ buttonClickListener=()=>{
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "name": this.state.name,
             "date": date,
             "month": month,
@@ -153,6 +153,13 @@ buttonClickListener=()=>{
 
 
     render() {
+      var title=''
+      if(GLOBAL.isDailyPres=='2'){
+        title='DAILY PREDICTION'
+      }else{
+        title = 'NUMEROLOGY FORM'
+      }
+
 
         return (
 
@@ -161,7 +168,7 @@ buttonClickListener=()=>{
            showHeaderImage={false}
            headerColor ={'#E60000'}
            backImagePath={require('./resources/back.png')}
-           headerName={'NUMEROLOGY FORM'}
+           headerName={title}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
           <KeyboardAwareScrollView>

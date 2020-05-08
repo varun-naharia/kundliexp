@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
-const windowW= Dimensions.get('window').width
-const windowH = Dimensions.get('window').height
+import {StyleSheet,ScrollView, Text, View,FlatList,Image,TouchableOpacity ,Container, Dimensions} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from 'react-native-button';
 import Header from 'react-native-custom-headers';
@@ -9,11 +7,10 @@ import moment from 'moment';
 const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-type Props = {};
-
 import IndicatorCustom from './IndicatorCustom.js';
+import AutoHeightWebView from 'react-native-autoheight-webview'
 
-export default class LalKitab extends Component<Props> {
+export default class LalKitab extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -33,6 +30,9 @@ export default class LalKitab extends Component<Props> {
             debts:[],
             planets:[],          
             renderIndex:0,
+            getChartHtml:``,
+            houses:[],
+            planetss:[],
             categories:[ 
                 {"key": "0",
                  "name": "Lal Kitab",
@@ -42,14 +42,23 @@ export default class LalKitab extends Component<Props> {
                  "name": "Debt",
                  "is_selected":"0",
                 },
+                {"key": "2",
+                 "name": "Chart",
+                 "is_selected":"0",
+                },
+                {"key": "3",
+                 "name": "Houses",
+                 "is_selected":"0",
+                },
+                {"key": "4",
+                 "name": "Planets",
+                 "is_selected":"0",
+                },
               ],
 
         }
 
     }
-
-    _keyExtractor = (item, index) => item.productID;
-
 
 
     showLoading() {
@@ -63,31 +72,14 @@ export default class LalKitab extends Component<Props> {
 
 
     componentDidMount(){
-
-//        this.props.navigation.addListener('willFocus',this._handleStateChange);
-
     this.getLalKitab()
-
-    // console.log(this.props.navigation.state.params)
-    // var navigation = this.props.navigation.state.params
-    // this.setState({getResponse : navigation.matchMakingResponse})
-    // this.setState({ points: navigation.matchMakingResponse.total})
     }
 
     getLalKitab= () =>{
 //    this.showLoading()
-        const url = GLOBAL.ASTRO_API_BASE_URL
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-
-
-            body: JSON.stringify({
+      console.log(JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -97,11 +89,33 @@ export default class LalKitab extends Component<Props> {
             "longitude":GLOBAL.gllong,
             "timezone":GLOBAL.glzone,
             "api-condition":"lalkitab_horoscope",
+            }))
+
+        const url = GLOBAL.ASTRO_API_BASE_URL
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":GLOBAL.glLanguage,
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"lalkitab_horoscope",
+            "chartType":GLOBAL.glChartStyle
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
   //              this.hideLoading()
-              console.log(JSON.stringify(responseJson))
+              // console.log(JSON.stringify(responseJson))
                 if (responseJson.status == true) {
 
                      this.setState({
@@ -149,7 +163,143 @@ export default class LalKitab extends Component<Props> {
 
 
         this.setState({categories:this.state.categories})
-        this.getLalkitabdebt(indexs)
+        if(indexs == 1){
+        this.getLalkitabdebt(indexs)          
+        }else if(indexs == 2){
+          this.getLalkitabChart()
+        }else if(indexs == 3){
+          this.getLalkitabHouses()
+        }else if(indexs == 4){
+          this.getLalkitabPlanets()
+        }
+    }
+
+
+    getLalkitabPlanets=()=>{
+        const url = GLOBAL.ASTRO_API_BASE_URL
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+
+            body: JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":GLOBAL.glLanguage,
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"lalkitab_planets",
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+  //              this.hideLoading()
+              console.log(JSON.stringify(responseJson))
+                if (responseJson.status == true) {
+
+                     this.setState({
+                      planetss : responseJson.responseData,
+                  })
+
+                }else{
+
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+    //            this.hideLoading()
+            });
+
+
+    }
+
+    getLalkitabHouses=()=>{
+        const url = GLOBAL.ASTRO_API_BASE_URL
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+
+            body: JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lang":GLOBAL.glLanguage,
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"lalkitab_houses",
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+  //              this.hideLoading()
+              // console.log(JSON.stringify(responseJson))
+                if (responseJson.status == true) {
+
+                     this.setState({
+                      houses : responseJson.responseData,
+                  })
+
+                }else{
+
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+    //            this.hideLoading()
+            });
+
+
+    }
+
+
+
+    getLalkitabChart=(indexs) =>{
+
+            const url = 'http://139.59.76.223/kundali_expert/astrology_api/laalkitaab_chart';
+            const data = new FormData();
+            data.append('user_id', GLOBAL.user_id);
+            data.append('lang', GLOBAL.glLanguage);
+            data.append('date', GLOBAL.gldate);
+            data.append('month', GLOBAL.glmonth); 
+            data.append('year', GLOBAL.glyear);
+            data.append('hour', GLOBAL.glhour);
+            data.append('minute', GLOBAL.glminute);
+            data.append('latitude', GLOBAL.gllat);
+            data.append('longitude', GLOBAL.gllong);
+            data.append('timezone', GLOBAL.glzone);
+            data.append('width', window.width);
+            data.append('chartType', GLOBAL.glChartStyle )
+            // console.log(data)
+            fetch(url, {
+            method: 'post',
+            body: data,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+
+            }).then((response) => response.text())
+                .then((text) => {
+                 this.hideLoading()
+ //                  console.log(text)
+                   this.setState({getChartHtml: text})
+
+                });
+
+
     }
 
 
@@ -166,7 +316,7 @@ export default class LalKitab extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -180,7 +330,7 @@ export default class LalKitab extends Component<Props> {
         }).then((response) => response.json())
             .then((responseJson) => {
   //              this.hideLoading()
-              console.log(JSON.stringify(responseJson))
+              // console.log(JSON.stringify(responseJson))
                 if (responseJson.status == true) {
 
                      this.setState({
@@ -224,9 +374,69 @@ export default class LalKitab extends Component<Props> {
         )      
     }
 
-    _renderPlanets=(item, index)=>{
-//      console.log(JSON.stringify(item))
+_renderPlanetss=({item, index})=>{
+    var dec_color, dec_p_color
+    if(index%2==0){
+      dec_color = '#fce8d8'
+      dec_p_color = '#e91e63'
+    }else{
+      dec_color = '#f2eeb3' 
+      dec_p_color = '#4caf50'
+    }
 
+    var soya_str =''
+    if(item.soya){
+      soya_str = 'Yes'
+    }else{
+      soya_str = 'No'
+    }
+
+    return(
+      <>
+    <View style={{width:wp(100), backgroundColor:dec_color, height:hp(6), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <Text style={{fontFamily:'Nunito-Regular',width:'20%',backgroundColor:'transparent', fontSize:16, color:'black', marginLeft:wp(1.5), textAlign:'left'}}>{item.planet}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'20%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left'}}>{item.rashi}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'15%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left' }}>{soya_str}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'20%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left'}}>{item.nature}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'25%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left', marginRight:wp(6)}}>{item.position}</Text>
+    </View>
+      </>
+      )
+  }
+
+
+    _renderHouses=({item, index})=>{
+    var dec_color, dec_p_color
+    if(index%2==0){
+      dec_color = '#fce8d8'
+      dec_p_color = '#e91e63'
+    }else{
+      dec_color = '#f2eeb3' 
+      dec_p_color = '#4caf50'
+    }
+
+    var soya_str =''
+    if(item.soya){
+      soya_str = 'Yes'
+    }else{
+      soya_str = 'No'
+    }
+
+    return(
+      <>
+    <View style={{width:wp(100), backgroundColor:dec_color, height:hp(6), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <Text style={{fontFamily:'Nunito-Regular',width:'20%',backgroundColor:'transparent', fontSize:16, color:'black', marginLeft:wp(1.5), textAlign:'left'}}>{item.maalik}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'30%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left'}}>{item.pakka_ghar}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'25%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left' }}>{item.kismat}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'15%',backgroundColor:'transparent', fontSize:16, color:'black', textAlign:'left', marginRight:wp(6)}}>{soya_str}</Text>
+    </View>
+      </>
+      )
+  }
+
+
+
+    _renderPlanets=(item, index)=>{
       var renderPlanets =   item.item.planet.map((b, index) => {
 
 
@@ -282,6 +492,7 @@ export default class LalKitab extends Component<Props> {
 
           {renderSmallPlanets}
         </View>
+
 
         )
     }
@@ -371,7 +582,7 @@ export default class LalKitab extends Component<Props> {
             </>
             )}
 
-          {this.state.renderIndex != 0 &&(
+          {this.state.renderIndex == 1 &&(
 
         <View style={{flexDirection:'column', margin:10 , width:wp(95) }}>
 
@@ -384,6 +595,64 @@ export default class LalKitab extends Component<Props> {
           </View>
 
             )}
+
+
+          {this.state.renderIndex == 2 &&(
+
+        <View style={{flexDirection:'column', width:wp(100),alignSelf:'center' }}>
+
+    <AutoHeightWebView source={{html : this.state.getChartHtml}} 
+    style={{width:window.width,marginTop: '9%'}}
+    containerStyle={{ marginLeft:'9%' }}
+    scalesPageToFit={true}
+    scrollEnabled={false}
+    viewportContent={'width=device-width, user-scalable=no'}/>
+
+          </View>
+
+            )}
+
+            {this.state.renderIndex == 3 &&(
+
+        <View style={{flexDirection:'column', width:wp(100) }}>
+    <View style={{width:wp(100), backgroundColor:'grey', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'20%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(1.5), textAlign:'left'}}>Maalik</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'30%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Pakka Ghar</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'25%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left' }}>Kismat</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'15%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left', marginRight:wp(6)}}>Soya</Text>
+    </View>
+
+        <FlatList data = {this.state.houses}
+        keyExtractor = { (item, index) => index.toString() }
+        extraData={this.state}
+        renderItem={this._renderHouses}
+        />
+
+          </View>
+
+              )}
+
+            {this.state.renderIndex == 4 &&(
+
+        <View style={{flexDirection:'column', width:wp(100) }}>
+    <View style={{width:wp(100), backgroundColor:'grey', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'20%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(1.5), textAlign:'left'}}>Planet</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'20%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Rashi</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'15%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left' }}>Soya</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'20%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Nature</Text>
+    <Text style={{fontFamily:'Nunito-ExtraBold',width:'25%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left', marginRight:wp(2)}}>Position</Text>
+    </View>
+
+        <FlatList data = {this.state.planetss}
+        keyExtractor = { (item, index) => index.toString() }
+        extraData={this.state}
+        renderItem={this._renderPlanetss}
+        />
+
+          </View>
+
+              )}
+
           </ScrollView>
           </View>
         );

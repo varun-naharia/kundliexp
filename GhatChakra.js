@@ -62,7 +62,8 @@ export default class GhatChakra extends Component<Props> {
 
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lat_long_address": GLOBAL.glLocationName,
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -82,8 +83,7 @@ export default class GhatChakra extends Component<Props> {
                 this.setState({response: responseJson.responseData },() => {
                   //    alert('gdsd'+JSON.stringify(this.state.response));
                   });                
-                 // this.props.navigation.navigate('KundliList')
-                  
+                 
                 }else{
 
                 }

@@ -147,6 +147,96 @@ export default class ProductListIn extends Component<Props> {
      
     }
 
+    favoPro=(item, index)=>{
+//http://139.59.76.223/kundali_expert/api/add_gems_bookmark
+
+      const url = GLOBAL.BASE_URL + "add_gems_bookmark";
+    //  this.showLoading()
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        product_id: item.id,
+        user_id: GLOBAL.user_id,
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+
+        if(responseJson.status==true){
+
+        console.log(JSON.stringify(responseJson))
+            var s = this.state.pdList[index];
+            if (item.is_bookmark == 0) {
+              s.is_bookmark = 1;
+            } else {
+              s.is_bookmark = 0;
+            }
+            this.state.pdList[index] = s;
+
+            this.setState({pdList: this.state.pdList});
+
+            //alert('Added to cart')
+
+
+        }else{
+
+        }
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+
+    unfavoPro=(item,index)=>{
+// http://139.59.76.223/kundali_expert/api/delete_bookmark_patient
+
+      const url = GLOBAL.BASE_URL + "delete_bookmark_patient";
+    //  this.showLoading()
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        product_id: item.id,
+        user_id: GLOBAL.user_id,
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+
+        if(responseJson.status==true){
+
+        console.log(JSON.stringify(responseJson))
+            var s = this.state.pdList[index];
+            if (item.is_bookmark == 1) {
+              s.is_bookmark = 0;
+            } else {
+              s.is_bookmark = 1;
+            }
+            this.state.pdList[index] = s;
+
+            this.setState({pdList: this.state.pdList});
+
+            //alert('Added to cart')
+
+
+        }else{
+
+        }
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+
+
+    }
 
 selectedFirst=(item, index)=>{
     GLOBAL.prodDetails = item
@@ -195,6 +285,21 @@ selectedFirst=(item, index)=>{
           </View>
 
       </View>
+      {item.is_bookmark == 0 && (
+      <TouchableOpacity style={{ position:'absolute', top:10, right:10}}
+      onPress={()=> this.favoPro(item, index)}>
+      <Image style={{width:25, height:25, resizeMode:'contain',}}
+      source={require('./resources/favo.png')}/>
+      </TouchableOpacity>
+        )}
+
+        {item.is_bookmark!=0 &&(
+      <TouchableOpacity style={{ position:'absolute', top:10, right:10}}
+      onPress={()=> this.unfavoPro(item, index)}>
+      <Image style={{width:25, height:25, resizeMode:'contain',}}
+      source={require('./resources/unfavo.png')}/>
+      </TouchableOpacity>
+          )}
       </View>
     </TouchableOpacity>
     )

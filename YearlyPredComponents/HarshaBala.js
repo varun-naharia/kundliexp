@@ -47,7 +47,7 @@ export default class HarshaBala extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
-            "lang":"en",
+            "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -61,7 +61,7 @@ export default class HarshaBala extends Component{
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
-//             console.log(JSON.stringify(responseJson))
+            console.log(JSON.stringify(responseJson))
   //             this.hideLoading()
                 if (responseJson.status == true) {
                 this.setState({response: responseJson.responseData,
@@ -87,7 +87,7 @@ export default class HarshaBala extends Component{
 
 
   render(){
-    console.log('render HarshaBala')
+    // console.log('render HarshaBala')
 //       console.log(JSON.stringify(this.props.response))
     var first = this.state.sthana_bala.map(id =>{
       var str= id.toString()
@@ -147,8 +147,8 @@ export default class HarshaBala extends Component{
   return(
     <View style={{width: wp(100), flex:1}}>  
     <ScrollView>
-    <View style={{width: wp(95), margin:15}}>
-    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5}}>Harsha Bala</Text>
+    <View style={{width: wp(92), margin:15}}>
+    <Text style={{fontFamily:'Nunito-Bold', fontSize:22,marginTop:5, alignSelf:'center'}}>Harsha Bala</Text>
     <Text style={{fontFamily:'Nunito-Regular', fontSize:16,color:'#838383', marginTop:10}}>Harsha literally means happiness.
     Planets are comfortable or happy in certain situations and hence they gain Bala or strength. To determine
     the strength, four points are considered: Position of a planet in a specific house. Placement in exaltation
@@ -157,7 +157,7 @@ export default class HarshaBala extends Component{
     
     </View>
 
-    <View style={{width:wp(100), backgroundColor:'#56aef6', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:'#e60000', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'25%',backgroundColor:'transparent', fontSize:16, color:'white', marginLeft:wp(0.5), textAlign:'left'}}>Bala</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'9%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Su</Text>
     <Text style={{fontFamily:'Nunito-ExtraBold',width:'9%',backgroundColor:'transparent', fontSize:16, color:'white', textAlign:'left'}}>Mo</Text>
