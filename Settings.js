@@ -10,6 +10,7 @@ import ToggleSwitch from 'toggle-switch-react-native'
 import {NavigationActions,StackActions} from 'react-navigation';
 import { Dialog, DialogContent, DialogComponent, DialogTitle,DialogButton,SlideAnimation } from 'react-native-dialog-component';
 import IndicatorCustom from './IndicatorCustom'
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Settings extends Component {
 
@@ -40,12 +41,23 @@ class Settings extends Component {
             getLang='Kannada'
         }
 
-        GLOBAL.glChartStyle=='south'? getChartStyle='South': getChartStyle='North'
+        if(GLOBAL.glChartStyle=='south'){
+          getChartStyle ='South'
+        }else if(GLOBAL.glChartStyle=='north'){
+          getChartStyle ='North'
+        }else if(GLOBAL.glChartStyle=='east'){
+          getChartStyle ='East'
+        }
+
+         // GLOBAL.glChartStyle=='south' ? getChartStyle='South': getChartStyle='North'
+
+        var dec_notif
+        GLOBAL.userDetails.notification_config =='1' ? dec_notif = true : dec_notif = false 
 
         super(props)
         const { navigation } = this.props;
         this.state = {
-            istoggle:false,
+            istoggle:dec_notif,
             visible:false,
             langName:getLang,
             chartStyleName:getChartStyle,
@@ -100,7 +112,12 @@ class Settings extends Component {
                 id:'2',
                 chart_name:'South',
                 chart_key:'south'
-            }
+            },
+            {
+                id:'3',
+                chart_name:'East',
+                chart_key:'east'
+            },
             ]
         }
     }
@@ -312,6 +329,51 @@ class Settings extends Component {
       )
   }
 
+
+   async toggleNotification(type){
+    var val='1'
+    type ? val ='1' : val = '0'
+//    alert(val)
+
+    const url = GLOBAL.BASE_URL + "update_user_configuration";
+    //  this.showLoading()
+   await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: GLOBAL.user_id,
+        for: 'notification',
+        value: val
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        //       this.hideLoading()
+          console.log(JSON.stringify(responseJson))
+
+        if (responseJson.status == true) {
+            this.setState({istoggle : type})
+
+            ToastAndroid.showWithGravity(
+              'Notification status changed successfully!',
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
+               50, 100,              
+            );
+        } else {
+
+            alert("Something went wrong");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    }
+
+
     render() {
         if(this.state.loading){
             return(
@@ -378,7 +440,7 @@ class Settings extends Component {
           onColor="green"
           offColor="red"
           size="medium"
-          onToggle={isOn => this.setState({istoggle : isOn})}
+          onToggle={isOn => this.toggleNotification(isOn)}
         />
         </View>
         </View>
@@ -387,7 +449,8 @@ class Settings extends Component {
         </View>
 
 
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={()=> this.props.navigation.navigate('Terms')}>
         <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
         <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
         <Image style={{width:wp(6), height:hp(4), resizeMode:'contain'}}
@@ -401,7 +464,8 @@ class Settings extends Component {
         </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={()=> this.props.navigation.navigate('Privacy')}>        
         <View style={{marginTop:hp(2),flexDirection:'row', height:hp(3),alignItems:'center', justifyContent:'space-between', flexDirection:'row', marginTop:hp(2)}}>
         <View style={{flexDirection:'row', marginLeft:hp(2.5),}}>
         <Image style={{width:wp(6), height:hp(4), resizeMode:'contain'}}
@@ -469,13 +533,13 @@ class Settings extends Component {
         width={wp(80)}
         height={hp(30)}
         dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }        
-        dialogStyle={{width:wp(80), height:hp(30),borderRadius:5,}}
+        dialogStyle={{width:wp(80), height:hp(38),borderRadius:5,}}
         ref={(dialogComponent) => { this.dialogComponent = dialogComponent; }}>
 
       <DialogContent>
 
     <View style={{flexDirection:'column', width:wp(80),alignSelf:'center'
-    ,backgroundColor:'white', height:hp(30),borderRadius:5, }}>
+    ,backgroundColor:'white', height:hp(38),borderRadius:5, }}>
 
       <FlatList data={this.state.chartStyles}
       renderItem={this._renderItemss}

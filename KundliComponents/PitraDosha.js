@@ -100,7 +100,7 @@ export default class PitraDosha extends Component{
 
     return(
       <>
-    <View style={{width:wp(100), backgroundColor:dec_color, height:hp(6), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
+    <View style={{width:wp(100), backgroundColor:dec_color,padding:10, justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>
     <Text style={{fontFamily:'Nunito-Regular',width:'98%',backgroundColor:'transparent', fontSize:14, color: 'grey', marginLeft:wp(1.5), textAlign:'left'}}>{item}</Text>
     </View>
 

@@ -102,10 +102,10 @@ export default class Slider extends Component<Props> {
                 <Image style={styles.text} source={require('./resources/slider_one.png')} />
               </View>
               <View style={[styles.child, {backgroundColor: 'transparent'}]}>
-                <Image style={styles.text} source={require('./resources/slider_one.png')} />
+                <Image style={styles.text} source={require('./resources/slider_two.png')} />
               </View>
               <View style={[styles.child, {backgroundColor: 'transparent'}]}>
-                <Image style={styles.text} source={require('./resources/slider_one.png')} />
+                <Image style={styles.text} source={require('./resources/slider_three.png')} />
               </View>
             </SwiperFlatList>
           </View>
@@ -215,7 +215,7 @@ export default class Slider extends Component<Props> {
 
           </View>
 
-            <Button
+{/*            <Button
               containerStyle={{
                 padding: 4,
                 height: 40,
@@ -232,6 +232,7 @@ export default class Slider extends Component<Props> {
               onPress={() => this.buttonClickListener()}>
               SKIP
             </Button>
+*/}
 
 
         </View>

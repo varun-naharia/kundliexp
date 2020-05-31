@@ -14,9 +14,9 @@ const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import * as Animatable from 'react-native-animatable';
 import RateModal from 'react-native-store-rating'
+import IndicatorCustom from './IndicatorCustom'
 
-type Props = {};
-export default class FreeAstro extends Component<Props> {
+export default class FreeAstro extends Component{
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -50,13 +50,13 @@ export default class FreeAstro extends Component<Props> {
         hasIc:0,
         ic:''
       },
-      {
-        id: '2',
-        title: 'Horoscope Matching',    
-        artwork: require('./resources/ftwo.png'),
-        hasIc:0,
-        ic:''
-      },
+      // {
+      //   id: '2',
+      //   title: 'Horoscope Matching',    
+      //   artwork: require('./resources/ftwo.png'),
+      //   hasIc:0,
+      //   ic:''
+      // },
       {
         id: '3',
         title: 'Medical Astrology',    
@@ -282,7 +282,36 @@ export default class FreeAstro extends Component<Props> {
 //  this.getReviews()
     }
 
-    getReviews= () =>{
+    getMagazine= () =>{
+        this.showLoading()
+        const url = GLOBAL.BASE_URL + "get_magzine";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          mode:'magzine'
+
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+                 this.hideLoading()
+       
+          console.log(JSON.stringify(responseJson))
+
+          if (responseJson.status == true) {
+            Linking.openURL(responseJson.magzine_link)
+          } else {
+            alert('No Magazine for now!')
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          this.hideLoading()
+        });
+
 
     }
 
@@ -295,8 +324,8 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 2){
     this.props.navigation.navigate('MatchMaking', {matchReportType : 'horo_match'})    
   }else if(item == 3){
-    alert('Coming soon...')
-//    this.props.navigation.navigate('KundliForm',{astroReportType : 'medical_astro'})  
+    // alert('Coming soon...')
+   this.props.navigation.navigate('BasicForm',{astroReportType : 'medical_astro'})  
   }else if(item == 4){
     GLOBAL.isDailyPres = '0'
     this.props.navigation.navigate('NumerologyForm')  
@@ -334,6 +363,8 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 16){
     GLOBAL.isDailyPres = '4'
     this.props.navigation.navigate('NumerologyForm')  
+  }else if(item == 17){
+    this.getMagazine()
   }else if(item == 18){
     GLOBAL.isDailyPres = '3'
     this.props.navigation.navigate('NumerologyForm')  
@@ -344,7 +375,8 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 21){
     this.props.navigation.navigate('GandMool')
   }else if(item == 22){
-    alert('Coming soon...')
+    // alert('Coming soon...')
+   this.props.navigation.navigate('BasicForm',{astroReportType : 'financial_astro'})  
   }else if(item == 23){
     alert('Coming soon...')
   }else if(item == 24){
@@ -359,9 +391,11 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 28){
     alert('Coming soon...')
   }else if(item == 29){
-  //  this.props.navigation.navigate('Chat')    
+    this.props.navigation.navigate('ContactUs')    
+  }else if(item == 30){
+   this.props.navigation.navigate('AboutUs')    
   }else if(item == 31){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'paid_pdf'})
+    this.props.navigation.navigate('BasicForm',{astroReportType : 'paid_pdf'})
   }else if(item == 32){
    this.props.navigation.navigate('ViewPdf')    
   }
@@ -503,10 +537,7 @@ selectedFirst=(item,indexs)=>{
     render() {
         if(this.state.loading){
             return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-                                       size={50} color="#E9128B" />
-                </View>
+            <IndicatorCustom/>
             )
         }
         return (

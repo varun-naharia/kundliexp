@@ -87,7 +87,7 @@ export default class ProductDetails extends Component<Props> {
               backgroundColor:'#EEEEF0', flexDirection:'column',justifyContent:'center', alignItems:'center'
             }}>
 
-              <Image style={{width:wp(100), height:hp(20),alignSelf:'center',marginTop:hp(5), resizeMode:'contain'}} source={{uri : item}}/>
+              <Image style={{width:wp(100), height:hp(20),alignSelf:'center',marginTop:hp(2), resizeMode:'contain'}} source={{uri : item}}/>
 
             </View>
         );
@@ -172,9 +172,13 @@ export default class ProductDetails extends Component<Props> {
         borderTopRightRadius:30, borderTopRightWidth:1, borderTopRightColor:'transparent', marginTop:hp('7%')}}
         contentContainerStyle={{backgroundColor:'transparent',}}>
 
-        <Text style = {{color:'black',fontSize: 20,fontFamily:'Nunito-Bold', alignSelf:'flex-end', marginRight:wp(8), marginTop:hp(-6.5)}}>
+        <Text style = {{color:'black',fontSize: 20,fontFamily:'Nunito-Bold', alignSelf:'flex-end', marginRight:wp(8), marginTop:hp(-9.5)}}>
         ₹ {yeah.base_price}/-
         </Text>
+
+      <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBoldItalic',color:'grey',alignSelf:'flex-end', marginRight:wp(8),}}>
+      (Prices are inclusive of Tax)
+      </Text>
 
         <TouchableOpacity style={{width:55, height:55,alignSelf:'flex-end',marginTop:hp(1),marginRight:wp(9)}}
         onPress={()=> this.props.navigation.navigate('Cart')}>

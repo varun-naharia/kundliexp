@@ -27,13 +27,11 @@ export default class ViewPdf extends Component {
             totalpages:0,
             component:<></>,
             currentpages:0,
+            getPdf:'',
             opacity: new Animated.Value(1)
 
         }
     }
-
-
-
 
     showLoading() {
         this.setState({loading: true})
@@ -44,8 +42,43 @@ export default class ViewPdf extends Component {
     }
 
 
+    getFreePdf= () =>{
+        // this.showLoading()
+        const url = GLOBAL.BASE_URL + "sample_pdf_for_free";
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          mode:'pdffree'
+
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+           // this.hideLoading()
+       
+          console.log(JSON.stringify(responseJson))
+
+          if (responseJson.status == true) {
+            this.setState({getPdf: responseJson.sample_link})
+          } else {
+            alert('No PDF for now!')
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          // this.hideLoading()
+        });
+
+
+    }
+
 
     componentDidMount(){
+      this.getFreePdf()
       this.displayTime()
     }
 
@@ -60,11 +93,11 @@ export default class ViewPdf extends Component {
             useDownloadManager: true,
             notification: true,
             mediaScannable: true,
-            title: `kundliexpert.pdf`,
-            path: `${dirs.DownloadDir}/kundliexpert.pdf`,
+            title: `kundliexpertFree.pdf`,
+            path: `${dirs.DownloadDir}/kundliexpertFree.pdf`,
             },
           })
-            .fetch('GET', GLOBAL.freePDF, {})
+            .fetch('GET', this.state.getPdf, {})
             .then((res) => {
             ToastAndroid.show('The file saved to '+ res.path(), ToastAndroid.SHORT)
               console.log('The file saved to ', res.path());
@@ -133,7 +166,7 @@ export default class ViewPdf extends Component {
         }
 
         // console.log('render')
-      const source = {uri: GLOBAL.freePDF,cache:true};
+      const source = {uri: this.state.getPdf,cache:true};
 
         return (
 

@@ -28,6 +28,7 @@ const equalWidth =  (width -20 )
 const YOUTUBE_API = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${`UCwobzUc3z-0PrFpoRxNszXQ`}&eventType=live&type=video&key=${GLOBAL.YOUTUBE_API}`
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
 import {PulseIndicator} from 'react-native-indicators'
+import Chat from './Chat'
 
 export default class LiveStream extends Component {
 
@@ -169,7 +170,7 @@ playVideo=(value)=>{
         </View>
 
 
-        <View style={{position:'absolute', right:10, bottom:10}}>
+        <View style={{position:'absolute', right:10, bottom:50}}>
               <Image style={{width:70, height:70, borderRadius:35}}
               source={{uri : yeah.params.image}}
               />
@@ -189,7 +190,7 @@ playVideo=(value)=>{
               </View>
 
             </View>
-
+            <Chat/>
             </View>
           );
   }

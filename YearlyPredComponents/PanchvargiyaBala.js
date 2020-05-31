@@ -63,7 +63,7 @@ export default class PanchvargiyaBala extends Component{
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
-           //   console.log(JSON.stringify(responseJson))
+             console.log('Panchvargiya Bala--->'+JSON.stringify(responseJson))
   //             this.hideLoading()
                 if (responseJson.status == true) {
                 this.setState({response: responseJson.responseData,

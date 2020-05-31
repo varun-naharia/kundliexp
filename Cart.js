@@ -315,7 +315,7 @@ export default class Cart extends Component<Props> {
             />
 
 
-        <View style = {{width:wp(94),height:hp(22),backgroundColor:'white',marginVertical:hp(1) ,
+        <View style = {{width:wp(94),height:hp(17),backgroundColor:'white',marginVertical:hp(1) ,
         marginHorizontal:wp(3),flexDirection :'column',borderRadius:8, elevation:4}}>
 
           <View style={{width:wp(94), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', marginTop:hp(1) }}>
@@ -323,11 +323,11 @@ export default class Cart extends Component<Props> {
           <Text style={{fontSize:15, color:'black', marginRight:wp(3.5),textAlign:'left', fontFamily:'Nunito-Regular'}}>₹ {this.state.sumtotal}</Text>
           </View>
 
-          <View style={{width:wp(94), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', }}>
+{/*          <View style={{width:wp(94), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', }}>
           <Text style={{fontSize:15, color:'black', marginLeft:wp(3.5), fontFamily:'Nunito-Regular'}}>Tax</Text>
-          <Text style={{fontSize:15, color:'black', marginRight:wp(3.5),textAlign:'left', fontFamily:'Nunito-Regular'}}>₹ {this.state.tax}</Text>
+          <Text style={{fontSize:15, color:'black', marginRight:wp(3.5),textAlign:'left', fontFamily:'Nunito-Regular'}}>{GLOBAL.gemsTax} %</Text>
           </View>
-
+*/}
           <View style={{width:wp(94), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', }}>
           <Text style={{fontSize:15, color:'black', marginLeft:wp(3.5), fontFamily:'Nunito-Regular'}}>Delivery</Text>
           <Text style={{fontSize:15, color:'black', marginRight:wp(3.5),textAlign:'left', fontFamily:'Nunito-Regular'}}>₹ {this.state.delivery}</Text>
@@ -343,7 +343,7 @@ export default class Cart extends Component<Props> {
 
                 <Button
                 containerStyle={{width:wp('70%'),padding:16, height:hp(7.5), overflow:'hidden', borderRadius:40,
-                 backgroundColor: '#e60000', elevation: 5, alignSelf:'center',  marginVertical:hp(5),}}
+                 backgroundColor: '#e60000', elevation: 5, alignSelf:'center',  marginTop:hp(15), marginBottom:hp(5)}}
                 style={{fontSize: 18, color: 'white', alignSelf: 'center', fontFamily:'Nunito-Bold'}}
                 onPress={this.buttonClickListeners}
                 >

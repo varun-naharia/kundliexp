@@ -10,8 +10,9 @@ import DeviceInfo from 'react-native-device-info';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import NetInfo, {NetInfoSubscription} from "@react-native-community/netinfo";
 import * as RNLocalize from "react-native-localize";
-import SmsListener from 'react-native-android-sms-listener'
+// import SmsListener from 'react-native-android-sms-listener'
 import IndicatorCustom from './IndicatorCustom'
+import OTPInputView from '@twotalltotems/react-native-otp-input'
 
 import CodeInput from 'react-native-confirmation-code-input';
 
@@ -66,21 +67,23 @@ export default class Otp extends Component {
 
   componentDidMount(){
     console.log('otp--->'+GLOBAL.loginOTP)
+    console.log('otp--->'+GLOBAL.signupOtp)
     
-    SmsListener.addListener(message => {
-      console.log(message)
-    })
+    // SmsListener.addListener(message => {
+    //   console.log(message)
+    // })
   }
 
   _onFulfill=(code)=>{
-    this.setState({otp : code})
+   // this.setState({otp : code})
     this._handlePress(code) 
   }
 
 
   _handlePress=(code)=>{
 //    alert(this.props.navigation.getParam('params'))
-
+//alert(this.state.otp)
+  var code= this.state.otp
     var otpType = this.props.navigation.getParam('params')
     if(otpType == 'LoginOtp'){
 
@@ -158,10 +161,10 @@ export default class Otp extends Component {
     mobile: GLOBAL.signupMobile,
     email: GLOBAL.signupEmail,
     auth : 'normal',
-    gender: GLOBAL.signupGender,
-    dob: GLOBAL.signupDob,
-    birth_time : GLOBAL.signupTob,
-    place_of_birth: GLOBAL.signupPob,
+    gender: '',
+    dob: '',
+    birth_time : '',
+    place_of_birth: '',
     latitude:'',
     longitude:'',
     deviceID: uniqueId,
@@ -263,6 +266,34 @@ export default class Otp extends Component {
           Enter your OTP code here
           </Text>
 
+           <TextInput style = {{width:wp('80%'),color:'#909090', height:hp('7%'),
+            fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(1),
+            borderBottomColor:'#909090', borderBottomWidth:1, alignSelf:'center'}}
+                         placeholder = {'OTP'}
+                         placeholderTextColor = "#909090"
+                         autoCapitalize = "none"
+                         keyboardType={'numeric'}
+                         editable={true}
+                         maxLength={6}
+                         onChangeText={(text) => this.setState({otp:text})}
+                         value={this.state.otp}
+              />
+
+{/*
+<OTPInputView
+    style={{width: '80%', height: 200,marginLeft:wp('3%'),}}
+    pinCount={6}
+    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+    // onCodeChanged = {code => { this.setState({code})}}
+    autoFocusOnLoad
+    codeInputFieldStyle={styles.underlineStyleBase}
+    codeInputHighlightStyle={styles.underlineStyleHighLighted}
+    onCodeFilled = {(code => {
+//        console.log(`Code is ${code}, you are good to go!`)
+          this._onFulfill(code)
+    })}
+/>
+
        <CodeInput
            containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
            ref="codeInputRef1"
@@ -279,8 +310,7 @@ export default class Otp extends Component {
            onFulfill={(code) => this._onFulfill(code)}
          />
 
-
-{/*          <OTPInput 
+          <OTPInput 
           containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
           value={this.state.otp}
           onChange={this.handleOTPChange}
@@ -299,7 +329,7 @@ export default class Otp extends Component {
           </Text>
           </TouchableOpacity>
 
-{/*          <TouchableOpacity style={{alignSelf:'flex-end'}}
+         <TouchableOpacity style={{alignSelf:'flex-end'}}
           onPress={()=> this._handlePress()}>
           <View style={{width:wp('24%'), height:hp('7%'), backgroundColor:'#E60000',justifyContent:'center',  borderRadius:50, alignSelf:'flex-end', marginTop:hp('4%'),marginRight:wp('1%')}}>
           <Image style={{width:wp(40), height:hp(3.5), resizeMode:'contain',alignSelf:'center'}} source={require('./resources/rightArrow.png')}
@@ -307,7 +337,7 @@ export default class Otp extends Component {
           </View>
           </TouchableOpacity>
 
-        */}
+
           </View>
 
 
@@ -332,5 +362,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  borderStyleBase: {
+    width: 30,
+    height: 45
+  },
 
+  borderStyleHighLighted: {
+    borderColor: "#E60000",
+  },
+
+  underlineStyleBase: {
+    width: 30,
+    height: 45,
+    borderWidth: 0,
+    fontSize:20,
+    color:'black',
+    borderBottomWidth: 1,
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: "#E60000",
+  },
 });

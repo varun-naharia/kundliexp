@@ -2,16 +2,12 @@ import React, {Component} from 'react';
 import {
     StyleSheet,
     Text,
-    TextInput,
     View,
     Image,
     Alert,
-    FlatList,
     Dimensions,
     TouchableOpacity,
-    ActivityIndicator,
-
-    AsyncStorage
+    BackHandler
 } from 'react-native';
 
 const window = Dimensions.get('window');
@@ -36,9 +32,15 @@ export default class Thankyou extends Component {
 
 
     componentDidMount(){
+      // BackHandler.addEventListener('hardwareBackPress', this._handlePress);
 
     }
-    _handlePress() {
+
+    componentWillUnmount () {
+      // BackHandler.removeEventListener('hardwareBackPress', this._handlePress);
+
+    }
+    _handlePress=()=>{
 
     this.props
             .navigation
@@ -100,82 +102,9 @@ export default class Thankyou extends Component {
 }
 
 const styles = StyleSheet.create({
-    wrapper: {
-    },
     container: {
-
         backgroundColor :'#f1f1f1',
         height: window.height,
     },
-    loading: {
-        position: 'absolute',
-        left: window.width/2 - 30,
 
-        top: window.height/2,
-
-        opacity: 0.5,
-
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    slide1: {
-
-        marginLeft : 50,
-
-        width: window.width - 50,
-        height:300,
-        resizeMode:'contain',
-        marginTop : window.height/2 - 200
-
-
-    },
-    slide2: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    slide3: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#92BBD9',
-    },
-    text: {
-        color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold',
-    },
-    account :{
-        marginTop : 20,
-        textAlign : 'center',
-        fontSize: 17,
-        justifyContent:'center',
-        color : '#262628',
-        fontFamily:'Poppins-Regular',
-
-
-    } ,
-    createaccount :{
-        marginLeft : 5,
-        fontSize: 17,
-        textAlign : 'center',
-        marginTop : 30,
-        color : '#0592CC',
-
-
-
-
-    } ,
-
-    createaccounts :{
-        marginLeft : 5,
-        fontSize: 17,
-        textAlign : 'center',
-        marginTop : 30,
-        color : '#0592CC',
-        textDecorationLine: 'underline',
-
-
-
-    } ,
 })

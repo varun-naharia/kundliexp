@@ -170,7 +170,7 @@ selectedFirst=(item,indexs)=>{
 
                <View style={{flexDirection:'column',width:wp('60%'), backgroundColor:'transparent'}}>
                <Text style={{fontSize:24,fontFamily:'Nunito-SemiBold',color:'white',}} multiline={true}>{item.package_name}</Text>
-               <Text style={{fontSize:21,fontFamily:'Nunito-SemiBold',color:'white',marginTop:hp(5),marginBottom:hp('2%')}} multiline={true}>{item.description} in Rs.{item.base_price} for {item.duration} {item.duration_type} ( + Service Tax Rs.{this.state.taxes}/-)</Text>
+               <Text style={{fontSize:21,fontFamily:'Nunito-SemiBold',color:'white',marginTop:hp(5),marginBottom:hp('2%')}} multiline={true}>{item.description} in Rs.{item.base_price} for {item.duration} {item.duration_type} ( + Service Tax {GLOBAL.classTax}% )</Text>
                </View>
 
 {/*               {item.is_selected == '' && (

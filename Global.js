@@ -11,7 +11,7 @@ module.exports = {
     ASTRO_APIS_USERID: '609418',
     ASTRO_APIS_API_KEY: '3f44385e5c9a4a5febc2e9ea7872bacf',
 
-    YOUTUBE_API : 'AIzaSyCkk0Mc6Hha2LUn3NHubv0LLSiumoPVhWs',
+    YOUTUBE_API : 'AIzaSyA7jAUh4B0Rk5YUsQ7QlUzL4Wd0GoV50ME',
     response:'',
 
     loginmobile:'',
@@ -33,6 +33,17 @@ module.exports = {
     glzone:'5.5',
     glgender:'male',
 
+//    globalTax:0,
+    gemsTax:0.00,
+    classTax:0.00,
+    in_personTax:0.00,
+    online_consultTax:0.00,
+    life_predTax:0.00,
+    match_makingTax:0.00,
+    medical_bookTax:0.00,
+    financial_bookTax:0.00,
+    pdf_bookTax:0.00,
+    
     home :'home',
     Signin :'Signin',
     guid:'',    

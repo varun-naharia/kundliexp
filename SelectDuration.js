@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage, Text, View,FlatList,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {Platform, StyleSheet, Text, View,FlatList,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking , Dimensions} from 'react-native';
 const windowW= Dimensions.get('window').width
 const windowH = Dimensions.get('window').height
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -49,7 +49,7 @@ class SelectDuration extends Component<Props> {
 
     async getData(){
 
-        alert(GLOBAL.hbooking_time + ' ' + GLOBAL.hbooking_date + ' ' + GLOBAL.consultMode)
+        // alert(GLOBAL.hbooking_time + ' ' + GLOBAL.hbooking_date + ' ' + GLOBAL.consultMode)
         console.log(GLOBAL.hbooking_time + ' ' + GLOBAL.hbooking_date + ' ' + GLOBAL.consultMode)
 
      const url = GLOBAL.BASE_URL + "time_slots_with_price";
@@ -94,7 +94,7 @@ class SelectDuration extends Component<Props> {
 
     buttonClickListener=()=>{
       var mode =  GLOBAL.consultMode
-      alert(GLOBAL.hbooking_time + ' ' + GLOBAL.hbooking_date + ' ' + GLOBAL.consultMode)
+      // alert(GLOBAL.hbooking_time + ' ' + GLOBAL.hbooking_date + ' ' + GLOBAL.consultMode)
 
       var finalData
 

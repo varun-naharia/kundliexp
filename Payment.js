@@ -6,13 +6,11 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  StatusBar,
   Image,
   TouchableOpacity,
   Alert,
   Container,
   Linking,
-  TextInput,
   Dimensions,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -52,12 +50,13 @@ export default class Payment extends Component<Props> {
       refer: false,
       value: 0,
       prices: '',
-     referralrs: GLOBAL.userDetails.refferal_wallet,
+      referralrs: GLOBAL.userDetails.refferal_wallet,
     // referralrs : "40",
       walletAmount: GLOBAL.walletAmount,
      // walletAmount: "500.00",
-       finalRef: "0",
-     finalWall : "0",
+      t_ax : '0',
+      finalRef: "0",
+      finalWall : "0",
       coupan_code: '0',
       coupan_code_id: '0',
       radio_props: [
@@ -141,37 +140,59 @@ walletStateChange = () => {
       .then(responseJson => {
         //       this.hideLoading()
 
-        console.log(JSON.stringify(responseJson));
+        // console.log(JSON.stringify(responseJson));
         if (responseJson.status == true) {
           this.setState({prices: responseJson.response});
 
   var get_price = '';
-
+  var tax_calc
     if (
       this.props.navigation.state.params.params.previous_screen ==
       'horo_matching'
     ) {
+      var get_tax = parseFloat(GLOBAL.match_makingTax)      
       get_price = responseJson.response.match_making_price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
     } else if(this.props.navigation.state.params.params.previous_screen =='life_pred'){
+      var get_tax = parseFloat(GLOBAL.life_predTax)
+      var getItem =this.props.navigation.state.params.params.item
       get_price = responseJson.response.life_prediction_price;
-//      alert('hi')
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+
     }else if(this.props.navigation.state.params.params.previous_screen =='astro_classes'){
+      var get_tax = parseFloat(GLOBAL.classTax)
       var getItem =this.props.navigation.state.params.params.item
       get_price = getItem.base_price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+     // alert(price_with_tax)
       console.log('astro_classess', this.props.navigation.state.params.params.item)
-    }else if(this.props.navigation.state.params.params.previous_screen =='chat'){
+    }else if(this.props.navigation.state.params.params.previous_screen =='chat'){      
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('chat pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='video'){
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('video pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='inperson'){
+      var get_tax = parseFloat(GLOBAL.in_personTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('inperson pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='from_cart'){
@@ -180,19 +201,43 @@ walletStateChange = () => {
 
       console.log('from cart', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='audio'){
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('audio call book', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='paid_pdf'){
+      var get_tax = parseFloat(GLOBAL.pdf_bookTax)
       var getItem =this.props.navigation.state.params.params.finalData
-      get_price = responseJson.response.varshphal_pdf;
+      get_price = this.state.prices.varshphal_pdf
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('paid pdf', this.props.navigation.state.params.params)
+    }else if(this.props.navigation.state.params.params.previous_screen =='medical_astro'){
+      var get_tax = parseFloat(GLOBAL.medical_bookTax)
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = getItem.prev_amount;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+      console.log('medical_astro', this.props.navigation.state.params)
+    }else if(this.props.navigation.state.params.params.previous_screen =='financial_astro'){
+      var get_tax = parseFloat(GLOBAL.financial_bookTax)
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = getItem.prev_amount;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+      console.log('financial_astro', this.props.navigation.state.params)
     }
 //    alert(get_price)
-    this.setState({finalCheckoutPrice: get_price,
-      totalPay: get_price})          
+    this.setState({finalCheckoutPrice: parseFloat(get_price).toFixed(2),
+      totalPay: get_price - tax_calc,
+      t_ax: get_tax
+    })   
         } else {
         }
       })
@@ -210,6 +255,8 @@ walletStateChange = () => {
 
     var get_price = '';
 
+    var taxAmount, tax_calc
+
     var navigation=this.props.navigation;
 
       if (this.state.wallet == false && this.state.debit == false && this.state.refer == false) {
@@ -218,13 +265,18 @@ walletStateChange = () => {
       }else{
 
             if (navigation.state.params.params.previous_screen =='horo_matching') {
+
+              var get_tax = parseFloat(GLOBAL.match_makingTax) 
+              taxAmount = GLOBAL.match_makingTax     
+              get_price = this.state.prices.match_making_price;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
               decide_for = '4';
               decide_module = 'matchmaking';
-              get_price = this.state.prices.match_making_price;
 
 
               if(this.state.finalCheckoutPrice == 0){
-//                  alert('perm')
 
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
@@ -239,9 +291,10 @@ walletStateChange = () => {
                     from_payment_gateway:"0",
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    order_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: get_price.toString(),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
 //                alert(JSON.stringify(navigation.state.params.params.finalData))
@@ -287,9 +340,10 @@ walletStateChange = () => {
                   
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    total_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: Math.round(get_price),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
 //                alert(JSON.stringify(navigation.state.params.params.finalData))
@@ -330,10 +384,14 @@ walletStateChange = () => {
             else if(navigation.state.params.params.previous_screen=='life_pred'){
 //              alert('life_pred')
 
+              var get_tax = parseFloat(GLOBAL.life_predTax)
+              taxAmount = GLOBAL.life_predTax
+              get_price = this.state.prices.life_prediction_price;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
               decide_for = '5';
               decide_module = 'lifeprediction';
-              get_price = this.state.prices.life_prediction_price;
-
 
               if(this.state.finalCheckoutPrice == 0){
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
@@ -349,9 +407,10 @@ walletStateChange = () => {
                     from_payment_gateway:"0",
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    order_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: get_price.toString(),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
 //                alert(JSON.stringify(navigation.state.params.params.finalData))
@@ -397,9 +456,10 @@ walletStateChange = () => {
                   
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    total_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: Math.round(get_price),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
 //                alert(JSON.stringify(navigation.state.params.params.finalData))
@@ -438,16 +498,28 @@ walletStateChange = () => {
             }
             else if(navigation.state.params.params.previous_screen=='astro_classes'){
               //alert('astro_classes')
+
+              var get_tax = parseFloat(GLOBAL.classTax)
               var getItem = navigation.state.params.params.item
+
+              get_price = getItem.base_price
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
+
               console.log(JSON.stringify(navigation.state.params.params.item))
               decide_for ='7'
+
+              taxAmount = GLOBAL.classTax
+
+
               decide_module = 'classpackage'
-              get_price = getItem.base_price
               var package_id = getItem.id
 
+               console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
               if(this.state.finalCheckoutPrice == 0){
-               // alert('perm')
+
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
                 var body = {
                     user_id: GLOBAL.user_id,
@@ -456,6 +528,7 @@ walletStateChange = () => {
 
                     package_id: package_id,
                     total_amount: get_price.toString(),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
                     coupan_code: this.state.coupan_code,
                     coupan_code_id: this.state.coupan_code_id,
                   
@@ -463,8 +536,8 @@ walletStateChange = () => {
                     payment_from:"normal",
                     discount_amount: '0',                    
                     order_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
                     console.log(JSON.stringify(body))
 
@@ -504,18 +577,23 @@ walletStateChange = () => {
             }else if(navigation.state.params.params.previous_screen=='chat'){
               console.log('---------------chat pay')
               var getItem = navigation.state.params.params.finalData
+              var get_tax = parseFloat(GLOBAL.online_consultTax)
+              taxAmount = GLOBAL.online_consultTax
+              get_price = getItem.price;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
+
               console.log(JSON.stringify(getItem))
               decide_for ='2'
               decide_module = 'chat'
               var decide_booking_type='2' //1 = ask for question, 2 = for online counsult
-              get_price = getItem.price
               var decide_type = 'online'
               var decide_booking_for = GLOBAL.dec_single_sel_member
               var mem_ids= GLOBAL.single_sel_member
 
-          
-
-
+              console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
+ 
               if(this.state.finalCheckoutPrice == 0){
                 
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
@@ -538,8 +616,9 @@ walletStateChange = () => {
                 coupan_code_id:'0',
                 from_payment_gateway:'0',
                 total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               } 
@@ -587,10 +666,11 @@ walletStateChange = () => {
                 dob: GLOBAL.userDetails.dob,
                 coupan_code:'0',
                 coupan_code_id:'0',
-                from_payment_gateway: this.state.finalCheckoutPrice.toString(),
-                total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
+                total_amount: Math.round(get_price),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               }
@@ -624,18 +704,22 @@ walletStateChange = () => {
             }else if(navigation.state.params.params.previous_screen=='video'){
               console.log('---------------video pay')
               var getItem = navigation.state.params.params.finalData
+              var get_tax = parseFloat(GLOBAL.online_consultTax)
+              taxAmount = GLOBAL.online_consultTax
+              get_price = getItem.price;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
               console.log(JSON.stringify(getItem))
               decide_for ='2'
               decide_module = 'video'
               var decide_booking_type='2' //1 = ask for question, 2 = for online counsult
-              get_price = getItem.price
               var decide_type = 'online'
               var decide_booking_for = GLOBAL.dec_single_sel_member
               var mem_ids= GLOBAL.single_sel_member
 
+              console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
           
-
-
               if(this.state.finalCheckoutPrice == 0){
                 
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
@@ -658,8 +742,9 @@ walletStateChange = () => {
                 coupan_code_id:'0',
                 from_payment_gateway:'0',
                 total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               } 
@@ -704,10 +789,11 @@ walletStateChange = () => {
                 dob: GLOBAL.userDetails.dob,
                 coupan_code:'0',
                 coupan_code_id:'0',
-                from_payment_gateway: this.state.finalCheckoutPrice.toString(),
-                total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
+                total_amount: Math.round(get_price),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               }
@@ -741,12 +827,20 @@ walletStateChange = () => {
 
       }else if(navigation.state.params.params.previous_screen=='inperson'){
               console.log('---------------inperson pay')
-              var getItem = navigation.state.params.params.finalData
-              console.log(JSON.stringify(getItem))
-              decide_for ='6'
-              decide_module = 'inperson'
-              get_price = getItem.price
 
+            var get_tax = parseFloat(GLOBAL.in_personTax)
+            taxAmount = GLOBAL.in_personTax
+
+            var getItem = navigation.state.params.params.finalData
+            console.log(JSON.stringify(getItem))
+            get_price = getItem.price
+            tax_calc = parseFloat(get_price) * (get_tax/ 100)
+            get_price = parseFloat(get_price) + tax_calc
+
+            decide_for ='6'
+            decide_module = 'inperson'
+
+           console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
         if(this.state.finalCheckoutPrice==0){
             const url = GLOBAL.BASE_URL + "add_permanent_booking";
@@ -759,8 +853,9 @@ walletStateChange = () => {
                 event_id: getItem.event_id,
                 multiple_members: GLOBAL.sel_members,
                 total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 payment_from: 'normal',
                 from_payment_gateway: '0',
@@ -799,9 +894,10 @@ walletStateChange = () => {
                 booking_date: getItem.booking_date,
                 event_id: getItem.event_id,
                 multiple_members: GLOBAL.sel_members,
-                total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                total_amount: Math.round(get_price),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 coupan_code:'0',
                 coupan_code_id:'0',                
@@ -835,14 +931,22 @@ walletStateChange = () => {
         }
 
       }else if(navigation.state.params.params.previous_screen=='from_cart'){
-         console.log('---------------cart pay')
-        var getItem = navigation.state.params.params.finalData
-        console.log(JSON.stringify(getItem))
-        decide_for ='3'
-        decide_module = 'gems'
-        var decide_booking_type='2'
-        get_price = getItem.price
+        console.log('---------------cart pay')
 
+            var get_tax = parseFloat(GLOBAL.gemsTax)
+            taxAmount = GLOBAL.gemsTax
+            var getItem = navigation.state.params.params.finalData
+            console.log(JSON.stringify(getItem))
+            get_price = getItem.price
+            tax_calc = parseFloat(get_price) * (get_tax/ 100)
+            get_price = parseFloat(get_price) + tax_calc
+
+            decide_for ='3'
+            decide_module = 'gems'
+            var decide_booking_type='2'
+
+
+        console.log(JSON.stringify(getItem))
 
         if(this.state.finalCheckoutPrice==0){
             const url = GLOBAL.BASE_URL + "add_permanent_booking";
@@ -850,9 +954,10 @@ walletStateChange = () => {
                 for: decide_for,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                order_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                total_amount: get_price,
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 name:GLOBAL.userDetails.name,
                 email:GLOBAL.userDetails.email,
@@ -897,9 +1002,10 @@ walletStateChange = () => {
                 for: decide_for,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                total_amount: Math.round(get_price),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 name:GLOBAL.userDetails.name,
                 email:GLOBAL.userDetails.email,
@@ -945,17 +1051,22 @@ walletStateChange = () => {
 
               console.log('---------------audio pay')
               var getItem = navigation.state.params.params.finalData
+
+              var get_tax = parseFloat(GLOBAL.online_consultTax)
+              taxAmount = GLOBAL.online_consultTax
+              get_price = getItem.price;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
               console.log(JSON.stringify(getItem))
               decide_for ='2'
               decide_module = 'audio'
               var decide_booking_type='2' //1 = ask for question, 2 = for online counsult
-              get_price = getItem.price
               var decide_type = 'online'
               var decide_booking_for = GLOBAL.dec_single_sel_member
               var mem_ids= GLOBAL.single_sel_member
 
-          
-
+              console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
               if(this.state.finalCheckoutPrice == 0){
                 
@@ -979,11 +1090,14 @@ walletStateChange = () => {
                 coupan_code_id:'0',
                 from_payment_gateway:'0',
                 total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               } 
+
+              console.log(JSON.stringify(body))
                   fetch(url, {
                   method: "POST",
                   headers: {
@@ -1025,10 +1139,11 @@ walletStateChange = () => {
                 dob: GLOBAL.userDetails.dob,
                 coupan_code:'0',
                 coupan_code_id:'0',
-                from_payment_gateway: this.state.finalCheckoutPrice.toString(),
-                total_amount: get_price,
-                wallet_amount: this.state.finalWall.toString(),
-                referral_amount: this.state.finalRef.toString(),
+                from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
+                total_amount: Math.round(get_price),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 discount_amount: '0',
                 trxn_mode:'normal'
               }
@@ -1061,14 +1176,20 @@ walletStateChange = () => {
               }
 
       }else if(navigation.state.params.params.previous_screen=='paid_pdf'){
+              var get_tax = parseFloat(GLOBAL.pdf_bookTax)
+              taxAmount = GLOBAL.pdf_bookTax
+              var getItem =this.props.navigation.state.params.params.finalData
+              get_price = this.state.prices.varshphal_pdf
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
 
               decide_for = '8';
               decide_module = 'varshfhal';
-              get_price = this.state.prices.varshphal_pdf;
               var FULL_DOB = GLOBAL.glyear +'-'+GLOBAL.glmonth +'-'+GLOBAL.gldate
               var FULL_TOB = GLOBAL.glhour + ':'+ GLOBAL.glminute
 
-              console.log(JSON.stringify(GLOBAL.userDetails))
+              // console.log(JSON.stringify(GLOBAL.userDetails))
+
               if(this.state.finalCheckoutPrice == 0){
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
@@ -1076,17 +1197,7 @@ walletStateChange = () => {
                     user_id: GLOBAL.user_id,
                     for: decide_for,
                     module: decide_module,
-
-                    name: GLOBAL.userDetails.name,
-                    dob: FULL_DOB,
-                    tob: FULL_TOB,
-                    pob: GLOBAL.glLocationName,
-                    lat: GLOBAL.gllat,
-                    long: GLOBAL.gllong,
-                    lat_long_address: GLOBAL.glLocationName,
                     timezone: GLOBAL.glzone,
-                    mobile: GLOBAL.userDetails.phone,
-                    email: GLOBAL.userDetails.email,
 
                     coupan_code: this.state.coupan_code,
                     coupan_code_id: this.state.coupan_code_id,
@@ -1094,20 +1205,22 @@ walletStateChange = () => {
                     from_payment_gateway:"0",
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    order_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: get_price.toString(),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
+                var finalBody = {...body , ...navigation.state.params.params.finalData}
 
-                console.log(JSON.stringify(body))
+                console.log(JSON.stringify(finalBody))
                 fetch(url, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json"
                   },
 
-                  body: JSON.stringify(body)
+                  body: JSON.stringify(finalBody)
                 })
                   .then(response => response.json())
                   .then(responseJson => {
@@ -1129,29 +1242,22 @@ walletStateChange = () => {
                     user_id: GLOBAL.user_id,
                     for: decide_for,
                     module: decide_module,
-
-                    name: GLOBAL.userDetails.name,
-                    dob: FULL_DOB,
-                    tob: FULL_TOB,
-                    pob: GLOBAL.glLocationName,
-                    lat: GLOBAL.gllat,
-                    long: GLOBAL.gllong,
-                    lat_long_address: GLOBAL.glLocationName,
                     timezone: GLOBAL.glzone,
-                    mobile: GLOBAL.userDetails.phone,
-                    email: GLOBAL.userDetails.email,
 
                     coupan_code: this.state.coupan_code,
                     coupan_code_id: this.state.coupan_code_id,
                   
                     payment_from:"normal",
                     discount_amount: '0',                    
-                    total_amount: get_price.toString(),
-                    wallet_amount: this.state.finalWall.toString(),
-                    referral_amount: this.state.finalRef.toString(),
+                    total_amount: Math.round(get_price),
+                    tax_amount: parseFloat(tax_calc).toFixed(2),
+                    wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                    referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                   }
 
-                console.log("temp"+JSON.stringify(body))
+                var finalBody = {...body , ...navigation.state.params.params.finalData}
+
+                console.log("temp"+JSON.stringify(finalBody))
 
                 fetch(url, {
                   method: "POST",
@@ -1159,7 +1265,7 @@ walletStateChange = () => {
                     "Content-Type": "application/json"
                   },
 
-                  body: JSON.stringify(body)
+                  body: JSON.stringify(finalBody)
                 })
                   .then(response => response.json())
                   .then(responseJson => {
@@ -1181,7 +1287,216 @@ walletStateChange = () => {
 
               }
 
-      }
+      }else if(navigation.state.params.params.previous_screen=='medical_astro'){
+
+              console.log('---------------medical_astro pay')
+              var get_tax = parseFloat(GLOBAL.medical_bookTax)
+              taxAmount = GLOBAL.medical_bookTax
+              var getItem = navigation.state.params.params.finalData
+              get_price = getItem.prev_amount;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
+              console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
+
+              // console.log(JSON.stringify(getItem))
+              decide_for ='9'
+              decide_module = 'medical'
+
+              if(this.state.finalCheckoutPrice == 0){
+                
+              const url = GLOBAL.BASE_URL + "add_permanent_booking";
+
+              var body={
+                for: decide_for,
+                booking_type: decide_booking_type,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                coupan_code:'0',
+                coupan_code_id:'0',
+                from_payment_gateway:'0',
+                total_amount: get_price,
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                discount_amount: '0',
+                payment_from:'normal'
+              } 
+
+              var finalBody = {...body , ...navigation.state.params.params.finalData}
+
+              console.log('---perm++'+JSON.stringify(finalBody))
+
+                  fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(finalBody)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+
+                      this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+              }else{
+               // alert('temp')
+                const url = GLOBAL.BASE_URL + "add_temporary_booking";
+                
+                var body={
+                for: decide_for,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                coupan_code:'0',
+                coupan_code_id:'0',
+                total_amount: Math.round(get_price),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                discount_amount: '0',
+              }
+              var finalBody = {...body , ...navigation.state.params.params.finalData}
+
+              console.log('---temp++'+JSON.stringify(finalBody))
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(finalBody)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+                      var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
+
+                       this.rajorPay(commonHtml)
+
+                      //this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+              }
+
+      }else if(navigation.state.params.params.previous_screen=='financial_astro'){
+
+              console.log('---------------financial_astro pay')
+              var get_tax = parseFloat(GLOBAL.financial_bookTax)
+              taxAmount = GLOBAL.financial_bookTax
+              var getItem = navigation.state.params.params.finalData
+              get_price = getItem.prev_amount;
+              tax_calc = parseFloat(get_price) * (get_tax/ 100)
+              get_price = parseFloat(get_price) + tax_calc
+
+              // console.log(JSON.stringify(getItem))
+              decide_for ='10'
+              decide_module = 'financial'
+
+              if(this.state.finalCheckoutPrice == 0){
+                
+              const url = GLOBAL.BASE_URL + "add_permanent_booking";
+
+              var body={
+                for: decide_for,
+                booking_type: decide_booking_type,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                coupan_code:'0',
+                coupan_code_id:'0',
+                from_payment_gateway:'0',
+                total_amount: get_price,
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                discount_amount: '0',
+                payment_from:'normal'
+              } 
+
+              var finalBody = {...body , ...navigation.state.params.params.finalData}
+
+              console.log('---perm++'+JSON.stringify(finalBody))
+
+                  fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(finalBody)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+
+                      this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+              }else{
+               // alert('temp')
+                const url = GLOBAL.BASE_URL + "add_temporary_booking";
+                
+                var body={
+                for: decide_for,
+                user_id: GLOBAL.user_id,
+                module: decide_module,
+                coupan_code:'0',
+                coupan_code_id:'0',
+                total_amount: Math.round(get_price),
+                wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
+                referral_amount: parseFloat(this.state.finalRef).toFixed(2),
+                tax_amount: parseFloat(tax_calc).toFixed(2),
+                discount_amount: '0',
+              }
+              var finalBody = {...body , ...navigation.state.params.params.finalData}
+
+              console.log('---temp++'+JSON.stringify(finalBody))
+                fetch(url, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+
+                  body: JSON.stringify(finalBody)
+                })
+                  .then(response => response.json())
+                  .then(responseJson => {
+                    console.log(JSON.stringify(responseJson))
+                    if (responseJson.status == true) {
+                      var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
+
+                       this.rajorPay(commonHtml)
+
+                      //this.props.navigation.navigate("Thankyou");
+                    } else {
+                    }
+                  })
+                  .catch(error => {
+                    console.error(error);
+                    this.hideLoading();
+                  });
+              }
+}
 
 
       }
@@ -1203,32 +1518,52 @@ walletStateChange = () => {
 
   calculation = (value) => {
     var get_price = '';
-
+    var tax_calc
     if (
       this.props.navigation.state.params.params.previous_screen ==
       'horo_matching'
     ) {
+      var get_tax = parseFloat(GLOBAL.match_makingTax)      
       get_price = this.state.prices.match_making_price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+    
     } else if(this.props.navigation.state.params.params.previous_screen =='life_pred'){
+      var get_tax = parseFloat(GLOBAL.life_predTax)
+      var getItem =this.props.navigation.state.params.params.item
       get_price = this.state.prices.life_prediction_price;
-//      alert('hi')
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
     }else if(this.props.navigation.state.params.params.previous_screen =='astro_classes'){
+      var get_tax = parseFloat(GLOBAL.classTax)
       var getItem =this.props.navigation.state.params.params.item
       get_price = getItem.base_price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
       console.log('astro_classess', this.props.navigation.state.params.params.item)
     }else if(this.props.navigation.state.params.params.previous_screen =='chat'){
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('chat pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='video'){
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('video pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='inperson'){
+      var get_tax = parseFloat(GLOBAL.in_personTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
       console.log('inperson pay', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='from_cart'){
@@ -1237,18 +1572,43 @@ walletStateChange = () => {
 
       console.log('from cart', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='audio'){
+      var get_tax = parseFloat(GLOBAL.online_consultTax)
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
 
-      console.log('from cart', this.props.navigation.state.params.params)
+      console.log('from audio', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='paid_pdf'){
-      get_price = this.state.prices.varshphal_pdf;
+      var get_tax = parseFloat(GLOBAL.pdf_bookTax)
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = this.state.prices.varshphal_pdf
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+
+    }else if(this.props.navigation.state.params.params.previous_screen =='medical_astro'){
+      var get_tax = parseFloat(GLOBAL.medical_bookTax)
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = getItem.prev_amount;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+      console.log('medical_astro', this.props.navigation.state.params)
+    }else if(this.props.navigation.state.params.params.previous_screen =='financial_astro'){
+      var get_tax = parseFloat(GLOBAL.financial_bookTax)
+      var getItem =this.props.navigation.state.params.params.finalData
+      get_price = getItem.prev_amount;
+      tax_calc = parseFloat(get_price) * (get_tax/ 100)
+      get_price = parseFloat(get_price) + tax_calc
+
+      console.log('financial_astro', this.props.navigation.state.params)
     }
 
     if(this.state.wallet == false && this.state.debit== false && this.state.refer ==false){
    //     alert('none')
         this.setState({finalCheckoutPrice: get_price,
-          totalPay: get_price,
+          totalPay: get_price - tax_calc,
           finalWall : 0,
           finalRef : 0
         })
@@ -1272,7 +1632,7 @@ walletStateChange = () => {
         if(cc > 0){
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalRef: 0
         })
 
@@ -1280,7 +1640,7 @@ walletStateChange = () => {
           var ss = aa - bb
         this.setState({finalCheckoutPrice: ss,
           finalWall: bb,
-          totalPay: get_price,
+          totalPay: get_price - tax_calc,
           finalRef: 0
         })
 
@@ -1314,9 +1674,9 @@ walletStateChange = () => {
         // var cc = aa - bb
         this.setState({finalCheckoutPrice:     bb,
           finalWall: 0,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalRef: 0
-            })
+         })
 
        // alert('debit' +bb)
     }else if(this.state.wallet == false && this.state.debit== false && this.state.refer ==true){
@@ -1328,7 +1688,7 @@ walletStateChange = () => {
 
           this.setState({finalCheckoutPrice: bb-aa,
           finalRef: aa,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalWall: 0
         })
 
@@ -1336,7 +1696,7 @@ walletStateChange = () => {
         }else{
           this.setState({finalCheckoutPrice: 0,
           finalRef: bb,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalWall: 0
         })
         }
@@ -1351,7 +1711,7 @@ walletStateChange = () => {
 
           this.setState({finalCheckoutPrice: bb-aa,
           finalRef: aa,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalWall: 0
         })
 
@@ -1359,7 +1719,7 @@ walletStateChange = () => {
         }else{
           this.setState({finalCheckoutPrice: 0,
           finalRef: bb,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalWall: 0
         })
         }
@@ -1390,7 +1750,7 @@ walletStateChange = () => {
         if(cc > 0){
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalRef: 0
         })
 
@@ -1398,7 +1758,7 @@ walletStateChange = () => {
           var ss = aa - bb
         this.setState({finalCheckoutPrice: ss,
           finalWall: bb,
-          totalPay: get_price,
+          totalPay: get_price - tax_calc,
           finalRef: 0
         })
 
@@ -1435,14 +1795,14 @@ walletStateChange = () => {
 
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price - aa,
-          totalPay: get_price,       
+          totalPay: get_price - tax_calc,
           finalRef: aa
         })
 
         }else{
         this.setState({finalCheckoutPrice: cc,
           finalWall: zz,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalRef: aa
         })
 
@@ -1461,14 +1821,14 @@ walletStateChange = () => {
 
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price - aa,
-          totalPay: get_price,       
+          totalPay: get_price - tax_calc,
           finalRef: aa
         })
 
         }else{
         this.setState({finalCheckoutPrice: cc,
           finalWall: zz,
-          totalPay: get_price,          
+          totalPay: get_price - tax_calc,
           finalRef: aa
         })
 
@@ -1524,7 +1884,9 @@ walletStateChange = () => {
     console.log('finalCheckoutPrice--> '+ this.state.finalCheckoutPrice+
                 '  finalref-->  '+this.state.finalRef+
                 '  finalWall-->  '+ this.state.finalWall+
-                '  totalPay-->  '+ this.state.totalPay)
+                '  totalPay-->  '+ this.state.totalPay 
+
+                )
 
   };
 
@@ -1534,7 +1896,7 @@ walletStateChange = () => {
 
 
   rajorPay = para => {
-    var finalPrice = parseFloat(this.state.finalCheckoutPrice) * 100;
+    var finalPrice = Math.round(parseFloat(this.state.finalCheckoutPrice)) * 100;
     // var desc = GLOBAL.user_id + '|' + 'online' + '|' + responseJson.id;
     var desc = para
     var options = {
@@ -1555,12 +1917,12 @@ walletStateChange = () => {
     RazorpayCheckout.open(options)
       .then(data => {
         // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
+        console.log(`Success: ${data.razorpay_payment_id}`);
         this.props.navigation.navigate('Thankyou')
       })
       .catch(error => {
         // handle failure
-        alert(`Error: ${error.code} | ${error.description}`);
+        console.log(`Error: ${error.code} | ${error.description}`);
       });
   };
 
@@ -1851,7 +2213,7 @@ walletStateChange = () => {
                     marginRight: wp(5),
                     fontFamily: 'Nunito-Regular',
                   }}>
-                  ₹ {this.state.totalPay}/-
+                  ₹ {parseFloat(this.state.totalPay).toFixed(2)}/-
                 </Text>
               </View>
               <View
@@ -1887,7 +2249,7 @@ walletStateChange = () => {
                     marginRight: wp(5),
                     fontFamily: 'Nunito-Regular',
                   }}>
-                  - ₹ {this.state.finalWall}/-
+                  - ₹ {parseFloat(this.state.finalWall).toFixed(2)}/-
                 </Text>
               </View>
               <View
@@ -1923,7 +2285,43 @@ walletStateChange = () => {
                     marginRight: wp(5),
                     fontFamily: 'Nunito-Regular',
                   }}>
-                  - ₹ {this.state.finalRef}/-
+                  - ₹ {parseFloat(this.state.finalRef).toFixed(2)}/-
+                </Text>
+              </View>
+              <View
+                style={{
+                  borderBottomColor: 'rgba(0,0,0,.1)',
+                  borderBottomWidth: 1,
+                  marginTop: 12,
+                }}
+              />
+
+              <View
+                style={{
+                  marginTop: hp(2),
+                  flexDirection: 'row',
+                  height: hp(3),
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    marginLeft: wp(5),
+                    fontFamily: 'Nunito-Regular',
+                  }}>
+                  Tax
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    marginRight: wp(5),
+                    fontFamily: 'Nunito-Regular',
+                  }}>
+                  {this.state.t_ax}%
                 </Text>
               </View>
               <View
@@ -1959,7 +2357,7 @@ walletStateChange = () => {
                     marginRight: wp(5),
                     fontFamily: 'Nunito-Bold',
                   }}>
-                  ₹ {this.state.finalCheckoutPrice}/-
+                  ₹ {parseFloat(this.state.finalCheckoutPrice).toFixed(2)}/-
                 </Text>
               </View>
               <View
@@ -2003,7 +2401,7 @@ walletStateChange = () => {
                     marginLeft: wp(3),
                     fontFamily: 'Nunito-Bold',
                   }}>
-                  ₹ {this.state.finalCheckoutPrice}/-
+                  ₹ {Math.round(parseFloat(this.state.finalCheckoutPrice).toFixed(2))}/-
                 </Text>
               </View>
               <Button

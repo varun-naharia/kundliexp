@@ -176,7 +176,8 @@ openMembers=()=>{
 //        alert(JSON.stringify(yeah))
         return (
             <View style={{flex:1, backgroundColor:'white'}}>
-                <ScrollView>
+                <ScrollView
+                showsVerticalScrollIndicator ={false}>
                     <View style={{backgroundColor:'white',}}>
                         <TouchableOpacity  onPress={this.navigateToScreen('EditProfile')}
                         activeOpacity={0.9}>
@@ -277,7 +278,7 @@ openMembers=()=>{
                             <Image style={styles.drawericon}
                                    source={require('./resources/drawer/d_about.png')} />
                             <Text style = {styles.drawerTexts}
-                                  onPress={()=>Linking.openURL('https://kundaliexpert.com/about.html')}>
+                                  onPress={()=> this.props.navigation.navigate('AboutUs')}>
                                About Us
                             </Text>
                         </View>

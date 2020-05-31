@@ -6,6 +6,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 type Props = {};
 import IndicatorCustom from './IndicatorCustom.js';
 import WebView from 'react-native-webview'
+import AutoHeightWebView from 'react-native-autoheight-webview'
 
 export default class GandMool extends Component<Props>{
 
@@ -35,7 +36,8 @@ export default class GandMool extends Component<Props>{
 
   }
   getReviews = () => {
-    const url = GLOBAL.BASE_URL + 'master_prices';
+    this.showLoading()
+    const url = GLOBAL.BASE_URL + 'gandmool';
     //  this.showLoading()
     fetch(url, {
       method: 'POST',
@@ -43,12 +45,12 @@ export default class GandMool extends Component<Props>{
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        data: '',
+        mode: 'gandmool',
       }),
     })
       .then(response => response.json())
       .then(responseJson => {
-        //       this.hideLoading()
+              this.hideLoading()
 
         console.log(JSON.stringify(responseJson));
         if (responseJson.status == true) {
@@ -60,6 +62,7 @@ export default class GandMool extends Component<Props>{
       })
       .catch(error => {
         console.error(error);
+        this.hideLoading()
       });
   };
 
@@ -86,12 +89,19 @@ export default class GandMool extends Component<Props>{
 
 
 
+    <AutoHeightWebView source={{html : this.state.gandmool}} 
+    style={{width:window.width,}}
+    containerStyle={{ margin:'1.5%' }}
+    scalesPageToFit={true}
+    scrollEnabled={false}
+    viewportContent={'width=device-width, user-scalable=no'}/>
 
 
-        <WebView containerStyle={{margin:10}}
-  source={{ html: this.state.gandmool }}
-    />
 
+{/*        <WebView containerStyle={{margin:10}}
+                 source={{ html: this.state.gandmool }}
+        />
+*/}
 
 
 

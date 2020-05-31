@@ -18,6 +18,7 @@ export default class NotifService {
 
       // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
       senderID: '506507542965',
+//      soundName: 'alarm.mp3',
 
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {
@@ -38,6 +39,8 @@ export default class NotifService {
         * - Specified if permissions (ios) and token (android and ios) will requested or not,
         * - if not, you must call PushNotificationsHandler.requestPermissions() later
         */
+      soundName: 'alarm.mp3', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      actions: '["Decline", "Accept"]',  // (Android only) See the doc for notification actions to know more
       requestPermissions: true,
     });
   }
@@ -72,9 +75,9 @@ export default class NotifService {
       title: "Thank You!", // (optional)
       message: "Your order has been placed successfully!", // (required)
       playSound: true, // (optional) default: true
-      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      soundName: 'alarm.mp3', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
       number: '10', // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-      actions: '["Yes", "No"]',  // (Android only) See the doc for notification actions to know more
+      actions: '["Decline", "Answer"]',  // (Android only) See the doc for notification actions to know more
     });
   }
 
@@ -112,7 +115,7 @@ export default class NotifService {
       userInteraction: true,
       show_in_foreground: true,
 
-      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      soundName: 'alarm.mp3', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
     });
   }
 

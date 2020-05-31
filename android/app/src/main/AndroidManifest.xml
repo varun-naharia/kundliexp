@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BIND_TELECOM_CONNECTION_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -43,6 +45,7 @@
             <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>            
         </intent-filter>
       </activity>
+        <activity android:name="com.incomingcall.UnlockScreenActivity" />
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
@@ -66,6 +69,13 @@
         <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
             android:value="rn-push-notification-channel"/>
 
+        <service android:name="io.wazo.callkeep.VoiceConnectionService"
+            android:label="Wazo"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

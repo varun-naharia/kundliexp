@@ -34,6 +34,7 @@ import moment from 'moment'
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import { withNavigationFocus } from 'react-navigation';
+import {NavigationActions,StackActions} from 'react-navigation';
 
 var myBanners=[{
     id: '1',
@@ -416,20 +417,19 @@ selectNews=(itemData, index)=>{
 _renderItemNewsList=({item, index})=>{
 //  alert(JSON.stringify(itemData))
     return(
-<TouchableOpacity style={{width:wp('45%'),margin:4, height:hp('6%'),}}
+<TouchableOpacity style={{width:wp('45%'),margin:4, height:hp('5%'),}}
 onPress={()=> this.selectNews(item, index)}>
   <View style  = {{width:'100%',height:'100%',backgroundColor:'white',
-       flexDirection:'row',borderRadius:5, }}>
-      <Text style = {{fontSize:13,marginLeft:10,fontFamily:'Nunito-Regular',color:'#8C9198',width:'95%', marginTop:5, borderBottomColor:'#f7f7f7', borderBottomWidth:1}}
-      numberOfLines={2}>
+       flexDirection:'column',borderRadius:5, }}>
+      <Text style = {{fontSize:13,marginLeft:10,fontFamily:'Nunito-Regular',color:'#8C9198',width:'95%',}}
+      numberOfLines={1}>
           {item.title}
       </Text>
-{/*      <Text style = {{fontSize:10,marginLeft:10,fontFamily:'BreeSerif-Regular',color:'pink',width:'95%'}}>
+       <Text style = {{fontSize:12,marginLeft:10,fontFamily:'Nunito-Regular',color:'red',}}
+       onPress={()=> Linking.openURL(item.url)}>
       Read more..
       </Text>
-*/}
-
-
+      <View style={{ backgroundColor:'#f7f7f7', height:1.5, width:'95%', alignSelf:'center', marginTop:5}}/>
 </View>
 </TouchableOpacity>
 
@@ -619,7 +619,7 @@ _renderItemNewsImageList=(itemData)=>{
       })
         .then(response => response.json())
         .then(responseJson => {
-          console.log(JSON.stringify(responseJson.user_detail));
+          console.log(JSON.stringify(responseJson.get_Settings));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
@@ -647,6 +647,19 @@ _renderItemNewsImageList=(itemData)=>{
                     live_details : responseJson.live_details
                    })
 
+                  // aloo
+                  GLOBAL.pdf_bookTax = responseJson.tax_details.pdf_booking
+                  GLOBAL.financial_bookTax = responseJson.tax_details.financial_booking
+                  GLOBAL.medical_bookTax = responseJson.tax_details.medical_booking
+                  GLOBAL.match_makingTax = responseJson.tax_details.match_making
+                  GLOBAL.life_predTax =  responseJson.tax_details.life_prediction
+                  // GLOBAL.online_consultTax = 1.18
+                  GLOBAL.online_consultTax = responseJson.tax_details.online_consultation
+                  GLOBAL.in_personTax = responseJson.tax_details.in_person
+                  GLOBAL.classTax = responseJson.tax_details.class_package
+                  GLOBAL.gemsTax =  responseJson.tax_details.gems_booking
+
+
                   GLOBAL.all_settings = responseJson.get_Settings
                   GLOBAL.userDetails = responseJson.user_detail
                   GLOBAL.helpline_number = responseJson.helpline_number
@@ -655,6 +668,22 @@ _renderItemNewsImageList=(itemData)=>{
                   GLOBAL.glLanguage = responseJson.user_detail.language
                   GLOBAL.glChartStyle= responseJson.user_detail.chart_style
 //                  alert(JSON.stringify(GLOBAL.all_settings))
+                if(responseJson.user_detail.status=='0'){
+                          AsyncStorage.removeItem('userID');
+
+                      this.props
+                          .navigation
+                          .dispatch(StackActions.reset({
+                              index: 0,
+                              actions: [
+                                  NavigationActions.navigate({
+                                      routeName: 'Login',
+                                      params: { someParams: 'parameters goes here...' },
+                                  }),
+                              ],
+                          }))
+                }
+
           } else {
             alert(
               "Something went wrong!"

@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import {
   Platform,
   StyleSheet,
-  AsyncStorage,
   Text,
   View,
   FlatList,
-  ActivityIndicator,
-  StatusBar,
   Image,
   TouchableOpacity,
   Alert,

@@ -80,7 +80,7 @@ class SavedKundli extends Component<Props> {
         .then(responseJson => {
                 this.hideLoading()
        
-          console.log(JSON.stringify(responseJson))
+          // console.log(JSON.stringify(responseJson))
 
           if (responseJson.status == true) {
 
@@ -111,6 +111,8 @@ class SavedKundli extends Component<Props> {
 
         GLOBAL.isSavedKundli='1'
         GLOBAL.savedKundliDetails = item
+       console.log(JSON.stringify(item))
+
     }
 
 

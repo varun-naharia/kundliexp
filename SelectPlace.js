@@ -8,7 +8,6 @@ import {
     FlatList,
     TouchableOpacity,
     SafeAreaView,
-    AsyncStorage,
     ScrollView,
     Dimensions,
     Alert
@@ -127,7 +126,7 @@ export default class SelectPlace extends Component<Props>{
                         return ""; // text input default value
                     }}
                     query={{
-                        key: "AIzaSyBWX-QNm_gVzt6U2K6xeU4cmF5dkX8XUQ0",
+                        key: "AIzaSyCqaIuorjMaU5R9SWxTKdVYT0eFjSg-XqY",
                         language: "en", // language of the results
                         types: "(cities)" // default: 'geocode'
                     }}

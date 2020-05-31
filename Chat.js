@@ -28,13 +28,13 @@ export default class Chat extends Component<Props> {
         return (
 
 <View style={{flex:1}}>
-           <Header navigation={this.props.navigation}
+{/*           <Header navigation={this.props.navigation}
            showHeaderImage={false}
            headerColor ={'#E60000'}
            backImagePath={require('./resources/back.png')}
            headerName={'CHAT'}
            headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
-
+*/}
             <GiftedChat
                 renderUsernameOnMessage = {true}
                 messages={this.state.messages}

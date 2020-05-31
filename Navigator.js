@@ -89,6 +89,11 @@ import DailyPanchang from './DailyPanchang'
 import RudrakshSuggestion from './RudrakshSuggestion'
 import LifeReports from './LifeReports'
 import MatchMakingExtra from './MatchMakingExtra'
+import BasicForm from './BasicForm'
+import AboutUs from './AboutUs'
+import ContactUs from './ContactUs'
+import Terms from './Terms'
+import Privacy from './Privacy'
 
 import React, {Component} from 'react';
 
@@ -118,7 +123,7 @@ const DrawerNavigator = createDrawerNavigator({
 
 const StackNavigator = createStackNavigator({
 
-    // Animations:{screen:Animations},
+    // Thankyou:{screen:Thankyou},
 
   //     Settings:{screen:Settings},
 
@@ -206,7 +211,12 @@ const StackNavigator = createStackNavigator({
         DailyPanchang:{screen:DailyPanchang},
         RudrakshSuggestion:{screen:RudrakshSuggestion},
         LifeReports:{screen:LifeReports},
-        MatchMakingExtra:{screen:MatchMakingExtra}
+        MatchMakingExtra:{screen:MatchMakingExtra},
+        BasicForm:{screen: BasicForm},
+        AboutUs:{screen: AboutUs},
+        ContactUs:{screen: ContactUs},
+        Terms:{screen:Terms},
+        Privacy:{screen:Privacy}
     },
 
     {headerMode :'none'},
