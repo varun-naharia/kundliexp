@@ -824,7 +824,7 @@ buttonOkJoin=()=>{
                 </View>
             )
         }
-        console.log('render')
+        // console.log('render')
         return (
         <>
               <ScrollView style={styles.container}
@@ -877,6 +877,8 @@ buttonOkJoin=()=>{
                              renderItem={this._renderItems}
                              sliderWidth={wp('95%')}
                              itemWidth={wp('95%')}
+                             autoplay={true}
+                             loop={true}
                              layout={'default'} layoutCardOffset={18}
                              onSnapToItem={(index) => this.setState({ activeSlide: index }) }
                            />{this.pagination}

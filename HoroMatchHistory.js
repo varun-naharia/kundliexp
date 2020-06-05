@@ -9,7 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom.js';
-
+import EmptyMessage from './EmptyMessage'
 
 type Props = {};
 class HoroMatchHistory extends Component<Props> {
@@ -71,10 +71,14 @@ class HoroMatchHistory extends Component<Props> {
           console.log(JSON.stringify(responseJson))
 
           if (responseJson.status == true) {
-          var resu = this.state.predlist
-          this.setState({predlist : [...resu ,...responseJson.lists]})
 
-//            this.setState({predlist : responseJson.lists})
+            if(responseJson.lists.length == 0){
+
+            }else{
+                var resu = this.state.predlist
+                this.setState({predlist : [...resu ,...responseJson.lists]})
+
+            }
           } else {
 
           }
@@ -200,6 +204,15 @@ class HoroMatchHistory extends Component<Props> {
         <View style={{width:wp(100),flex:1,backgroundColor:'transparent',flexDirection:'column',
         marginTop:hp(1), alignSelf:'center'}}>
 
+            {this.state.predlist.length == 0 &&(
+
+              <EmptyMessage
+              emptyMessage={'No booking made by you!'}/>
+
+              )}
+
+              {this.state.predlist.length !=0 &&(
+
                     <FlatList style= {{marginBottom:hp(2)}}
                               data={this.state.predlist}
                               keyExtractor = { (item, index) => index.toString() }
@@ -208,7 +221,7 @@ class HoroMatchHistory extends Component<Props> {
                               onEndReached={this.handleLoadMore}
                               onEndReachedThreshold={0.01}
                     />
-
+              )}
 
         </View>
             </View>

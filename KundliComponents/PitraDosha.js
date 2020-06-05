@@ -57,7 +57,7 @@ export default class PitraDosha extends Component{
         }).then((response) => response.json())
             .then((responseJson) => {
   //             this.hideLoading()
-                   console.log(JSON.stringify(responseJson))
+                   // console.log(JSON.stringify(responseJson))
 
                 if (responseJson.status == true) {
                 this.setState({response: responseJson.responseData,

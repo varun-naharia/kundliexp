@@ -387,7 +387,7 @@ buttonClickListener=()=>{
                   >{item.review}</Text>
               </View>
               </View>
-                <StarRating containerStyle={{width:'30%', margin:5,}}
+                <StarRating containerStyle={{width:'30%', margin:5,position:'absolute', right:10, top:0}}
                     disabled={true}
                     maxStars={5}
                     fullStarColor={'#ffd300'}        
@@ -456,7 +456,7 @@ buttonClickListener=()=>{
               <Text style={{fontSize:15, color:'white', marginTop:hp(1),
               lineHeight:20, fontFamily:'Nunito-SemiBold',alignSelf:'center'}}>{yeah.languages}</Text>
 
-               <View style={{width:wp('100%'), height:hp('8%'),marginTop:hp(1.6), backgroundColor:'transparent', flexDirection:'row'}}>
+               <View style={{width:wp('100%'), height:hp('8%'),marginTop:hp(1.6), backgroundColor:'transparent', flexDirection:'row', justifyContent:'space-between'}}>
 
                <View style={{width:'33%', flexDirection:'column'}}>
 
@@ -483,7 +483,7 @@ buttonClickListener=()=>{
                 </Text>
                </View>
 
-               <View style={{width:'33%', flexDirection:'column'}}>
+{/*               <View style={{width:'33%', flexDirection:'column'}}>
 
               <Text style = {{fontSize:17,fontFamily:'Nunito-SemiBold',color:'white', marginTop:hp(1)
               ,alignSelf:'center'}}>
@@ -494,12 +494,12 @@ buttonClickListener=()=>{
               Served
                 </Text>
                </View>
-
+*/}
                </View>
 
                </ImageBackground>
 
-               {GLOBAL.headerTitle != 'BOOKING' &&(
+{/*               {GLOBAL.headerTitle != 'BOOKING' &&(
 
           <View style={{flexDirection:'row', marginVertical:hp(2),width:wp(93),alignSelf:'center',marginTop:hp(2)}}>
               <View style={{flexDirection:'column', marginLeft:hp(1)}}>
@@ -510,7 +510,7 @@ buttonClickListener=()=>{
           </View>
 
                )}
-
+*/}
 
                {GLOBAL.headerTitle == 'BOOKING' &&(
                <View style={{width:wp(95), flexDirection:'column', alignSelf:'center', marginTop:hp(1), marginBottom:hp(0.5)}}>
@@ -531,7 +531,7 @@ buttonClickListener=()=>{
           <View style={{flexDirection:'row', marginVertical:hp(2),width:wp(93),alignSelf:'center',marginTop:hp(2)}}>
               <View style={{flexDirection:'column', marginLeft:hp(1)}}>
                   <Text style={{fontSize:17, color:'black',fontFamily:'Nunito-Bold'}}>Expertise</Text>
-                  <Text style={{fontSize:15, color:'#ACAAAA', width:wp(80),marginTop:hp(1),lineHeight:20}}
+                  <Text style={{fontSize:15, color:'#ACAAAA',fontFamily:'Nunito-Regular', width:wp(80),marginTop:hp(1),lineHeight:20}}
                   >{yeah.expertise}</Text>
               </View>
           </View>
@@ -559,7 +559,7 @@ buttonClickListener=()=>{
 
           <View style={{flexDirection:'row', marginVertical:hp(2),width:wp(93),alignSelf:'center',marginTop:hp(2)}}>
               <View style={{flexDirection:'column', marginLeft:hp(1)}}>
-                  <Text style={{fontSize:17, color:'black',fontFamily:'Nunito-Bold'}}>Reviews ({this.state.count_reviews} ratings)</Text>
+                  <Text style={{fontSize:17, color:'black',fontFamily:'Nunito-Bold'}}>Google Reviews ({this.state.count_reviews} ratings)</Text>
                   <View style={{flexDirection:'row'}}>
                   <Text style={{fontSize:27, color:'black', marginTop:hp(1), fontFamily:'Nunito-SemiBold'}}
                   >{this.state.ratting}</Text>

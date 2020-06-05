@@ -25,11 +25,12 @@ export default class Cart extends Component<Props> {
 
 
     constructor(props){
+      // alert(GLOBAL.all_settings.tax)
         super(props)
         const { navigation } = this.props;
         this.state = {
             qty: '1',
-            tax: GLOBAL.all_settings.tax,
+            tax: '0',
             delivery: GLOBAL.all_settings.delivery_charge,
             cartItems:[]
 
@@ -76,8 +77,9 @@ export default class Cart extends Component<Props> {
        console.log(JSON.stringify(responseJson))
         if (responseJson.status == true) {
 
-          this.setState({cartItems : responseJson.list})
-          this.setState({sumtotal : responseJson.sum_total})
+          this.setState({cartItems : responseJson.list,
+            sumtotal : responseJson.sum_total
+          })
 
         } else {
           alert("Empty Cart!");
@@ -94,7 +96,12 @@ export default class Cart extends Component<Props> {
     }
 
     buttonClickListeners = () =>{
+      if(GLOBAL.totalAmount ==0){
+        alert('No item in cart')
+      }else{
         this.props.navigation.navigate('AddressSelect')
+
+      }
 
     }
 
@@ -123,8 +130,6 @@ export default class Cart extends Component<Props> {
 
            this.setState({cartItems : responseJson.list,
            sumtotal : responseJson.sum_total})
-
-          
 
         } else {
           alert("Empty Cart!");
@@ -165,8 +170,10 @@ export default class Cart extends Component<Props> {
        console.log(JSON.stringify(responseJson))
         if (responseJson.status == true) {
 
-           this.setState({cartItems : responseJson.list})
-           this.setState({sumtotal : responseJson.sum_total})          
+           this.setState({cartItems : responseJson.list,
+            sumtotal : responseJson.sum_total
+           })
+
 
         } else {
           alert("Something went wrong!");
@@ -180,7 +187,7 @@ export default class Cart extends Component<Props> {
 
 
     removeMore=(itemData)=>{
-        alert(JSON.stringify(itemData.item))
+        // alert(JSON.stringify(itemData.item))
         if(itemData.item.quantity == 0){
             this.removeItem(itemData)
         }else{
@@ -207,8 +214,9 @@ export default class Cart extends Component<Props> {
                console.log(JSON.stringify(responseJson))
                 if (responseJson.status == true) {
 
-                   this.setState({cartItems : responseJson.list})
-                   this.setState({sumtotal : responseJson.sum_total})          
+                   this.setState({cartItems : responseJson.list,
+                    sumtotal : responseJson.sum_total
+                   })
 
                 } else {
                   alert("Something went wrong!");
@@ -281,6 +289,7 @@ export default class Cart extends Component<Props> {
 
 
     render() {
+      console.log(this.state.sumtotal + 'tax'+ this.state.tax+ 'delivery'+this.state.delivery)
         let totalAmount = parseFloat(this.state.sumtotal)+ parseFloat(this.state.tax)+parseFloat(this.state.delivery)
         GLOBAL.totalAmount = totalAmount
 
@@ -356,8 +365,8 @@ export default class Cart extends Component<Props> {
 
   {this.state.cartItems.length==0 && (
 
-            <Text style={{fontSize : 13,marginTop:15,color :'black',fontFamily:'Nunito-Regular',alignSelf:'center', textAlign:'center'}}>
-            Empty Cart
+            <Text style={{fontSize : 15,marginTop:15,color :'black',fontFamily:'Nunito-Regular',alignSelf:'center', textAlign:'center'}}>
+            Empty Cart!
             </Text>
 
     )}

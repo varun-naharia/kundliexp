@@ -11,8 +11,6 @@ import {
   TouchableOpacity,
   Dimensions,
   TouchableNativeFeedback,
-  WebView,
-  ActivityIndicator
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import VideoPlayer from 'react-native-video-controls';
@@ -47,7 +45,7 @@ export default class Horoscope extends Component {
 
 static navigationOptions = {
           title: 'Video Detail',
-          header: null
+          headerShown: false
       };
 
 
@@ -64,50 +62,76 @@ static navigationOptions = {
       ],
       horosigns_list:[{
         id: '1',
-        title: 'Aries',    
+        title: 'Aries',
+        for_api: 'aries',    
         artwork: require('./resources/ho_aries.png')
       },
       {
         id: '2',
-        title: 'Taurus',    
+        title: 'Taurus', 
+        for_api: 'taurus',           
         artwork: require('./resources/ho_taurus.png')
       },
       {
         id: '3',
-        title: 'Gemini',    
+        title: 'Gemini', 
+        for_api: 'gemini',               
         artwork: require('./resources/ho_gemini.png')
       },
       {
         id: '4',
         title: 'Cancer',    
+        for_api: 'cancer',            
         artwork: require('./resources/ho_canc.png')
       },
       {
         id: '5',
         title: 'Leo',    
+        for_api: 'leo',            
         artwork: require('./resources/ho_leo.png')
       },
       {
         id: '6',
         title: 'Virgo',    
+        for_api: 'virgo',            
         artwork: require('./resources/ho_virgo.png')
       },
       {
         id: '7',
         title: 'Libra',    
+        for_api: 'libra',            
         artwork: require('./resources/ho_libra.png')
       },
       {
         id: '8',
         title: 'Scorpio',    
+        for_api: 'scorpio',            
         artwork: require('./resources/ho_scorpio.png')
       },
       {
         id: '9',
-        title: 'Sagittairus',    
+        title: 'Sagittairus',
+        for_api: 'sagittarius',                
         artwork: require('./resources/ho_sagittairus.png')
       },
-
+      {
+        id: '10',
+        title: 'Capricorn',
+        for_api: 'capricorn',                
+        artwork: require('./resources/ho_capricorn.png')
+      },
+      {
+        id: '11',
+        title: 'Aquarius',
+        for_api: 'aquarius',                
+        artwork: require('./resources/ho_aquarius.png')
+      },
+      {
+        id: '12',
+        title: 'Pisces',
+        for_api: 'pisces',                
+        artwork: require('./resources/ho_pisces.png')
+      },
 ]      
     }
   }
@@ -127,22 +151,20 @@ static navigationOptions = {
   }
 
 
-  _keyExtractor = (item, index) => item.productID;
-
-
-openVideo=(itemData)=>{
-//  alert(JSON.stringify(itemData))
-  GLOBAL.postId = itemData.item.post_id
-//  this.props.navigation.push('ViewVideo')
-  this.props.navigation.navigate('HoroscopeDetails')
-
-}
+  openVideo=(item, index)=>{
+    this.props.navigation.navigate('HoroscopeDetails', {params : {sel_zodiac: item}})
+  }
 
 
     _renderScene = ({ route }) => {
         switch (route.key) {
             case 'first':
-                return     <ViewVideoHoroscope
+                return  <FlatList data={this.state.horosigns_list}
+                        extraData={this.state}
+                        numColumns={3}
+                        renderItem={this.renderItem}/>
+
+                {/*<ViewVideoHoroscope
                           navigation={this.props.navigation}
                           getRoute = {'day'}
                           key = {route.key}
@@ -162,13 +184,13 @@ openVideo=(itemData)=>{
                 console.log(e)}
 
               style={{ height: '80%', width: 300,alignSelf: 'stretch',borderTopLeftRadius:6, borderTopRightRadius:6}}/>
-}/>
+}/>*/}
 ;
             case 'second':
                 return <ViewVideoHoroscope
                           navigation={this.props.navigation}
                           getRoute = {'week'}
-                           key = {route.key}/>;
+                          key = {route.key}/>;
             case 'third':
                 return <ViewVideoHoroscope
                           navigation={this.props.navigation}
@@ -182,10 +204,10 @@ openVideo=(itemData)=>{
         }
     };
 
-  renderItem = (itemData) => {
+  renderItem = ({item, index}) => {
     //alert(JSON.stringify(itemData))
     return (
-      <TouchableNativeFeedback onPress={()=> this.openVideo(itemData)}>
+      <TouchableNativeFeedback onPress={()=> this.openVideo(item, index)}>
       <View style={{ shadowColor: '#f7f7f7',
     shadowOffset: {
       width: 0,
@@ -195,9 +217,9 @@ openVideo=(itemData)=>{
     shadowOpacity: 0.5,flex : 1, backgroundColor:'white',borderRadius:8,
     margin:5,marginTop:15,marginBottom:1,}}>
     <View style={{width:110, height:110, borderColor: 'transparent', borderWidth: 0.001, borderRadius: 55,elevation:8, backgroundColor:'white', alignSelf:'center'}}>
-    <Image style={{width:'100%', height:'100%',}} source={itemData.item.artwork}/>
+    <Image style={{width:'100%', height:'100%',}} source={item.artwork}/>
     </View>
-     <Text style={{fontSize:15, alignSelf:'center',  marginTop: 10, fontFamily: 'Nunito-SemiBold'}} numberOfLines={3}>{itemData.item.title}</Text>
+     <Text style={{fontSize:15, alignSelf:'center',  marginTop: 10, fontFamily: 'Nunito-SemiBold'}} numberOfLines={3}>{item.title}</Text>
 
 </View>
 

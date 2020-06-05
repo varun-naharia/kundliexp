@@ -197,7 +197,50 @@ handleBackButtonClick() {
 
 //        this.props.navigation.addListener('willFocus',this._handleStateChange);
 
-//  this.getReviews()
+     this.getBasicDetails()
+    }
+
+    getBasicDetails= () =>{
+        const url = GLOBAL.ASTRO_API_BASE_URL
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+
+
+            body: JSON.stringify({
+            "user_id":GLOBAL.user_id,
+            "lat_long_address": GLOBAL.glLocationName,
+            "lang":GLOBAL.glLanguage,
+            "date":GLOBAL.gldate,
+            "month":GLOBAL.glmonth,
+            "year":GLOBAL.glyear,
+            "hour":GLOBAL.glhour,
+            "minute":GLOBAL.glminute,
+            "latitude":GLOBAL.gllat,
+            "longitude":GLOBAL.gllong,
+            "timezone":GLOBAL.glzone,
+            "api-condition":"basic_detail",
+            "name": GLOBAL.nameForBasic
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+              console.log('---> basic_detail hit first')
+                if (responseJson.status == true) {
+              // this.setState({response: responseJson },() => {
+              //     //    alert('gdsd'+JSON.stringify(this.state.response));
+              //     });                  
+                }else{
+
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                this.hideLoading()
+            });
+
     }
 
 

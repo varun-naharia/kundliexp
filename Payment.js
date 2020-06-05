@@ -1896,6 +1896,8 @@ walletStateChange = () => {
 
 
   rajorPay = para => {
+    // test key : rzp_test_XSUYUlOXU9O4AG
+    // live key: rzp_live_lPEmRInJoTftjI
     var finalPrice = Math.round(parseFloat(this.state.finalCheckoutPrice)) * 100;
     // var desc = GLOBAL.user_id + '|' + 'online' + '|' + responseJson.id;
     var desc = para
@@ -1903,7 +1905,7 @@ walletStateChange = () => {
       description: desc,
       image: {uri: require('./resources/kundli_logo.png')},
       currency: 'INR',
-      key: 'rzp_test_XSUYUlOXU9O4AG',
+      key: 'rzp_live_lPEmRInJoTftjI',
       amount: finalPrice,
       name: GLOBAL.userDetails.name,
       prefill: {

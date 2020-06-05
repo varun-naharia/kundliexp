@@ -40,7 +40,15 @@ class HoroscopeMatching extends Component<Props> {
     super(props);
     const {navigation} = this.props;
     this.state = {
-      istoggle: false,
+      name:'',
+      names:'',
+      pob:'',
+      date:'',
+      time:'',
+      dates:'',
+      times:'',
+      is_sel: 0,
+      is_sels: 0,
     };
   }
 
@@ -54,22 +62,39 @@ class HoroscopeMatching extends Component<Props> {
 
   componentDidMount() {
     //        this.props.navigation.addListener('willFocus',this._handleStateChange);
-    //  this.getReviews()
+     this.setDateTime()
   }
 
-  getReviews = () => {};
+  setDateTime = () => {
+    this.setState({
+      date : GLOBAL.gldate +'-'+GLOBAL.glmonth+'-'+GLOBAL.glyear,
+      dates : GLOBAL.gldate +'-'+GLOBAL.glmonth+'-'+GLOBAL.glyear,
+      time: GLOBAL.glhour+':'+GLOBAL.glminute,
+      times: GLOBAL.glhour+':'+GLOBAL.glminute
+     })
+
+  };
 
   returnDataMale(lat, lon, name) {
     console.log('Male--> lat' + lat + 'lon' + lon);
-    this.setState({m_lat: lat, m_lon: lon, pob: name});
+    this.setState({m_lat: lat, m_lon: lon, pob: name, is_sel: 1});
   }
 
   returnDataFeMale(lat, lon, name) {
     console.log('FeMale--> lat' + lat + 'lon' + lon);
-    this.setState({f_lat: lat, f_lon: lon, pobs: name});
+    this.setState({f_lat: lat, f_lon: lon, pobs: name, is_sels: 1});
   }
 
   buttonClickListener = () => {
+    if(this.state.name==''){
+      alert('Please enter Boy Name')
+    }else if(this.state.is_sel==0){
+      alert('Please select Boy Place of Birth')
+    }else if(this.state.names==''){
+      alert('Please enter Girl Name')
+    }else if(this.state.is_sels==0){
+      alert('Please select Girl Place of Birth')
+    }else{
     var finalData = {
       boy_name: this.state.name,
       boy_dob: this.state.date,
@@ -92,9 +117,12 @@ class HoroscopeMatching extends Component<Props> {
 
     };
 
+    console.log(JSON.stringify(finalData))
     this.props.navigation.navigate('Payment', {
       params: {previous_screen: 'horo_matching', finalData},
     });
+
+    }
   };
 
   render() {

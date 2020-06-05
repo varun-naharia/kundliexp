@@ -76,10 +76,6 @@ static navigationOptions = {
   }
 
 
-
-  _keyExtractor = (item, index) => item.productID;
-
-
 openVideo=(itemData)=>{
 //  alert(JSON.stringify(itemData))
   GLOBAL.postId = itemData.item.post_id

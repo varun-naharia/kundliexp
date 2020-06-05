@@ -38,6 +38,7 @@ export default class KundliForm extends Component<Props> {
             date:'',
             time:'',
             value:0,
+            pob:''
         }
     }
 
@@ -135,6 +136,7 @@ buttonClickListener=()=>{
   }
 //  alert(gender)
    GLOBAL.glgender = gender
+   GLOBAL.nameForBasic = this.state.name
 
    var getSavekundli= GLOBAL.savedKundliDetails
    if(GLOBAL.isSavedKundli=='1'){
@@ -148,6 +150,10 @@ buttonClickListener=()=>{
 
    }
 
+   console.log(this.state.pob)
+   if(this.state.pob=='' || this.state.pob==undefined || this.state.pob==null){
+    alert('Please select Place of Birth')
+   }else{
 
   var navigation = this.props.navigation.state.params
 
@@ -178,6 +184,8 @@ buttonClickListener=()=>{
                 params: {previous_screen: 'paid_pdf', },
       })
   }
+
+   }
 
 
 

@@ -115,6 +115,7 @@ export default class Vimshottari extends Component{
             },
             body: JSON.stringify({
             "user_id":GLOBAL.user_id,
+            "lat_long_address": GLOBAL.glLocationName,                        
             "lang":GLOBAL.glLanguage,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,

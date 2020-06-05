@@ -56,6 +56,7 @@ export default class BasicDetails extends Component<Props> {
       console.log({
             "user_id":GLOBAL.user_id,
             "lang":GLOBAL.glLanguage,
+            "lat_long_address": GLOBAL.glLocationName,
             "date":GLOBAL.gldate,
             "month":GLOBAL.glmonth,
             "year":GLOBAL.glyear,
@@ -64,7 +65,8 @@ export default class BasicDetails extends Component<Props> {
             "latitude":GLOBAL.gllat,
             "longitude":GLOBAL.gllong,
             "timezone":GLOBAL.glzone,
-            "api-condition":"basic_detail"
+            "api-condition":"basic_detail",
+            "name":GLOBAL.nameForBasic
             })
 
       this.showLoading()
@@ -89,11 +91,12 @@ export default class BasicDetails extends Component<Props> {
             "latitude":GLOBAL.gllat,
             "longitude":GLOBAL.gllong,
             "timezone":GLOBAL.glzone,
-            "api-condition":"basic_detail"
+            "api-condition":"basic_detail",
+            "name": GLOBAL.nameForBasic
             }),
         }).then((response) => response.json())
             .then((responseJson) => {
-//               alert(JSON.stringify(responseJson))
+              console.log(JSON.stringify(responseJson))
                 this.hideLoading()
                 if (responseJson.status == true) {
               this.setState({response: responseJson },() => {
@@ -160,7 +163,7 @@ selectedFirst=(item,indexs)=>{
           <ScrollView>
           <View style={{width:wp(95), backgroundColor:'white', height:hp(5),flexDirection:'row',alignSelf:'center', justifyContent:'space-between', alignItems:'center', marginTop:hp(1) }}>
           <Text style={{fontSize:15, color:'#A3B8CB', marginLeft:wp(3), fontFamily:'Nunito-Regular'}}>Name</Text>
-          <Text style={{fontSize:15, color:'black', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Regular'}}>{yeah.name}</Text>
+          <Text style={{fontSize:15, color:'black', marginRight:wp(3),textAlign:'left', fontFamily:'Nunito-Regular'}}>{yeah.uname}</Text>
           </View>
           <View style={{width:wp(90), height:hp(0.2), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(1)}}/>
 

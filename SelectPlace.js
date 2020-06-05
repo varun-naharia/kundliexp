@@ -97,6 +97,13 @@ export default class SelectPlace extends Component<Props>{
                         GLOBAL.glLocationName = details.formatted_address
                         this.props.navigation.goBack()
 
+                        }else if(navigation.params.previous_screen=='Edit_Profile'){
+
+                        GLOBAL.edit_profLat =  details.geometry.location.lat
+                        GLOBAL.edit_profLong =  details.geometry.location.lng
+                        GLOBAL.edit_profAddress = details.formatted_address
+                        this.props.navigation.goBack()
+
                         }
 
                         // if(GLOBAL.like==2){

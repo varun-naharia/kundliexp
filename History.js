@@ -9,6 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom'
+import EmptyMessage from './EmptyMessage'
 
 type Props = {};
 class History extends Component<Props> {
@@ -73,11 +74,12 @@ class History extends Component<Props> {
     
                 if (responseJson.status == true) {
 
+                  if(responseJson.lists.length == 0){
+
+                  }else{
                     var resu = this.state.results
                     this.setState({results: [...resu, ...responseJson.lists]})
-
-      //              console.log(JSON.stringify(this.state.results))
-
+                  }
                 } else {
 //                    this.setState({results: []})
                 }
@@ -258,6 +260,14 @@ class History extends Component<Props> {
 
                 <View style={{width:'95%',  margin:10, borderRadius:7, flex:1}}>
 
+                 {this.state.results.length == 0 &&(
+
+                    <EmptyMessage
+                    emptyMessage={'You have not made any bookings yet!'}/>
+              )}
+
+              {this.state.results.length !=0 &&(
+
                     <FlatList style= {{flexGrow:0, marginBottom:5}}
                               data={this.state.results}
                               keyExtractor = { (item, index) => index.toString() }
@@ -267,7 +277,7 @@ class History extends Component<Props> {
                               onEndReachedThreshold={0.01}
                     />
 
-
+                )}
 
                 </View>
 

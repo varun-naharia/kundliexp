@@ -83,7 +83,7 @@ export default class Otp extends Component {
   _handlePress=(code)=>{
 //    alert(this.props.navigation.getParam('params'))
 //alert(this.state.otp)
-  var code= this.state.otp
+  var code= code
     var otpType = this.props.navigation.getParam('params')
     if(otpType == 'LoginOtp'){
 
@@ -266,6 +266,39 @@ export default class Otp extends Component {
           Enter your OTP code here
           </Text>
 
+
+             <CodeInput
+                 containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%')}}
+                 ref="codeInputRef1"
+                 keyboardType="numeric"
+                 secureTextEntry={false}
+                 className={'border-box'}
+                 space={6}
+                 codeInputStyle={{width:wp(11), height:hp(7), marginLeft:wp(3.5),marginTop:hp(5), color:'#909090', fontSize:26, alignSelf:'center'}}
+                 size={30}
+                 codeLength={6}
+                 inputPosition='center'
+                 activeColor = '#E60000'
+                 inactiveColor =  '#EAECEF'
+                 onFulfill={(code) => this._onFulfill(code)}
+               />
+
+
+{/*
+            <OTPInputView
+                style={{width: '80%', height: 200,marginLeft:wp('0%'),alignSelf:'center'}}
+                pinCount={6}
+                // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+                // onCodeChanged = {code => { this.setState({code})}}
+                autoFocusOnLoad
+                codeInputFieldStyle={styles.underlineStyleBase}
+                codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                onCodeFilled = {(code => {
+            //        console.log(`Code is ${code}, you are good to go!`)
+                      this._onFulfill(code)
+                })}
+            />
+
            <TextInput style = {{width:wp('80%'),color:'#909090', height:hp('7%'),
             fontSize:18, fontFamily:'Nunito-Regular', paddingLeft:wp(1),
             borderBottomColor:'#909090', borderBottomWidth:1, alignSelf:'center'}}
@@ -279,36 +312,7 @@ export default class Otp extends Component {
                          value={this.state.otp}
               />
 
-{/*
-<OTPInputView
-    style={{width: '80%', height: 200,marginLeft:wp('3%'),}}
-    pinCount={6}
-    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-    // onCodeChanged = {code => { this.setState({code})}}
-    autoFocusOnLoad
-    codeInputFieldStyle={styles.underlineStyleBase}
-    codeInputHighlightStyle={styles.underlineStyleHighLighted}
-    onCodeFilled = {(code => {
-//        console.log(`Code is ${code}, you are good to go!`)
-          this._onFulfill(code)
-    })}
-/>
 
-       <CodeInput
-           containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
-           ref="codeInputRef1"
-           keyboardType="numeric"
-           secureTextEntry={false}
-           className={'border-box'}
-           space={6}
-           codeInputStyle={{width:wp(11), height:hp(7), marginLeft:wp(3.5),marginTop:hp(5), color:'#909090', fontSize:26, alignSelf:'center'}}
-           size={30}
-           codeLength={6}
-           inputPosition='center'
-           activeColor = '#E60000'
-           inactiveColor =  '#EAECEF'
-           onFulfill={(code) => this._onFulfill(code)}
-         />
 
           <OTPInput 
           containerStyle={{alignSelf:'flex-start', marginLeft:wp('3%'), marginTop:hp('2%'),}}
@@ -321,10 +325,10 @@ export default class Otp extends Component {
           />
 */}
 
-          <View style={{width:wp('80%'), backgroundColor:'transparent', justifyContent:'space-between', alignSelf:'center', flexDirection:'row', alignItems:'center'}}>
+          <View style={{width:wp('80%'), backgroundColor:'transparent', marginTop:hp(8), justifyContent:'space-between', alignSelf:'center', flexDirection:'row', alignItems:'center'}}>
 
           <TouchableOpacity>
-          <Text style = {{width:wp('35%'),color:'#000000',fontSize: 16,fontFamily:'Nunito-SemiBold',textAlign:'left', marginTop:hp(8)}}>
+          <Text style = {{width:wp('35%'),color:'#000000',fontSize: 16,fontFamily:'Nunito-SemiBold',textAlign:'left', marginTop:hp(4)}}>
           Resend Code?
           </Text>
           </TouchableOpacity>

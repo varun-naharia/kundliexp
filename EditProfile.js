@@ -66,6 +66,7 @@ export default class EditProfile extends Component {
             data.append('user_id', GLOBAL.user_id);
             data.append('name', this.state.name);
             data.append('gender', gender);
+            data.append('pob', this.state.pob);
             data.append('dob', this.state.dob);
             data.append('birth_time', this.state.tob);
             data.append('place_of_birth', this.state.pob);
@@ -133,6 +134,12 @@ export default class EditProfile extends Component {
   componentDidMount(){
 
     this.getProfile()
+    this.props.navigation.addListener('willFocus',this._handleStateChange);
+
+  }
+
+  _handleStateChange = state =>{
+    this.setState({pob : GLOBAL.edit_profAddress})
   }
 
 
@@ -159,18 +166,16 @@ export default class EditProfile extends Component {
           if (responseJson.status == true) {
 
 //            this.setState({edituserDetails : responseJson.user_details})
-            this.setState({avatarSource : responseJson.user_details.image})
-            this.setState({name : responseJson.user_details.name})
-            this.setState({email : responseJson.user_details.email})
-            this.setState({phone : responseJson.user_details.mobile})
-            this.setState({dob : responseJson.user_details.dob})
-            this.setState({pob : responseJson.user_details.place_of_birth})
-            this.setState({tob : responseJson.user_details.birth_time})
-            this.setState({location : responseJson.user_details.address})
-
-            this.setState({gender: responseJson.user_details.gender})
-            
-
+            this.setState({avatarSource : responseJson.user_details.image,
+              name : responseJson.user_details.name,
+              email : responseJson.user_details.email,
+              phone : responseJson.user_details.mobile,
+              dob : responseJson.user_details.dob,
+              pob : responseJson.user_details.place_of_birth,
+              tob : responseJson.user_details.birth_time,
+              location : responseJson.user_details.address,
+              gender: responseJson.user_details.gender
+            })
 
 
             if(this.state.gender=='male'){
@@ -193,10 +198,10 @@ export default class EditProfile extends Component {
 
      }
 
-     UNSAFE_componentWillReceiveProps(){
-      alert(this.state.value)
-      this.setState({value : this.state.value})
-     }
+     // UNSAFE_componentWillReceiveProps(){
+     //  alert(this.state.value)
+     //  this.setState({value : this.state.value})
+     // }
 
 
   render() {
@@ -355,7 +360,7 @@ export default class EditProfile extends Component {
       <View style={{width:'100%', backgroundColor:'rgba(0,0,0,0.05)', height:1, marginTop:5}}/>
       </View>
 
-
+      <TouchableOpacity onPress={()=> this.props.navigation.navigate('SelectPlace', {params:{previous_screen:'Edit_Profile'}})}>
       <View style={{flexDirection:'column', width:'100%', marginTop:'7%'}}>
       <Text style={{color:'#bfbfbf', fontFamily:'Nunito-Regular'}}>Birth Place</Text>
               <TextInput style = {{width:'100%',color:'black', height:45, fontSize:17,paddingLeft:-10, fontFamily:'Nunito-Regular', borderBottomColor:'rgba(0,0,0,0.05)', borderBottomWidth:1}}
@@ -367,7 +372,7 @@ export default class EditProfile extends Component {
 
               />
       </View>
-
+      </TouchableOpacity>
 
       <View style={{flexDirection:'column', width:'100%', marginTop:'7%', marginBottom:'10%'}}>
       <Text style={{color:'#bfbfbf',fontFamily:'Nunito-Regular'}}>Address</Text>

@@ -16,7 +16,6 @@ class Drawer extends React.Component {
         const { navigation } = this.props;
         this.state = {
             my: 'sdf',
-            expandList:true,
             pic:'',
             userDetails:''
         }

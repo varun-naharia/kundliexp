@@ -7,9 +7,9 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom'
+import EmptyMessage from './EmptyMessage'
 
-type Props = {};
-export default class PdfYours extends Component<Props> {
+export default class PdfYours extends Component {
 
     static navigationOptions = ({ navigation }) => {
         return {
@@ -71,11 +71,13 @@ export default class PdfYours extends Component<Props> {
     
                 if (responseJson.status == true) {
 
+                  if(responseJson.lists.length == 0){
+
+                  }else{
                     var resu = this.state.results
                     this.setState({results: [...resu, ...responseJson.lists]})
 
-      //              console.log(JSON.stringify(this.state.results))
-
+                  }
                 } else {
 //                    this.setState({results: []})
                 }
@@ -188,6 +190,15 @@ export default class PdfYours extends Component<Props> {
 
                 <View style={{width:'95%',  margin:10, borderRadius:7, flex:1}}>
 
+            {this.state.results.length == 0 &&(
+
+              <EmptyMessage
+              emptyMessage={'No pdf purchase made by you!'}/>
+
+              )}
+
+              {this.state.results.length !=0 &&(
+
                     <FlatList style= {{flexGrow:0, marginBottom:5}}
                               data={this.state.results}
                               keyExtractor = { (item, index) => index.toString() }
@@ -196,9 +207,7 @@ export default class PdfYours extends Component<Props> {
                               onEndReached={()=>this.handleLoadMore()}
                               onEndReachedThreshold={0.01}
                     />
-
-
-
+              )}
                 </View>
 
             </View>

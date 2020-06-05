@@ -9,6 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom'
+import EmptyMessage from './EmptyMessage'
 type Props = {};
 
 class MyOrders extends Component<Props> {
@@ -72,10 +73,12 @@ class MyOrders extends Component<Props> {
     
                 if (responseJson.status == true) {
 
-                    var resu = this.state.myorder_list
-                    this.setState({myorder_list: [...resu, ...responseJson.lists]})
+                  if(responseJson.lists.length ==0){
 
-      //              console.log(JSON.stringify(this.state.results))
+                  }else{
+                    var resu = this.state.myorder_list
+                    this.setState({myorder_list: [...resu, ...responseJson.lists]})                    
+                  }
 
                 } else {
 //                    this.setState({results: []})
@@ -107,7 +110,7 @@ class MyOrders extends Component<Props> {
 
        <Image style={{width:80, height:80, borderRadius:5,borderWidth:1, borderColor:'#FF0000',margin:15}}
         source={{uri : o_item.image}}/>
-       <View style={{ flexDirection:'column', marginTop:15, width:'71%', marginBottom:10}}>
+       <View style={{ flexDirection:'column', marginTop:15, width:'70%', marginBottom:10}}>
                <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',}}>
                 {o_item.name}
                </Text>
@@ -194,8 +197,16 @@ class MyOrders extends Component<Props> {
                        headerName={'MY ORDERS'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
+
                 <View style={{width:'95%',  margin:10, borderRadius:7, flex:1}}>
 
+                 {this.state.myorder_list.length == 0 &&(
+
+                    <EmptyMessage
+                    emptyMessage={'You have not placed any order yet!'}/>
+              )}
+
+              {this.state.myorder_list.length !=0 &&(
                     <FlatList style= {{marginBottom:10}}
                               data={this.state.myorder_list}
                               keyExtractor = { (item, index) => index.toString() }
@@ -204,7 +215,7 @@ class MyOrders extends Component<Props> {
                               onEndReached={this.handleLoadMore}
                               onEndReachedThreshold={0.01}
                     />
-
+                  )}
 
 
                 </View>

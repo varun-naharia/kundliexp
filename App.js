@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,Dimensions, Text, View,Alert,StatusBar,PermissionsAndroid, AsyncStorage} from 'react-native';
+import {Platform, StyleSheet,Dimensions, Text, View,Alert,StatusBar,PermissionsAndroid, } from 'react-native';
 import 'react-native-gesture-handler';
 import NetInfo from "@react-native-community/netinfo";
 const { width } = Dimensions.get('window');
@@ -7,15 +7,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SafeAreaView from 'react-native-safe-area-view';
 import AppNavigator from './Navigator';
 import DropdownAlert from 'react-native-dropdownalert';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import NotifService from './NotifService';
 const GLOBAL = require('./Global');
 import appConfig from './app.json';
 import PushNotificationAndroid  from 'react-native-push-notification';
-import RNCallKeep from 'react-native-callkeep';
+// import RNCallKeep from 'react-native-callkeep';
 import { v4 as uuidv4 } from 'uuid';
 type Props = {};
-import IncomingCall from 'react-native-incoming-call';
+// import IncomingCall from 'react-native-incoming-call';
 
 
 function MiniOfflineSign() {

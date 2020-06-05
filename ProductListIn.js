@@ -10,8 +10,9 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import IndicatorCustom from './IndicatorCustom'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import EmptyMessage from './EmptyMessage'
 type Props = {};
+
 export default class ProductListIn extends Component<Props> {
 
     static navigationOptions = ({ navigation }) => {
@@ -83,12 +84,17 @@ export default class ProductListIn extends Component<Props> {
           var resu = this.state.pdList
 
         if (responseJson.status == true) {
-          this.setState({pdList : [...resu , ...responseJson.gems]})
+        
+          if(responseJson.gems.length == 0){
+
+          }else{
+              this.setState({pdList : [...resu , ...responseJson.gems]})            
+          }
 
         } else {
 //          alert("No Products found!");
 
-          this.setState({pdList : [...resu , ...responseJson.gems]})
+//          this.setState({pdList : [...resu , ...responseJson.gems]})
 
         }
       })
@@ -333,6 +339,16 @@ selectedFirst=(item, index)=>{
                headerName={GLOBAL.catDetails.name.toUpperCase()}
                headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
+
+            {this.state.pdList.length == 0 &&(
+
+              <EmptyMessage
+              emptyMessage={'No Product found!'}/>
+
+              )}
+
+              {this.state.pdList.length !=0 &&(
+
                     <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
                               data={this.state.pdList}
                               numColumns={2}
@@ -342,7 +358,7 @@ selectedFirst=(item, index)=>{
                               onEndReached={this.handleLoadMore}
                               onEndReachedThreshold={0.01}
                     />
-
+              )}
             </View>
         );
     }

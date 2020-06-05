@@ -9,6 +9,7 @@ const window = Dimensions.get('window');
 const GLOBAL = require('./Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from './IndicatorCustom'
+import EmptyMessage from './EmptyMessage'
 type Props = {};
 class Wishlist extends Component<Props> {
 
@@ -48,7 +49,6 @@ class Wishlist extends Component<Props> {
     }
 
     getWishlist= () =>{
-    
           this.showLoading()
          const url = GLOBAL.BASE_URL + 'list_gems_bookmark'
 
@@ -75,7 +75,7 @@ class Wishlist extends Component<Props> {
       //              console.log(JSON.stringify(this.state.results))
 
                 } else {
-//                    this.setState({wish_list: []})
+                   this.setState({wish_list: []})
                 }
             })
             .catch((error) => {
@@ -86,6 +86,38 @@ class Wishlist extends Component<Props> {
 
     }
 
+    unfavoPro=(item,index)=>{
+// http://139.59.76.223/kundali_expert/api/delete_bookmark_patient
+  console.log(JSON.stringify(item))
+      const url = GLOBAL.BASE_URL + "delete_bookmark_patient";
+    //  this.showLoading()
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        product_id: item.product_id,
+        user_id: GLOBAL.user_id,
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(JSON.stringify(responseJson))
+
+        if(responseJson.status==true){
+            // var s = this.state.wish_list[index];
+            // delete s
+            // this.setState({wish_list:})
+        }else{
+
+        }
+
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
 
 
 
@@ -118,6 +150,13 @@ class Wishlist extends Component<Props> {
                </TouchableOpacity>
 */}
         </View>
+{/*
+      <TouchableOpacity style={{width:wp(5), height:hp(5), resizeMode:'contain',position:'absolute', top:2, right:wp(1)}}
+      onPress={()=> this.unfavoPro(item, index)}>
+        <Image style={{width:wp(3.5), height:hp(4), resizeMode:'contain',}} source={require('./resources/cross.png')}/>
+      </TouchableOpacity>
+*/}
+
         </View>
 
     </TouchableOpacity>
@@ -132,7 +171,7 @@ class Wishlist extends Component<Props> {
         }
         return (
 
-        <View style={{flex:1, flexDirection:'column'}}>
+        <View style={{flex:1, flexDirection:'column',backgroundColor:'white'}}>
 
          <Header navigation={this.props.navigation}
                        showHeaderImage={false}
@@ -141,7 +180,15 @@ class Wishlist extends Component<Props> {
                        headerName={'WISHLIST'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
-                <View style={{width:'95%',  margin:10, borderRadius:7}}>
+                <View style={{flex:1,width:'95%',  margin:10, borderRadius:7}}>
+
+            {this.state.wish_list.length == 0 &&(
+              <EmptyMessage
+              emptyMessage={'Your wishlist is empty!'}/>
+
+              )}
+
+              {this.state.wish_list.length !=0 &&(
 
                     <FlatList style= {{flexGrow:0,}}
                               data={this.state.wish_list}
@@ -150,7 +197,7 @@ class Wishlist extends Component<Props> {
                               extraData={this.state}
                     />
 
-
+              )}
 
                 </View>
 
