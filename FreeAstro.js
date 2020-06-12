@@ -345,7 +345,7 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 12){
     this.props.navigation.navigate('RahuKalam')
   }else if(item == 13){
-    var PLAY_STORE_LINK = 'https://play.google.com/store/apps/details?id=com.larder'
+    var PLAY_STORE_LINK = 'https://play.google.com/store/apps/details?id=com.kundliexpert'
     Alert.alert(
         'Enjoying the app?',
         'Please help us by rating the app on '+(Platform.OS =='ios' ? 'app store' : 'play store')+'.',
@@ -559,7 +559,7 @@ selectedFirst=(item,indexs)=>{
 
 
       <RateModal
-                  modalTitle="Your modal title"
+              modalTitle="Your modal title"
               rateBtnText={'Rate'}
               cancelBtnText={'Cancel'}
               totalStarCount={5}
@@ -568,7 +568,7 @@ selectedFirst=(item,indexs)=>{
               sendBtnText={'Send'}
               commentPlaceholderText={'Placeholder text'}
               emptyCommentErrorMessage={'Empty comment error message'}
-              playStoreUrl={'https://play.google.com/store/apps/details?id=in.AajTak.headlines'}
+              playStoreUrl={'https://play.google.com/store/apps/details?id=com.kundliexpert'}
               isModalOpen={this.state.isModalOpen}
               storeRedirectThreshold={3}
               style={{

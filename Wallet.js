@@ -80,7 +80,7 @@ export default class Wallet extends Component<Props> {
                 description: desc,
                 image: {uri : require('./resources/kundli_logo.png')},
                 currency: 'INR',
-                key: 'rzp_test_XSUYUlOXU9O4AG',
+                key: 'rzp_live_lPEmRInJoTftjI',
                 amount: parseInt(this.state.username) *100,
                 name: GLOBAL.userDetails.name,
                 prefill: {
@@ -93,7 +93,7 @@ export default class Wallet extends Component<Props> {
 
             RazorpayCheckout.open(options).then((data) => {
                 // handle success
-                alert(`Success: ${data.razorpay_payment_id}`);
+                alert(`Amount added to wallet successfully!`);
                 this.props.navigation.goBack();
               }).catch((error) => {
                 // handle failure
@@ -139,7 +139,7 @@ export default class Wallet extends Component<Props> {
             <KeyboardAwareScrollView keyboardShouldPersistTaps='handled'
             contentContainerStyle = {{backgroundColor:'#f1f1f1',width : wp(100) ,height:hp(90)}}
             >
-                <View style={{width:wp(92), height:hp(22), backgroundColor:'black', marginVertical:hp(2), borderRadius:7,alignSelf:'center'}}>
+                <View style={{width:wp(92), height:hp(19), backgroundColor:'black', marginVertical:hp(2), borderRadius:7,alignSelf:'center'}}>
 
                 <View style={{flexDirection:'row', width:wp(92),height:hp(22), justifyContent:'space-between'}}>
 
@@ -158,7 +158,7 @@ export default class Wallet extends Component<Props> {
                     </Text>
 
                     <Text style = {{color :'#c8c8c8',fontSize :13,fontFamily :'Nunito-Regular', marginLeft:wp(1.8),}}>
-                    + 0% Comp. Last Week
+
                     </Text>
                     </View>
                 </View>

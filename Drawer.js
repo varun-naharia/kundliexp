@@ -25,7 +25,7 @@ class Drawer extends React.Component {
 
     _fancyShareMessage=()=>{
 
-        var a = 'Hey! Checkout Kundli Experts app from Play Store'
+        var a = 'Hey! Checkout Kundali Expert app from Play Store'
 
         Share.share({
                 message:a
