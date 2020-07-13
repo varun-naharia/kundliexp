@@ -11,6 +11,8 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import DatePickers from 'react-native-date-picker'
+import { Dialog, DialogContent, DialogComponent, DialogTitle, DialogButton } from 'react-native-dialog-component';
 
 type Props = {};
 var radio_props = [
@@ -30,7 +32,13 @@ class LifePred extends Component<Props> {
         const { navigation } = this.props;
         this.state = {
             istoggle:false,
-            value:0
+            value:0,
+            name:'',
+            date: new Date(),
+            dates:'',
+            pob:'',
+            review:'',
+            time: moment().format("HH:mm")
         }
     }
 
@@ -50,42 +58,57 @@ class LifePred extends Component<Props> {
 
     componentDidMount(){
 
-//        this.props.navigation.addListener('willFocus',this._handleStateChange);
-
-//  this.getReviews()
     }
 
-    getReviews= () =>{
 
-    }
 
     buttonClickListener=()=>{
       var genderTitle;
 
-      if(this.state.value == 0)
-        genderTitle='Male'
-      else
-        genderTitle ='Female'
+      if(this.state.name==''){
+        alert('Please enter name')
+      }else if(this.state.dates==''){
+        alert('Please select date of birth')
+      }else if(this.state.pob==''){
+        alert('Please select place of birth')
+      }else if(this.state.review==''){
+        alert('Please write a message')
+      }else{
+          if(this.state.value == 0)
+            genderTitle='Male'
+          else
+            genderTitle ='Female'
 
-      var finalData={
-        name: this.state.name,
-        gender: genderTitle,        
-        dob: this.state.date,
-        tob: this.state.time,
-        pob: this.state.pob,
-        pob_lat : this.state.p_lat,
-        pob_long : this.state.p_lon,
-        pob_lat_long_address : this.state.pob,
-        country: '',
-        problem: this.state.review          
-      }
+          var finalData={
+            name: this.state.name,
+            gender: genderTitle,        
+            dob: this.state.dates,
+            tob: this.state.time,
+            pob: this.state.pob,
+            pob_lat : this.state.p_lat,
+            pob_long : this.state.p_lon,
+            pob_lat_long_address : this.state.pob,
+            country: '',
+            problem: this.state.review          
+          }
 
-        this.props.navigation.navigate('Payment', {
-          params: {previous_screen: 'life_pred', finalData},
-        });
-      
+          console.log(JSON.stringify(finalData))
+            this.props.navigation.navigate('Payment', {
+              params: {previous_screen: 'life_pred', finalData},
+            });
+
+      }      
     }
 
+    setDate=(getDate)=>{
+      this.setState({
+        date: getDate,
+      },()=>{
+
+      })                        
+
+      console.log(getDate)
+    }
 
 
     render() {
@@ -132,31 +155,22 @@ class LifePred extends Component<Props> {
 
           <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey', marginTop:hp(1)}}>Date of Birth</Text>
 
-          <DatePicker
-            style={{width: 200,}}
-            date={this.state.date}
-            mode="date"
-            showIcon={false}
-            placeholder={this.state.dob}
-            format="DD-MM-YYYY"
-            minDate="01-01-1950"
-            maxDate= {moment().format('DD-MM-YYYY')}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateInput: {
-                marginLeft: -102, borderWidth:0, color:'black'
-              },
-              dateText:{
-                  fontFamily:'Nunito-Regular', fontSize:17
-              }                            
-            }}
-            onDateChange={(date) => {
-              this.setState({date: date})
-            }}
-          />
 
-          <View style={{width:wp(92), height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(0.4),marginBottom: hp(2) ,}}/>
+          <TouchableOpacity 
+          onPress={()=> this.dialogComponents.show()}>
+          <TextInput
+              style={{ height: hp(6), borderColor: '#f3f3f4',fontSize:17,paddingLeft:-0.5, borderBottomWidth: 1, marginTop:0 ,marginBottom: hp(2) ,width:'99%',color:'black',fontFamily:'Nunito-Regular'}}
+              // Adding hint in TextInput using Placeholder option.
+              placeholder="Select Date of Birth"
+              placeholderTextColor = 'grey'
+              maxLength={35}
+              editable={false}
+              // Making the Under line Transparent.
+              underlineColorAndroid="transparent"
+              value = {this.state.dates}
+          />
+          </TouchableOpacity>
+
 
 
           <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey', marginTop:hp(1)}}>Time of Birth</Text>
@@ -275,6 +289,62 @@ class LifePred extends Component<Props> {
 
 
         </KeyboardAwareScrollView>
+
+           <DialogComponent
+                dialogStyle = {{backgroundColor:'white', marginTop:hp(-13)}}
+                dismissOnTouchOutside={true}
+                dismissOnHardwareBackPress={true}
+                width={wp(82)}
+                height={hp(34)}
+                ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+              <DialogContent>
+
+            <View style={{flexDirection:'column', width:wp(82),alignSelf:'center',alignItems:'center',justifyContent:'center'
+            ,backgroundColor:'white', height:hp(34),borderRadius:5, marginTop:hp(-2) }}>
+
+              <DatePickers
+                  date={this.state.date}
+                  onDateChange={(date) => this.setDate(date)}
+                  mode={'date'}
+                  locale={'en'}
+                />
+            <View style={{width:'80%', flexDirection:'row', alignSelf:'center', marginTop:0, justifyContent:'space-between'}}>
+            <DialogButton text="Cancel" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60,  }}
+            onPress={()=>{this.dialogComponents.dismiss()
+              if(this.state.dates!=''){
+
+              }else{
+                this.setState({dates:''})
+              }
+
+            }}/>
+
+            <DialogButton text="Confirm" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60, }}
+            onPress={()=>{
+              if(this.state.date == ''){
+                this.setState({ dates: moment().format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()                
+              }else{
+                this.setState({ dates: moment(this.state.date).format('DD-MM-YYYY'),
+
+              })
+                this.dialogComponents.dismiss()
+
+              }
+
+            }}/>
+            </View>
+            </View>
+
+            </DialogContent>
+
+            </DialogComponent>
+
             </View>
         );
     }

@@ -216,7 +216,8 @@ const StackNavigator = createStackNavigator({
         AboutUs:{screen: AboutUs},
         ContactUs:{screen: ContactUs},
         Terms:{screen:Terms},
-        Privacy:{screen:Privacy}
+        Privacy:{screen:Privacy},
+
     },
 
     {headerMode :'none'},

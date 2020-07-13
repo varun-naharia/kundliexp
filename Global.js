@@ -16,6 +16,7 @@ module.exports = {
 
     loginmobile:'',
     loginOTP:'',
+    loginCtryCode:'',
 
     opentok_api_key:'46593922',
 
@@ -83,4 +84,5 @@ module.exports = {
     signupOtp:'',
     signupVerifyRefer:'',
     signupApplyRefer:'',
+    signupCtryCode:''
 };

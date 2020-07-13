@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet,Text, View,ImageBackground,Animated,Easing,TextInput,Image,AsyncStorage,TouchableOpacity,Dimensions} from 'react-native';
+import { StyleSheet,Text, View,TextInput,Image,TouchableOpacity,Dimensions} from 'react-native';
 const window = Dimensions.get('window');
 import Button from 'react-native-button';
 const GLOBAL = require('./Global');
@@ -10,6 +10,8 @@ import moment from 'moment';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import Header from 'react-native-custom-headers';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import DatePickers from 'react-native-date-picker'
+import { Dialog, DialogContent, DialogComponent, DialogTitle, DialogButton } from 'react-native-dialog-component';
 
 const options = {
     title: 'Select Avatar',
@@ -37,7 +39,8 @@ export default class EditProfile extends Component {
       phone:'',
       gender:'',
       value:0,
-      dob:'',
+      dob: new Date(),
+      dobs:'',
       pob:'',
       tob:'',
       location:'',
@@ -67,7 +70,7 @@ export default class EditProfile extends Component {
             data.append('name', this.state.name);
             data.append('gender', gender);
             data.append('pob', this.state.pob);
-            data.append('dob', this.state.dob);
+            data.append('dob', this.state.dobs);
             data.append('birth_time', this.state.tob);
             data.append('place_of_birth', this.state.pob);
             data.append('flag',this.state.flag);
@@ -170,7 +173,7 @@ export default class EditProfile extends Component {
               name : responseJson.user_details.name,
               email : responseJson.user_details.email,
               phone : responseJson.user_details.mobile,
-              dob : responseJson.user_details.dob,
+              dobs : responseJson.user_details.dob,
               pob : responseJson.user_details.place_of_birth,
               tob : responseJson.user_details.birth_time,
               location : responseJson.user_details.address,
@@ -198,10 +201,12 @@ export default class EditProfile extends Component {
 
      }
 
-     // UNSAFE_componentWillReceiveProps(){
-     //  alert(this.state.value)
-     //  this.setState({value : this.state.value})
-     // }
+    setDate=(getDate)=>{
+      this.setState({ dob : getDate,
+        // dates : moment(getDate).format('DD-MM-YYYY')
+       }) 
+      console.log(getDate)
+    }
 
 
   render() {
@@ -311,27 +316,18 @@ export default class EditProfile extends Component {
 
       <View style={{flexDirection:'column', width:'100%', marginTop:'7%'}}>
       <Text style={{color:'#bfbfbf',fontFamily:'Nunito-Regular'}}>Date of Birth</Text>
-              <DatePicker
-                style={{width: 200,}}
-                date={this.state.dob}
-                mode="date"
-                showIcon={false}
-                placeholder={this.state.dob}
-                format="DD-MM-YYYY"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateInput: {
-                    marginLeft: -120, borderWidth:0, color:'black',
-                  }
-                }}
-                onDateChange={(date) => {
-                  this.setState({dob: date})
-                }}
+          <TouchableOpacity 
+          onPress={()=> this.dialogComponents.show()}>
+
+              <TextInput style = {{width:'100%',color:'black', height:45, fontSize:17,paddingLeft:-10, fontFamily:'Nunito-Regular', borderBottomColor:'rgba(0,0,0,0.05)', borderBottomWidth:1}}
+                         placeholder = 'Date of Birth'
+                         placeholderTextColor = "black"
+                         editable={false}
+                         onChangeText={(text) => this.setState({phone: text})}
+                         value={this.state.dobs}
+
               />
-
-
-      <View style={{width:'100%', backgroundColor:'rgba(0,0,0,0.05)', height:1, marginTop:5}}/>
+          </TouchableOpacity>
       </View>
 
 
@@ -400,6 +396,57 @@ export default class EditProfile extends Component {
 
       </KeyboardAwareScrollView>
 
+           <DialogComponent
+                dialogStyle = {{backgroundColor:'white', marginTop:hp(-13)}}
+                dismissOnTouchOutside={true}
+                dismissOnHardwareBackPress={true}
+                width={wp(82)}
+                height={hp(34)}
+                ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+              <DialogContent>
+
+            <View style={{flexDirection:'column', width:wp(82),alignSelf:'center',alignItems:'center',justifyContent:'center'
+            ,backgroundColor:'white', height:hp(34),borderRadius:5, marginTop:hp(-2) }}>
+
+              <DatePickers
+                  date={this.state.dob}
+                  onDateChange={(date) => this.setDate(date)}
+                  mode={'date'}
+                  locale={'en'}
+                />
+            <View style={{width:'80%', flexDirection:'row', alignSelf:'center', marginTop:0, justifyContent:'space-between'}}>
+            <DialogButton text="Cancel" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60,  }}
+            onPress={()=>{this.dialogComponents.dismiss()
+              if(this.state.dobs!=''){
+
+              }else{
+                this.setState({dobs:''})
+              }
+
+            }}/>
+
+            <DialogButton text="Confirm" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60, }}
+            onPress={()=>{
+              if(this.state.dob == ''){
+                this.setState({ dobs: moment().format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()                
+              }else{
+                this.setState({ dobs: moment(this.state.dob).format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()
+              }
+
+            }}/>
+            </View>
+            </View>
+
+            </DialogContent>
+
+            </DialogComponent>
 
       </View>
     );

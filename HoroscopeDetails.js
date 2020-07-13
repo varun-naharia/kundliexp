@@ -69,12 +69,12 @@ export default class HoroscopeDetails extends Component{
                 // this.hideLoading()
                 if (responseJson.status == true) {
               this.setState({response: responseJson,
-                health: responseJson.prediction.health,
-                emotions: responseJson.prediction.emotions,
-                personal_life: responseJson.prediction.personal_life,
-                profession: responseJson.prediction.profession,
-                travel: responseJson.prediction.travel,
-                luck: responseJson.prediction.luck
+                health: responseJson.responseData.prediction.health,
+                emotions: responseJson.responseData.prediction.emotions,
+                personal_life: responseJson.responseData.prediction.personal_life,
+                profession: responseJson.responseData.prediction.profession,
+                travel: responseJson.responseData.prediction.travel,
+                luck: responseJson.responseData.prediction.luck
               });
                 }else{
 

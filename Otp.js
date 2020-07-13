@@ -15,6 +15,7 @@ import IndicatorCustom from './IndicatorCustom'
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 
 import CodeInput from 'react-native-confirmation-code-input';
+var randomString = require('random-string');
 
 // get all required values of device
 let uniqueId = DeviceInfo.getUniqueId();
@@ -83,13 +84,15 @@ export default class Otp extends Component {
   _handlePress=(code)=>{
 //    alert(this.props.navigation.getParam('params'))
 //alert(this.state.otp)
+
+    console.log('otp--->'+GLOBAL.loginOTP)
+    console.log('otp--->'+GLOBAL.signupOtp)
+
   var code= code
     var otpType = this.props.navigation.getParam('params')
     if(otpType == 'LoginOtp'){
 
       if(code == GLOBAL.loginOTP){
-//        alert('user_detail_after_otp')
-      //this.props.navigation.replace('DrawerNavigator')
      const url = GLOBAL.BASE_URL +  'user_detail_after_otp'
 
       this.showLoading()
@@ -230,8 +233,112 @@ export default class Otp extends Component {
     this.setState({ otp: '221198' })
   }
 
+  signupResendOtp=()=>{
+
+      var genOtp = randomString({
+      length: 6,
+      numeric: true,
+      letters: false,
+      special: false,
+  });
+
+          const url = GLOBAL.BASE_URL +  'otp'
+        //  this.showLoading()
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: GLOBAL.signupEmail,
+              mobile: GLOBAL.signupMobile,
+              otp: genOtp,
+              country_code: GLOBAL.signupCtryCode
+
+            }),
+    }).then((response) => response.json())
+        .then((responseJson) => {
+
+            console.log(JSON.stringify(responseJson))
+      //       this.hideLoading()
+           if (responseJson.status == true) {
+              GLOBAL.loginOTP = ''
+              GLOBAL.signupOtp = genOtp
+
+              alert("OTP resend successfully!")
+           }
+           else{
+            // alert('This mobile number is already registered with us.')
+           }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+  }
 
 
+  loginResendOtp=()=>{
+      var genOtp = randomString({
+      length: 6,
+      numeric: true,
+      letters: false,
+      special: false,
+  });
+
+      const url = GLOBAL.BASE_URL +  'otp_for_login'
+    //  this.showLoading()
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+    body: JSON.stringify({
+      mobile: GLOBAL.loginmobile,
+      otp: genOtp,
+      country_code: GLOBAL.loginCtryCode
+
+    }),
+  }).then((response) => response.json())
+    .then((responseJson) => {
+
+        console.log(JSON.stringify(responseJson))
+         // this.hideLoading()
+       if (responseJson.status == true) {
+          GLOBAL.loginOTP = genOtp
+          GLOBAL.signupOtp = ''
+
+        alert("OTP resend successfully!")
+       }
+       else{
+        // alert('It seems you are not registered with us. Please signup to continue.')
+       }
+    })
+    .catch((error) => {
+      this.hideLoading()
+      console.error(error);
+
+    });
+}
+
+
+  resendOtp =()=>{
+
+    var scrType = this.props.navigation.getParam('params')
+    // alert(scrType)
+    if(scrType == 'LoginOtp'){
+      this.loginResendOtp()
+    } else if(scrType == 'SignupOtp'){
+      this.signupResendOtp()
+    } else{
+
+    }  
+  }
+
+  componentWillUnmount(){
+    GLOBAL.loginOTP = ''
+    GLOBAL.signupOtp = ''
+  }
 
 
   render() {
@@ -327,7 +434,7 @@ export default class Otp extends Component {
 
           <View style={{width:wp('80%'), backgroundColor:'transparent', marginTop:hp(8), justifyContent:'space-between', alignSelf:'center', flexDirection:'row', alignItems:'center'}}>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> this.resendOtp()}>
           <Text style = {{width:wp('35%'),color:'#000000',fontSize: 16,fontFamily:'Nunito-SemiBold',textAlign:'left', marginTop:hp(4)}}>
           Resend Code?
           </Text>

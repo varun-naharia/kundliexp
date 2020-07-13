@@ -185,7 +185,7 @@ export default class PdfYours extends Component {
                        showHeaderImage={false}
                        headerColor ={'#E60000'}
                        backImagePath={require('./resources/back.png')}
-                       headerName={'VARSHPHAL PDF'}
+                       headerName={'YOUR PDFs'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
                 <View style={{width:'95%',  margin:10, borderRadius:7, flex:1}}>

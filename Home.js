@@ -271,7 +271,7 @@ _handleStateChange = state => {
     console.warn('-->times' + GLOBAL.glhour +'-->'+GLOBAL.glminute)
     console.warn('-->'+ GLOBAL.gldate+'-->'+GLOBAL.glmonth+'-->'+GLOBAL.glyear)
 
-    this.forConsult()
+    // this.forConsult()
     this.loadHome()
  };
 
@@ -555,6 +555,7 @@ _renderItemNewsImageList=(itemData)=>{
 
 
     forConsult=()=>{
+      // console.log('recursive')
       const url = GLOBAL.BASE_URL + "home_user_dynamics";
       //  this.showLoading()
       fetch(url, {
@@ -569,7 +570,7 @@ _renderItemNewsImageList=(itemData)=>{
       })
         .then(response => response.json())
         .then(responseJson => {
-//          console.log(JSON.stringify(responseJson));
+         // console.log(JSON.stringify(responseJson));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
@@ -589,7 +590,7 @@ _renderItemNewsImageList=(itemData)=>{
               this.dialogComponents.show()
 
             }
-//            this.forConsult() // recursive
+           this.forConsult() // recursive
 
           } else {
             alert(
@@ -619,7 +620,7 @@ _renderItemNewsImageList=(itemData)=>{
       })
         .then(response => response.json())
         .then(responseJson => {
-          console.log(JSON.stringify(responseJson.get_Settings));
+          // console.log(JSON.stringify(responseJson.get_Settings));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
@@ -697,11 +698,6 @@ _renderItemNewsImageList=(itemData)=>{
 
     }
 
-//     componentWillMount(){
-// //      alert(GLOBAL.user_id)
-//       // this.loadHome()
-//       // this.forConsult()
-//     }
 
 
     componentDidMount(){
@@ -742,6 +738,8 @@ _renderItemNewsImageList=(itemData)=>{
 
 //        this.dialogComponents.show()
 //        this.loadHome()
+        this.forConsult()
+        // alert('hi')
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
 
     }
@@ -915,6 +913,7 @@ buttonOkJoin=()=>{
                               numColumns={2}
                               keyExtractor = { (item, index) => index.toString() }
                               renderItem={this._renderItemproducts}
+                              extraData={this.state}
                     />
 
 

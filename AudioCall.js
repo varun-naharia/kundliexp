@@ -30,6 +30,9 @@ const BtnEndCall = () => require('./resources/btn_endcall.png')
 const BtnMute = () => require('./resources/btn_mute.png')
 const BtnSwitchCamera = () => require('./resources/btn_switch_camera.png')
 const IconMuted = () => require('./resources/icon_muted.png')
+const IconLoudSpeaker = () => require('./resources/btn_loudspeaker.png')
+const IconNoLoudSpeaker = () => require('./resources/btn_noloudspeaker.png')
+
 
 const {width} = Dimensions.get('window')
 
@@ -101,7 +104,8 @@ class AudioCall extends Component<Props> {
         hideButton: false,
         visible: false,
         selectedUid: undefined,
-        animating: true
+        animating: true,
+        isLoudspeaker: false,
     }
 
     componentWillMount () {
@@ -191,7 +195,6 @@ class AudioCall extends Component<Props> {
 
 
         getlog = ()=>{
-
 
       const url = GLOBAL.BASE_URL +  'online_counsult_timer'
                      fetch(url, {
@@ -304,6 +307,19 @@ class AudioCall extends Component<Props> {
         })
     }
 
+    toggleSpeaker=()=>{
+        this.setState({
+            isLoudspeaker: !this.state.isLoudspeaker
+        }, () => {
+            RtcEngine.setEnableSpeakerphone(this.state.isLoudspeaker).then(_ => {
+                /**
+                 * ADD the code snippet after muteAllRemoteAudioStreams success.
+                 */
+            })
+        })
+
+    }
+
     toggleHideButtons = () => {
         this.setState({
             hideButton: !this.state.hideButton
@@ -320,7 +336,7 @@ class AudioCall extends Component<Props> {
         })
     }
 
-    toolBar = ({hideButton, isMute}) => {
+    toolBar = ({hideButton, isMute, isLoudspeaker}) => {
         if (!hideButton) {
             return (
                 <View>
@@ -328,6 +344,10 @@ class AudioCall extends Component<Props> {
                         <OperateButton
                             onPress={this.toggleAllRemoteAudioStreams}
                             source={isMute ? IconMuted() : BtnMute()}
+                        />
+                        <OperateButton
+                            onPress={this.toggleSpeaker}
+                            source={isLoudspeaker ? IconLoudSpeaker() : IconNoLoudSpeaker()}
                         />
                         <OperateButton
                             style={{alignSelf: 'center', marginBottom: -10}}

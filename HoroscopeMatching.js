@@ -27,6 +27,8 @@ import {
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 import IndicatorCustom from './IndicatorCustom.js';
+import DatePickers from 'react-native-date-picker'
+import { Dialog, DialogContent, DialogComponent, DialogTitle, DialogButton } from 'react-native-dialog-component';
 
 type Props = {};
 class HoroscopeMatching extends Component<Props> {
@@ -43,10 +45,12 @@ class HoroscopeMatching extends Component<Props> {
       name:'',
       names:'',
       pob:'',
-      date:'',
-      time:'',
-      dates:'',
-      times:'',
+      date: new Date(),
+      dateN: '',
+      time: moment().format("HH:mm"),
+      dates: new Date(),
+      dateNe: '',
+      times: moment().format("HH:mm"),
       is_sel: 0,
       is_sels: 0,
     };
@@ -62,7 +66,7 @@ class HoroscopeMatching extends Component<Props> {
 
   componentDidMount() {
     //        this.props.navigation.addListener('willFocus',this._handleStateChange);
-     this.setDateTime()
+     // this.setDateTime()
   }
 
   setDateTime = () => {
@@ -97,7 +101,7 @@ class HoroscopeMatching extends Component<Props> {
     }else{
     var finalData = {
       boy_name: this.state.name,
-      boy_dob: this.state.date,
+      boy_dob: this.state.dateN,
       boy_tob: this.state.time,
       boy_pob: this.state.pob,
       boy_country: '',
@@ -106,7 +110,7 @@ class HoroscopeMatching extends Component<Props> {
       boy_lat_long_address: this.state.pob,
 
       girl_name: this.state.names,
-      girl_dob: this.state.dates,
+      girl_dob: this.state.dateNe,
       girl_tob: this.state.times,
       girl_pob: this.state.pobs,
       girl_country: '',
@@ -124,6 +128,22 @@ class HoroscopeMatching extends Component<Props> {
 
     }
   };
+
+
+    setDate=(getDate)=>{
+      this.setState({ date : getDate,
+        // dates : moment(getDate).format('DD-MM-YYYY')
+       }) 
+      console.log(getDate)
+    }
+
+    setDates=(getDate)=>{
+      this.setState({ dates : getDate,
+        // dates : moment(getDate).format('DD-MM-YYYY')
+       }) 
+      console.log(getDate)
+    }
+
 
   render() {
     if (this.state.loading) {
@@ -221,43 +241,20 @@ class HoroscopeMatching extends Component<Props> {
                 Date of Birth
               </Text>
 
-              <DatePicker
-                style={{width: 200}}
-                date={this.state.date}
-                mode="date"
-                showIcon={false}
-                placeholder={this.state.dob}
-                format="DD-MM-YYYY"
-                minDate="01-01-1950"
-                maxDate={moment().format('DD-MM-YYYY')}
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateInput: {
-                    marginLeft: -102,
-                    borderWidth: 0,
-                    color: 'black',
-                  },
-                  dateText: {
-                    fontFamily: 'Nunito-Regular',
-                    fontSize: 17,
-                  },
-                }}
-                onDateChange={date => {
-                  this.setState({date: date});
-                }}
-              />
-
-              <View
-                style={{
-                  width: wp(92),
-                  height: hp(0.15),
-                  backgroundColor: 'rgba(0,0,0,0.05)',
-                  alignSelf: 'center',
-                  marginTop: hp(0.4),
-                  marginBottom: hp(2),
-                }}
-              />
+          <TouchableOpacity 
+          onPress={()=> this.dialogComponents.show()}>
+          <TextInput
+              style={{ height: hp(6), borderColor: '#f3f3f4',fontSize:17,paddingLeft:-0.5, borderBottomWidth: 1, marginTop:0 ,marginBottom: hp(2) ,width:'99%',color:'black',fontFamily:'Nunito-Regular'}}
+              // Adding hint in TextInput using Placeholder option.
+              placeholder="Select Date of Birth"
+              placeholderTextColor = 'grey'
+              maxLength={35}
+              editable={false}
+              // Making the Under line Transparent.
+              underlineColorAndroid="transparent"
+              value = {this.state.dateN}
+          />
+          </TouchableOpacity>
 
               <Text
                 style={{
@@ -434,43 +431,21 @@ class HoroscopeMatching extends Component<Props> {
                 Date of Birth
               </Text>
 
-              <DatePicker
-                style={{width: 200}}
-                date={this.state.dates}
-                mode="date"
-                showIcon={false}
-                placeholder={this.state.dobs}
-                format="DD-MM-YYYY"
-                minDate="01-01-1950"
-                maxDate={moment().format('DD-MM-YYYY')}
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateInput: {
-                    marginLeft: -102,
-                    borderWidth: 0,
-                    color: 'black',
-                  },
-                  dateText: {
-                    fontFamily: 'Nunito-Regular',
-                    fontSize: 17,
-                  },
-                }}
-                onDateChange={date => {
-                  this.setState({dates: date});
-                }}
-              />
 
-              <View
-                style={{
-                  width: wp(92),
-                  height: hp(0.15),
-                  backgroundColor: 'rgba(0,0,0,0.05)',
-                  alignSelf: 'center',
-                  marginTop: hp(0.4),
-                  marginBottom: hp(2),
-                }}
-              />
+          <TouchableOpacity 
+          onPress={()=> this.dialogComponentsn.show()}>
+          <TextInput
+              style={{ height: hp(6), borderColor: '#f3f3f4',fontSize:17,paddingLeft:-0.5, borderBottomWidth: 1, marginTop:0 ,marginBottom: hp(2) ,width:'99%',color:'black',fontFamily:'Nunito-Regular'}}
+              // Adding hint in TextInput using Placeholder option.
+              placeholder="Select Date of Birth"
+              placeholderTextColor = 'grey'
+              maxLength={35}
+              editable={false}
+              // Making the Under line Transparent.
+              underlineColorAndroid="transparent"
+              value = {this.state.dateNe}
+          />
+          </TouchableOpacity>
 
               <Text
                 style={{
@@ -601,6 +576,118 @@ class HoroscopeMatching extends Component<Props> {
             SUBMIT
           </Button>
         </KeyboardAwareScrollView>
+
+           <DialogComponent
+                dialogStyle = {{backgroundColor:'white', marginTop:hp(-13)}}
+                dismissOnTouchOutside={true}
+                dismissOnHardwareBackPress={true}
+                width={wp(82)}
+                height={hp(34)}
+                ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+              <DialogContent>
+
+            <View style={{flexDirection:'column', width:wp(82),alignSelf:'center',alignItems:'center',justifyContent:'center'
+            ,backgroundColor:'white', height:hp(34),borderRadius:5, marginTop:hp(-2) }}>
+
+              <DatePickers
+                  date={this.state.date}
+                  onDateChange={(date) => this.setDate(date)}
+                  mode={'date'}
+                  locale={'en'}
+                />
+            <View style={{width:'80%', flexDirection:'row', alignSelf:'center', marginTop:0, justifyContent:'space-between'}}>
+            <DialogButton text="Cancel" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60,  }}
+            onPress={()=>{this.dialogComponents.dismiss()
+              if(this.state.dateN!=''){
+
+              }else{
+                this.setState({dateN:''})
+              }
+
+            }}/>
+
+            <DialogButton text="Confirm" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60, }}
+            onPress={()=>{
+              if(this.state.date == ''){
+                this.setState({ dateN: moment().format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()                
+              }else{
+                this.setState({ dateN: moment(this.state.date).format('DD-MM-YYYY'),
+
+              })
+                this.dialogComponents.dismiss()
+
+              }
+
+            }}/>
+            </View>
+            </View>
+
+            </DialogContent>
+            </DialogComponent>
+
+
+
+           <DialogComponent
+                dialogStyle = {{backgroundColor:'white', marginTop:hp(-13)}}
+                dismissOnTouchOutside={true}
+                dismissOnHardwareBackPress={true}
+                width={wp(82)}
+                height={hp(34)}
+                ref={(dialogComponentsn) => { this.dialogComponentsn = dialogComponentsn; }}>
+
+              <DialogContent>
+
+            <View style={{flexDirection:'column', width:wp(82),alignSelf:'center',alignItems:'center',justifyContent:'center'
+            ,backgroundColor:'white', height:hp(34),borderRadius:5, marginTop:hp(-2) }}>
+
+              <DatePickers
+                  date={this.state.dates}
+                  onDateChange={(date) => this.setDates(date)}
+                  mode={'date'}
+                  locale={'en'}
+                />
+            <View style={{width:'80%', flexDirection:'row', alignSelf:'center', marginTop:0, justifyContent:'space-between'}}>
+            <DialogButton text="Cancel" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60,  }}
+            onPress={()=>{this.dialogComponentsn.dismiss()
+              if(this.state.dateNe!=''){
+
+              }else{
+                this.setState({dateNe:''})
+              }
+
+            }}/>
+
+            <DialogButton text="Confirm" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60, }}
+            onPress={()=>{
+              if(this.state.dates == ''){
+                this.setState({ dateNe: moment().format('DD-MM-YYYY') })
+                this.dialogComponentsn.dismiss()                
+              }else{
+                this.setState({ dateNe: moment(this.state.dates).format('DD-MM-YYYY'),
+
+              })
+                this.dialogComponentsn.dismiss()
+
+              }
+
+            }}/>
+            </View>
+            </View>
+
+            </DialogContent>
+
+            </DialogComponent>
+
       </View>
     );
   }

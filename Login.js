@@ -7,17 +7,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 var randomString = require('random-string');
 type Props = {};
+import CountryPicker from 'react-native-country-picker-modal';
 import PhoneInput from 'react-native-phone-input'
 import {
-  BallIndicator,
   BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
 } from 'react-native-indicators';
 
 export default class Login extends Component {
@@ -75,8 +68,17 @@ export default class Login extends Component {
 
     GLOBAL.loginmobile= phoneNumber
     GLOBAL.loginOTP = genOtp
+    GLOBAL.loginCtryCode = this.phone.getCountryCode()
+
       const url = GLOBAL.BASE_URL +  'otp_for_login'
     //  this.showLoading()
+    
+    console.log(JSON.stringify({
+    mobile: phoneNumber,
+    otp: genOtp,
+    country_code: this.phone.getCountryCode()
+
+  }))
       fetch(url, {
   method: 'POST',
   headers: {
@@ -141,6 +143,12 @@ export default class Login extends Component {
       this.props.navigation.replace('DrawerNavigator')
   }
 
+  onPressFlag(){
+    alert("Enter mobile number starting with + followed by country code")
+    // this.countryPicker.openModal();
+  }
+
+
   render() {
 
     if(this.state.loading){
@@ -182,6 +190,7 @@ export default class Login extends Component {
           Enter your mobile number to {'\n'}continue
           </Text>
 
+
           <View style = {{flexDirection:'row',marginTop:hp('7%'),width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'#f5f5f5', marginLeft:wp('8%')}}>
         
         <PhoneInput style={{width:wp('78%'), height:hp('7%'), color:'#909090',marginLeft:wp('2%')}}
@@ -190,8 +199,8 @@ export default class Login extends Component {
           }}
           offset={20}
           initialCountry={'in'}
-          onPressFlag={()=> {}}
-          textProps={{placeholder: 'Mobile no.'}}
+          onPressFlag={this.onPressFlag}
+          textProps={{placeholder: '+91'}}
           textStyle = {{ fontSize:18, fontFamily:'Nunito-Regular',}}
 //          onChangePhoneNumber={(text)=> {this.setState({mobile: text.replace(/[^0-9]/g, '')})}}
 
@@ -200,9 +209,22 @@ export default class Login extends Component {
 
           </View>
 
+          <Text style = {{width:wp('83%'),color:'grey',fontSize: 14,fontFamily:'Nunito-SemiBoldItalic'
+          ,textAlign:'left',marginTop:hp('2%'), marginLeft:wp('8%'), lineHeight:17,}}>
+          * for NRI users please type '+' followed by your country code and then mobile number for eg: USA user +1xxxxxx
+          </Text>
 
+{/*        <CountryPicker
+          ref={(ref) => {
+            this.countryPicker = ref;
+          }}
+          onChange={value => this.selectCountry(value)}
+          translation="eng"
+          cca2={this.state.cca2}
+      />
+*/}
 
-          <TouchableOpacity style={{width:wp('82%'),borderRadius:5, marginTop:hp('5.5%'),
+          <TouchableOpacity style={{width:wp('82%'),borderRadius:5, marginTop:hp('4.5%'),
            backgroundColor:'#E60000',height:hp('7%'),alignSelf:'center', marginRight:wp('2%')}}
            onPress={this.login}>
           
@@ -218,7 +240,7 @@ export default class Login extends Component {
 
          </View>
 
-        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('12%')}}
+        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('6%'), marginBottom:hp(2)}}
         onPress={()=> this.props.navigation.navigate('Signup')}>
         <View style={{width:wp('100%'),  alignSelf:'center', alignItems:'center',}}>
         <Text style = {{width:wp('90%'),color:'black',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular',}}>

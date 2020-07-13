@@ -25,6 +25,8 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 type Props = {};
 import { Dropdown } from 'react-native-material-dropdown';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import DatePickers from 'react-native-date-picker'
+import { Dialog, DialogContent, DialogComponent, DialogTitle, DialogButton } from 'react-native-dialog-component';
 
 
 export default class AddMember extends Component {
@@ -37,11 +39,16 @@ export default class AddMember extends Component {
             name:'',
             email:'',
             mobile:'',
-            relation:'bro',
+            relation:'',
             gender:'',
             dob:'Select Date of Birth',
+            date:new Date(),
+            dates:'',
             value:0,
-            rdata:[]
+            rdata:[],
+            time:'',
+            atleast:0,
+            pob:''
 
         };
 
@@ -67,7 +74,7 @@ export default class AddMember extends Component {
     }
 
     componentDidMount(){
-        this.getRelations()
+      this.getRelations()
     }
 
 
@@ -86,15 +93,15 @@ export default class AddMember extends Component {
       })
         .then(response => response.json())
         .then(responseJson => {
-          console.log(JSON.stringify(responseJson));
+          // console.log(JSON.stringify(responseJson));
 //          this.hideLoading();
           if (responseJson.status == true) {
 
-                        var rece = responseJson.response
-                        const transformed = rece.map(({ id, name }) => ({ label: name, value: id }));
-                        console.log(transformed)
+                var rece = responseJson.response
+                const transformed = rece.map(({ id, name }) => ({ label: name, value: id }));
+                // console.log(transformed)
 
-                        this.setState({rdata : transformed})
+                this.setState({rdata : transformed})
           }else {
             alert(
               "Something went wrong!"
@@ -109,23 +116,22 @@ export default class AddMember extends Component {
 
 
     _handlePress=()=> {
-       // alert('added')
+        if(this.state.name==''){
+            alert('Please Enter Member Name')
 
-        // if(this.state.name==''){
-        //     alert('Please Enter Member Name')
+        }else if(this.state.dates==''){
+            alert('Please Select date of birth')
 
-        // }else if(this.state.email==''){
-        //     alert('Please Enter Member EmailId')
+        }else if(this.state.time==''){
+            alert('Please Select time of birth')
 
-        // }else if(this.state.mobile==''){
-        //     alert('Please Enter Mobile Number')
+        }else if(this.state.pob==''){
+            alert('Please Select place of birth')
 
-        // }else if(this.state.relation==''){
-        //     alert('Please select relation')
+        }else if(this.state.atleast==0){
+            alert('Please Select Relationship')
 
-        // }else if(this.state.dob == ''){
-        //     alert('Please select Date of Birth')
-        // }else{
+        }else{
         var type= ''
         if(this.state.value == 0){
             type = 'Male'
@@ -145,7 +151,7 @@ export default class AddMember extends Component {
             body: JSON.stringify({
                 "user_id":GLOBAL.user_id,
                 "member_name":this.state.name,
-                "member_dob":this.state.date,
+                "member_dob":this.state.dates,
                 "member_gender":type,
                 "place_of_birth": this.state.pob,
                 "latitude": this.state.mem_lat,
@@ -169,10 +175,18 @@ export default class AddMember extends Component {
                 console.error(error);
                 this.hideLoading()
             });
+        }
     }
 
     login = () => {
         this.props.navigation.navigate('NurseTime')
+    }
+
+    setDate=(getDate)=>{
+      this.setState({ date : getDate,
+        // dates : moment(getDate).format('DD-MM-YYYY')
+       }) 
+      console.log(getDate)
     }
 
 
@@ -183,7 +197,7 @@ export default class AddMember extends Component {
 
 
     getIndex = (index) => {
-
+        this.setState({atleast:1})
         this.setState({relation:this.state.rdata[index].label})
         //alert(this.state.relation)
     }
@@ -240,34 +254,21 @@ export default class AddMember extends Component {
 
           <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey', marginTop:hp(1)}}>Date of Birth</Text>
 
-          <DatePicker
-            style={{width: 200,}}
-            date={this.state.date}
-            mode="date"
-            showIcon={false}
-            placeholder={this.state.dob}
-            format="DD-MM-YYYY"
-            minDate="01-01-1950"
-            maxDate= {moment().format('DD-MM-YYYY')}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateInput: {
-                marginLeft: -102, borderWidth:0, color:'black'
-              },
-              dateText:{
-                  fontFamily:'Nunito-Regular', fontSize:17
-              },
-              placeholderText: {
-                    fontFamily:'Nunito-Regular', fontSize:17, marginLeft:55, color:'grey'
-              }                                         
-            }}
-            onDateChange={(date) => {
-              this.setState({date: date})
-            }}
+          <TouchableOpacity 
+          onPress={()=> this.dialogComponents.show()}>
+          <TextInput
+              style={{ height: hp(6), borderColor: '#f3f3f4',fontSize:17,paddingLeft:-0.5, borderBottomWidth: 1, marginTop:0 ,marginBottom: hp(2) ,width:'99%',color:'black',fontFamily:'Nunito-Regular'}}
+              // Adding hint in TextInput using Placeholder option.
+              placeholder="Select Date of Birth"
+              placeholderTextColor = 'grey'
+              maxLength={35}
+              editable={false}
+              // Making the Under line Transparent.
+              underlineColorAndroid="transparent"
+              value = {this.state.dates}
           />
+          </TouchableOpacity>
 
-          <View style={{width:wp(92), height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(0.4),marginBottom: hp(2) ,}}/>
 
 
           <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey', marginTop:hp(1)}}>Time of Birth</Text>
@@ -358,14 +359,68 @@ export default class AddMember extends Component {
 
             <Button
             containerStyle={{width:wp('70%'),padding:16, height:hp(7.5), overflow:'hidden', borderRadius:40,
-             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(7), marginBottom:hp(2)}}
+             backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(6), marginBottom:hp(3)}}
             style={{fontSize: 18, color: 'white', alignSelf: 'center', fontFamily:'Nunito-Bold'}}
             onPress={this._handlePress}
             >
             SAVE
             </Button>
 
-                    </KeyboardAwareScrollView>
+              </KeyboardAwareScrollView>
+
+
+           <DialogComponent
+                dialogStyle = {{backgroundColor:'white', marginTop:hp(-13)}}
+                dismissOnTouchOutside={true}
+                dismissOnHardwareBackPress={true}
+                width={wp(82)}
+                height={hp(34)}
+                ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+              <DialogContent>
+
+            <View style={{flexDirection:'column', width:wp(82),alignSelf:'center',alignItems:'center',justifyContent:'center'
+            ,backgroundColor:'white', height:hp(34),borderRadius:5, marginTop:hp(-2) }}>
+
+              <DatePickers
+                  date={this.state.date}
+                  onDateChange={(date) => this.setDate(date)}
+                  mode={'date'}
+                  locale={'en'}
+                />
+            <View style={{width:'80%', flexDirection:'row', alignSelf:'center', marginTop:0, justifyContent:'space-between'}}>
+            <DialogButton text="Cancel" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60,  }}
+            onPress={()=>{this.dialogComponents.dismiss()
+              if(this.state.dates!=''){
+
+              }else{
+                this.setState({dates:''})
+              }
+
+            }}/>
+
+            <DialogButton text="Confirm" align="center" textStyle ={{color:'red'}}
+            activeOpacity={0.99}
+            buttonStyle={{width:wp(30), height:60, }}
+            onPress={()=>{
+              if(this.state.date == ''){
+                this.setState({ dates: moment().format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()                
+              }else{
+                this.setState({ dates: moment(this.state.date).format('DD-MM-YYYY') })
+                this.dialogComponents.dismiss()
+
+              }
+
+            }}/>
+            </View>
+            </View>
+
+            </DialogContent>
+
+            </DialogComponent>
 
                 </View>
 

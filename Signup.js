@@ -95,6 +95,7 @@ updateInfo() {
         GLOBAL.signupOtp = genOtp
         GLOBAL.signupVerifyRefer = this.state.isverifyrefer
         GLOBAL.signupApplyRefer = this.state.applied
+        GLOBAL.signupCtryCode = this.phone.getCountryCode()
 
 
           const url = GLOBAL.BASE_URL +  'otp'
@@ -186,6 +187,10 @@ updateInfo() {
     }
   }
 
+  onPressFlag(){
+    alert("Enter mobile number starting with + followed by country code")
+    // this.countryPicker.openModal();
+  }
 
 
   render() {
@@ -237,7 +242,7 @@ updateInfo() {
           }}
           offset={20}
           initialCountry={'in'}          
-          onPressFlag={()=> {}}
+          onPressFlag={this.onPressFlag}
           textProps={{placeholder: 'Mobile no.'}}
           textStyle = {{ fontSize:18, fontFamily:'Nunito-Regular',}}
 //          onChangePhoneNumber={(text)=> {this.setState({mobile: text.replace(/[^0-9]/g, '')})}}
@@ -259,6 +264,10 @@ updateInfo() {
             */}
           </View>
 
+          <Text style = {{width:wp('83%'),color:'grey',fontSize: 14,fontFamily:'Nunito-SemiBoldItalic'
+          ,textAlign:'left',marginTop:hp('2%'), marginLeft:wp('8%'), lineHeight:17,}}>
+          * for NRI users please type '+' followed by your country code and then mobile number for eg: USA user +1xxxxxx
+          </Text>
 
 {/*          <View style = {{flexDirection:'column',marginTop:hp('4%'),justifyContent:'center',width:wp('82%'),height:hp('7%'), borderColor:'white',borderRadius:5, borderWidth:2, elevation: this.state.elevations, backgroundColor:'white', marginLeft:wp('8%')}}>
           <DatePicker
@@ -393,7 +402,7 @@ updateInfo() {
 
          </View>
 
-        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('18%'), marginBottom:hp('2%')}}
+        <TouchableOpacity style={{width:wp('100%'),alignSelf:'center', alignItems:'center',marginTop:hp('11%'), marginBottom:hp('2%')}}
         onPress={()=> this.props.navigation.navigate('Login')}>
         <View style={{width:wp('100%'),  alignSelf:'center', alignItems:'center',}}>
         <Text style = {{width:wp('90%'),color:'black',fontSize: 18,textAlign:'center',fontFamily:'Nunito-Regular'}}>

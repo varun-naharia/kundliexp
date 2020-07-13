@@ -12,7 +12,8 @@ export default class KalsarpaDosha extends Component{
         const { navigation } = this.props;
         this.state = {
             response:{},
-            report:``
+            report:``,
+            one_line:''
         }
     }
 
@@ -54,14 +55,21 @@ export default class KalsarpaDosha extends Component{
         }).then((response) => response.json())
             .then((responseJson) => {
   //             this.hideLoading()
-                   // console.log(JSON.stringify(responseJson))
+                   console.log(JSON.stringify(responseJson))
 
                 if (responseJson.status == true) {
-                this.setState({response: responseJson.responseData,
-                  report: responseJson.responseData.report.report
-                },()=>{
 
-                })
+                    if(responseJson.responseData.present == true){
+                            this.setState({response: responseJson.responseData,
+                              report: responseJson.responseData.report.report,
+                              one_line: responseJson.responseData.one_line
+                            },()=>{
+
+                            })                        
+                    }else{
+                        this.setState({one_line: responseJson.responseData.one_line})
+                       // alert(responseJson.responseData.one_line)
+                    }
                 }else{
 
                 }
@@ -100,7 +108,7 @@ export default class KalsarpaDosha extends Component{
 
     <View style={{width:wp(100), backgroundColor:'#d9d9f3', justifyContent:'space-between',padding:8,alignItems:'center', flexDirection:'row'}}
     >
-    <Text style={{fontFamily:'Nunito-Regular',width:'99%',backgroundColor:'transparent', fontSize:16, color:'black', marginLeft:wp(0.5), textAlign:'left'}}>{this.state.response.one_line}</Text>
+    <Text style={{fontFamily:'Nunito-Regular',width:'99%',backgroundColor:'transparent', fontSize:16, color:'black', marginLeft:wp(0.5), textAlign:'left'}}>{this.state.one_line}</Text>
     </View>
 
     <View style={{width:wp(100), backgroundColor:'white', height:hp(6.5), justifyContent:'space-between',alignItems:'center', flexDirection:'row'}}>

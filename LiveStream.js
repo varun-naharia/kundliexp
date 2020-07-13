@@ -190,7 +190,8 @@ playVideo=(value)=>{
               </View>
 
             </View>
-            <Chat/>
+          {/*
+            <Chat/> */}
             </View>
           );
   }

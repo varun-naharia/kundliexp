@@ -3,7 +3,6 @@ import { StyleSheet,ScrollView, Text, View,FlatList,Image,TouchableOpacity ,Aler
 const GLOBAL = require('../Global');
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import IndicatorCustom from '../IndicatorCustom'
-import LinearGradient from 'react-native-linear-gradient';
 
 export default class FavourablePoints extends Component{
 

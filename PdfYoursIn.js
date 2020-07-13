@@ -128,6 +128,10 @@ export default class PdfYoursIn extends Component {
                        headerName={'DOCUMENT VIEW'}
                        headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
+          <Text style = {{fontSize:16,marginBottom:5,fontFamily:'Nunito-SemiBoldItalic',color:'grey',marginLeft:wp(3)}}>
+          *Tap on the document to open
+          </Text>
+
                     <FlatList style= {{flexGrow:0,marginTop:5}}
                               data={this.state.data}
                               numColumns={3}

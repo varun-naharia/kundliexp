@@ -11,6 +11,7 @@ import {
   Alert,
   Container,
   Linking,
+  TextInput,
   Dimensions,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -50,6 +51,10 @@ export default class Payment extends Component<Props> {
       refer: false,
       value: 0,
       prices: '',
+      disc_code:'',
+      disc_amount:'0',
+      disc_code_id:'0',
+      isapplied:0,
       referralrs: GLOBAL.userDetails.refferal_wallet,
     // referralrs : "40",
       walletAmount: GLOBAL.walletAmount,
@@ -62,7 +67,7 @@ export default class Payment extends Component<Props> {
       radio_props: [
         {label: 'Debit/Credit Card/Netbanking', value: 0},
         {label: 'Wallet ' + `(₹ ${GLOBAL.walletAmount})`, value: 1},
-        {label: 'Referral Wallet (Max. 10% can be applied)', value: 2},
+        {label: 'Referral Wallet (Max. 30% can be applied)', value: 2},
       ],
     };
   }
@@ -118,8 +123,8 @@ walletStateChange = () => {
   };
 
   componentDidMount() {
-   // console.log(this.props.navigation.state.params.params);
-
+   console.log(this.props.navigation.state.params.params);
+// this.props.navigation.state.params.params.previous_screen
     this.getReviews();
   }
 
@@ -285,12 +290,12 @@ walletStateChange = () => {
                     for: decide_for,
                     module: decide_module,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     from_payment_gateway:"0",
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: get_price.toString(),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -335,11 +340,11 @@ walletStateChange = () => {
                     for: decide_for,
                     module: decide_module,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: Math.round(get_price),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -401,12 +406,12 @@ walletStateChange = () => {
                     for: decide_for,
                     module: decide_module,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     from_payment_gateway:"0",
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: get_price.toString(),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -451,11 +456,11 @@ walletStateChange = () => {
                     for: decide_for,
                     module: decide_module,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: Math.round(get_price),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -529,12 +534,12 @@ walletStateChange = () => {
                     package_id: package_id,
                     total_amount: get_price.toString(),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     payment_gateway_amount:"0",
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     order_amount: get_price.toString(),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                     referral_amount: parseFloat(this.state.finalRef).toFixed(2),
@@ -564,7 +569,7 @@ walletStateChange = () => {
                   });
 
               }else{
-              var commonHtml = `${GLOBAL.user_id}|${decide_module}|${package_id}|${get_price}|${get_price}|${this.state.finalWall.toString()}|${this.state.finalRef.toString()}|${'0'}|${decide_module}|${'0'}|${'0'}`;
+              var commonHtml = `${GLOBAL.user_id}|${decide_module}|${package_id}|${get_price}|${get_price}|${this.state.finalWall.toString()}|${this.state.finalRef.toString()}|${this.state.disc_amount}|${this.state.disc_code}|${this.state.disc_code_id}|${tax_calc}`;
               console.log(commonHtml)
               this.rajorPay(commonHtml)
 
@@ -612,14 +617,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 from_payment_gateway:'0',
                 total_amount: get_price,
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               } 
 
@@ -664,14 +669,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
                 total_amount: Math.round(get_price),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               }
 
@@ -738,14 +743,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code:this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,
                 from_payment_gateway:'0',
                 total_amount: get_price,
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               } 
                   fetch(url, {
@@ -787,14 +792,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code:this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
                 total_amount: Math.round(get_price),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               }
 
@@ -856,11 +861,11 @@ walletStateChange = () => {
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 payment_from: 'normal',
                 from_payment_gateway: '0',
-                coupan_code:'0',
-                coupan_code_id:'0',                
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,                
               }
               console.log(JSON.stringify(body))
              fetch(url, {
@@ -898,9 +903,9 @@ walletStateChange = () => {
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
-                coupan_code:'0',
-                coupan_code_id:'0',                
+                discount_amount: this.state.disc_amount,
+                coupan_code: this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,                
               }
 
               console.log('---temp++'+JSON.stringify(body))
@@ -958,7 +963,7 @@ walletStateChange = () => {
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 name:GLOBAL.userDetails.name,
                 email:GLOBAL.userDetails.email,
                 mobile:GLOBAL.userDetails.phone,
@@ -968,8 +973,8 @@ walletStateChange = () => {
                 city_state: getItem.city_state,
                 payment_from: 'normal',
                 from_payment_gateway: '0',
-                coupan_code:'0',
-                coupan_code_id:'0',                
+                coupan_code: this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,                
               }
               console.log(JSON.stringify(body))
 
@@ -1006,7 +1011,7 @@ walletStateChange = () => {
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 name:GLOBAL.userDetails.name,
                 email:GLOBAL.userDetails.email,
                 mobile:GLOBAL.userDetails.phone,
@@ -1016,8 +1021,8 @@ walletStateChange = () => {
                 city_state: getItem.city_state,
                 payment_from: 'rajorpay',
                 from_payment_gateway: '0',
-                coupan_code:'0',
-                coupan_code_id:'0',                
+                coupan_code:this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,                
               }
               console.log('---temp++'+JSON.stringify(body))
                 fetch(url, {
@@ -1086,14 +1091,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code:this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,
                 from_payment_gateway:'0',
                 total_amount: get_price,
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               } 
 
@@ -1137,14 +1142,14 @@ walletStateChange = () => {
                 name: GLOBAL.userDetails.name,
                 gender: GLOBAL.userDetails.gender,
                 dob: GLOBAL.userDetails.dob,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code:this.state.disc_code,
+                coupan_code_id:this.state.disc_code_id,
                 from_payment_gateway: Math.round(parseFloat(this.state.finalCheckoutPrice.toString()).toFixed(2)),
                 total_amount: Math.round(get_price),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               }
 
@@ -1199,12 +1204,12 @@ walletStateChange = () => {
                     module: decide_module,
                     timezone: GLOBAL.glzone,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     from_payment_gateway:"0",
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: get_price.toString(),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -1244,11 +1249,11 @@ walletStateChange = () => {
                     module: decide_module,
                     timezone: GLOBAL.glzone,
 
-                    coupan_code: this.state.coupan_code,
-                    coupan_code_id: this.state.coupan_code_id,
+                    coupan_code: this.state.disc_code,
+                    coupan_code_id: this.state.disc_code_id,
                   
                     payment_from:"normal",
-                    discount_amount: '0',                    
+                    discount_amount: this.state.disc_amount,                    
                     total_amount: Math.round(get_price),
                     tax_amount: parseFloat(tax_calc).toFixed(2),
                     wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
@@ -1312,14 +1317,14 @@ walletStateChange = () => {
                 booking_type: decide_booking_type,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 from_payment_gateway:'0',
                 total_amount: get_price,
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 payment_from:'normal'
               } 
 
@@ -1356,13 +1361,13 @@ walletStateChange = () => {
                 for: decide_for,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 total_amount: Math.round(get_price),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
               }
               var finalBody = {...body , ...navigation.state.params.params.finalData}
 
@@ -1416,14 +1421,14 @@ walletStateChange = () => {
                 booking_type: decide_booking_type,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 from_payment_gateway:'0',
                 total_amount: get_price,
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
                 payment_from:'normal'
               } 
 
@@ -1460,13 +1465,13 @@ walletStateChange = () => {
                 for: decide_for,
                 user_id: GLOBAL.user_id,
                 module: decide_module,
-                coupan_code:'0',
-                coupan_code_id:'0',
+                coupan_code: this.state.disc_code,
+                coupan_code_id: this.state.disc_code_id,
                 total_amount: Math.round(get_price),
                 wallet_amount: parseFloat(this.state.finalWall).toFixed(2),
                 referral_amount: parseFloat(this.state.finalRef).toFixed(2),
                 tax_amount: parseFloat(tax_calc).toFixed(2),
-                discount_amount: '0',
+                discount_amount: this.state.disc_amount,
               }
               var finalBody = {...body , ...navigation.state.params.params.finalData}
 
@@ -1610,7 +1615,11 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: get_price,
           totalPay: get_price - tax_calc,
           finalWall : 0,
-          finalRef : 0
+          finalRef : 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,          
         })
     }else if(this.state.wallet == true && this.state.debit== false && this.state.refer ==false){
         var aa = parseFloat(get_price);
@@ -1633,7 +1642,11 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
           totalPay: get_price - tax_calc,
-          finalRef: 0
+          finalRef: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,
         })
 
         }else{
@@ -1641,7 +1654,11 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: ss,
           finalWall: bb,
           totalPay: get_price - tax_calc,
-          finalRef: 0
+          finalRef: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,
         })
 
         }
@@ -1675,13 +1692,17 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice:     bb,
           finalWall: 0,
           totalPay: get_price - tax_calc,
-          finalRef: 0
+          finalRef: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,          
          })
 
        // alert('debit' +bb)
     }else if(this.state.wallet == false && this.state.debit== false && this.state.refer ==true){
       // use only 10% of balance
-        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var aa = ((parseFloat(this.state.referralrs))*30)/100;
         var bb = parseFloat(get_price);
 //        var cc = bb - aa
         if (bb >= aa){
@@ -1689,7 +1710,11 @@ walletStateChange = () => {
           this.setState({finalCheckoutPrice: bb-aa,
           finalRef: aa,
           totalPay: get_price - tax_calc,
-          finalWall: 0
+          finalWall: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,
         })
 
 
@@ -1697,14 +1722,18 @@ walletStateChange = () => {
           this.setState({finalCheckoutPrice: 0,
           finalRef: bb,
           totalPay: get_price - tax_calc,
-          finalWall: 0
+          finalWall: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,          
         })
         }
       //  alert('referral' + cc)
 
     }else if(this.state.wallet == false && this.state.debit== true && this.state.refer ==true){
 
-        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var aa = ((parseFloat(this.state.referralrs))*30)/100;
         var bb = parseFloat(get_price);
 //        var cc = bb - aa
         if (bb >= aa){
@@ -1712,7 +1741,12 @@ walletStateChange = () => {
           this.setState({finalCheckoutPrice: bb-aa,
           finalRef: aa,
           totalPay: get_price - tax_calc,
-          finalWall: 0
+          finalWall: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,          
+
         })
 
 
@@ -1720,7 +1754,12 @@ walletStateChange = () => {
           this.setState({finalCheckoutPrice: 0,
           finalRef: bb,
           totalPay: get_price - tax_calc,
-          finalWall: 0
+          finalWall: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,          
+
         })
         }
         // this.setState({finalCheckoutPrice: cc,
@@ -1751,7 +1790,11 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price,
           totalPay: get_price - tax_calc,
-          finalRef: 0
+          finalRef: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }else{
@@ -1759,7 +1802,11 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: ss,
           finalWall: bb,
           totalPay: get_price - tax_calc,
-          finalRef: 0
+          finalRef: 0,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }
@@ -1784,7 +1831,7 @@ walletStateChange = () => {
 //        alert('wallet debit'+ total)
     }else if(this.state.wallet == true && this.state.debit== true && this.state.refer ==true){
 
-        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var aa = ((parseFloat(this.state.referralrs))*30)/100;
         var bb = parseFloat(get_price);
         var zz = parseFloat(this.state.walletAmount);      
         // var sum = aa+zz
@@ -1796,21 +1843,29 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price - aa,
           totalPay: get_price - tax_calc,
-          finalRef: aa
+          finalRef: aa,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }else{
         this.setState({finalCheckoutPrice: cc,
           finalWall: zz,
           totalPay: get_price - tax_calc,
-          finalRef: aa
+          finalRef: aa,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }
 
        // alert('wallet debit refer' +zz)
     }else if(this.state.wallet == true && this.state.debit== false && this.state.refer ==true){
-        var aa = ((parseFloat(this.state.referralrs))*10)/100;
+        var aa = ((parseFloat(this.state.referralrs))*30)/100;
         var bb = parseFloat(get_price);
         var zz = parseFloat(this.state.walletAmount);      
         // var sum = aa+zz
@@ -1822,14 +1877,22 @@ walletStateChange = () => {
         this.setState({finalCheckoutPrice: 0,
           finalWall: get_price - aa,
           totalPay: get_price - tax_calc,
-          finalRef: aa
+          finalRef: aa,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }else{
         this.setState({finalCheckoutPrice: cc,
           finalWall: zz,
           totalPay: get_price - tax_calc,
-          finalRef: aa
+          finalRef: aa,
+          disc_code:'',
+          disc_amount:'0',
+          disc_code_id:'0',
+          isapplied:0,                    
         })
 
         }
@@ -1928,6 +1991,137 @@ walletStateChange = () => {
       });
   };
 
+
+  removeDiscCode=()=>{
+
+    var disc_amount = parseFloat(this.state.disc_amount)
+    var checkout_p = parseFloat(this.state.finalCheckoutPrice)
+
+    checkout_p = disc_amount + checkout_p
+
+    this.setState({
+      disc_code : '',
+      isapplied: 0,
+      finalCheckoutPrice: checkout_p,
+      coupan_code: '0',
+      disc_code_id: '0',
+      disc_amount:'0',
+    })
+
+// disc_amount
+  // this.setState((prevState, nextState) => { 
+  //   console.log(JSON.stringify(prevState))
+  //        finalCheckoutPrice: prevState
+  //      }, () => console.log('UpdatedState', this.state.finalCheckoutPrice));
+
+    // this.setState(prevState => ({
+    //   // alert(prevState)
+    //   finalCheckoutPrice : prevState
+    // }))
+  }
+
+  verifyDiscCode=()=>{
+
+    var decide_code
+      if (this.state.wallet == false && this.state.debit == false && this.state.refer == false) {
+        alert("Please choose the paymeny method first to continue");
+        return;
+      }
+
+    if(this.props.navigation.state.params.params.previous_screen == 'astro_classes'){
+      decide_code = '1'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'chat'){
+      decide_code = '2'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'audio'){
+      decide_code = '3'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'video'){
+      decide_code = '4'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'life_pred'){
+      decide_code = '6' // '5' for ask a question
+    }else if(this.props.navigation.state.params.params.previous_screen == 'horo_matching'){
+      decide_code = '7'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'inperson'){
+      decide_code = '8'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'medical_astro'){
+      decide_code = '9'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'financial_astro'){
+      decide_code = '10'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'from_cart'){
+      decide_code = '11'
+    }else if(this.props.navigation.state.params.params.previous_screen == 'paid_pdf'){
+      decide_code = '12'
+    }
+
+    console.log('----> discount module--'+decide_code)
+
+    if(this.state.disc_code == ''){
+      alert('Enter discount code')
+    }else{
+
+     const url = GLOBAL.BASE_URL + "coupan_verify";
+  
+      fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        coupan_code: this.state.disc_code,
+        module: decide_code,
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(JSON.stringify(responseJson));
+
+        if (responseJson.status == true) {
+
+        var getFprice = parseFloat(this.state.finalCheckoutPrice)
+
+        this.setState({isapplied: 1})
+
+          if(responseJson.discount_type=='percentage'){
+            var getPerc_value = parseFloat(responseJson.condition)
+            getPerc_value = getFprice * getPerc_value/100            
+            getFprice = getFprice - getPerc_value            
+
+            this.setState({
+              finalCheckoutPrice: getFprice,
+              disc_amount: getPerc_value,
+              disc_code_id : responseJson.coupan_id
+            })
+            // alert('percentage')
+          }else{
+
+            if(getFprice > 0){
+              getFprice = getFprice - parseFloat(responseJson.condition)
+              this.setState({ finalCheckoutPrice : getFprice,
+                disc_amount : responseJson.condition,
+                disc_code_id: responseJson.coupan_id
+              })
+            }
+            // alert('flat')
+          }
+
+  
+          alert('Discount coupon applied successfully!')
+        } else {
+          this.setState({
+            isapplied : 0,
+            disc_code_id: '0',
+            disc_code:'',
+            disc_amount:'0'
+          })
+          alert("Invalid discount code");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    }
+  }
+
   render() {
     var radio_props = [
       {label: 'Debit/Credit Card/Netbanking', value: 0},
@@ -1951,7 +2145,7 @@ walletStateChange = () => {
     }
     return (
       <View
-        style={{flex: 1, flexDirection: 'column', backgroundColor: '#F5F5F5'}}>
+        style={{flexDirection: 'column', backgroundColor: '#F5F5F5', flex:1}}>
         <Header
           navigation={this.props.navigation}
           showHeaderImage={false}
@@ -1966,19 +2160,22 @@ walletStateChange = () => {
         />
 
         <KeyboardAwareScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{flex: 1}}>
+          extraScrollHeight={100}          
+          scrollEnabled={true} enableAutomaticScroll={true}
+          contentContainerStyle={{flexGrow: 1,}}
+          enableOnAndroid={true}
+          >
           <View
             style={{
-              flex: 1,
               flexDirection: 'column',
+
               backgroundColor: '#F5F5F5',
               alignSelf: 'center',
             }}>
             <View
               style={{
                 width: wp(100),
-                marginTop: hp(3),
+                marginTop: hp(0),
                 backgroundColor: 'white',
                 flexDirection: 'column',
               }}>
@@ -2034,7 +2231,7 @@ walletStateChange = () => {
                   }}>
 
 
- <TouchableOpacity onPress={() => this.debitstate()}>
+           <TouchableOpacity onPress={() => this.debitstate()}>
                 <View style={{ flexDirection: "row", margin: 5 }}>
                   <Text
                     style={{
@@ -2085,7 +2282,7 @@ walletStateChange = () => {
                       marginTop: 6
                     }}
                   >
-                    Use 10% Referral Bonus Rs {this.state.referralrs}
+                    Use 30% Referral Bonus Rs {this.state.referralrs}
                   </Text>
 
                   {this.state.refer == false && (
@@ -2176,7 +2373,7 @@ walletStateChange = () => {
                 fontSize: 17,
                 color: 'black',
                 marginLeft: wp(3),
-                marginTop: hp(2),
+                marginTop: hp(1),
                 fontFamily: 'Nunito-Bold',
               }}>
               Payment Summary
@@ -2185,7 +2382,7 @@ walletStateChange = () => {
             <View
               style={{
                 width: wp(100),
-                marginTop: 17,
+                marginTop: 10,
                 backgroundColor: 'white',
                 flexDirection: 'column',
               }}>
@@ -2371,15 +2568,58 @@ walletStateChange = () => {
               />
             </View>
 
+{this.state.finalCheckoutPrice != 0 && (
+
+          <View style = {{flexDirection:'row',justifyContent:'space-between',marginTop:hp('0.5%'),width:wp('100%'),height:hp('6%'), borderColor:'white',borderRadius:5, borderWidth:2, backgroundColor:'white',}}>
+              <TextInput style = {{width:wp('60%'),color:'black', height:hp('6%'), fontSize:15, fontFamily:'Nunito-Regular', paddingLeft:wp(5),}}
+                         placeholder = {'Discount Code (if any)'}
+                         placeholderTextColor = "black"
+                         autoCapitalize = "none"
+                         editable={true}
+                         onChangeText={(text) => this.setState({disc_code:text})}
+                         value={this.state.disc_code}
+              />
+
+          {this.state.isapplied != 1 && (
+          <TouchableOpacity onPress={()=> this.verifyDiscCode()}>
+          <Text style = {{color:'#E60000',fontSize: 15,fontFamily:'Nunito-Regular',textAlign:'left', marginRight:wp('5%'),marginTop:wp('3%')}}>
+          Verify
+          </Text>
+          </TouchableOpacity>
+            )}
+
+          {this.state.isapplied == 1 && (
+
+          <TouchableOpacity onPress={()=> this.removeDiscCode()}>
+          <Text style = {{color:'#E60000',fontSize: 15,fontFamily:'Nunito-Regular',textAlign:'left', marginRight:wp('5%'),marginTop:wp('3%')}}>
+          Remove
+          </Text>
+          </TouchableOpacity>
+
+            )}
+
+          </View>
+
+  )}
+
+{this.state.finalCheckoutPrice == 0 && (
+
+        <View style = {{flexDirection:'row',justifyContent:'space-between',marginTop:hp('0.5%'),width:wp('100%'),height:hp('6%'), backgroundColor:'transparent',}}>
+        </View>
+  )}
+          </View>
+        </KeyboardAwareScrollView>
+
             <View
               style={{
                 width: wp(100),
                 backgroundColor: 'white',
-                height: hp(8),
+                height: hp(7),
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                position: 'absolute',
-                bottom: 0,
+                marginTop:hp(0),
+                position:'absolute',
+                bottom:0
               }}>
               <View
                 style={{
@@ -2427,8 +2667,7 @@ walletStateChange = () => {
                 PAY NOW
               </Button>
             </View>
-          </View>
-        </KeyboardAwareScrollView>
+
       </View>
     );
   }
