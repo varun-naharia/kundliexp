@@ -94,6 +94,11 @@ import AboutUs from './AboutUs'
 import ContactUs from './ContactUs'
 import Terms from './Terms'
 import Privacy from './Privacy'
+import Refernearn from './Refernearn'
+import KundliFormRest from './KundliFormRest'
+import ViewMembership from './ViewMembership'
+import FollowUpSelectDateTime from './FollowUpSelectDateTime'
+import FollowUpHistory from './FollowUpHistory'
 
 import React, {Component} from 'react';
 
@@ -217,6 +222,11 @@ const StackNavigator = createStackNavigator({
         ContactUs:{screen: ContactUs},
         Terms:{screen:Terms},
         Privacy:{screen:Privacy},
+        Refernearn:{screen:Refernearn},
+        KundliFormRest:{screen:KundliFormRest},
+        ViewMembership:{screen:ViewMembership},
+        FollowUpSelectDateTime:{screen:FollowUpSelectDateTime},
+        FollowUpHistory:{screen:FollowUpHistory}
 
     },
 

@@ -28,7 +28,7 @@ const equalWidth =  (width -20 )
 const YOUTUBE_API = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${`UCwobzUc3z-0PrFpoRxNszXQ`}&eventType=live&type=video&key=${GLOBAL.YOUTUBE_API}`
 import { OTSession, OTPublisher, OTSubscriber } from 'opentok-react-native';
 import {PulseIndicator} from 'react-native-indicators'
-import Chat from './Chat'
+import LiveChat from './LiveChat'
 
 export default class LiveStream extends Component {
 
@@ -42,6 +42,8 @@ static navigationOptions = {
     super(props)
 
     var gets = this.props.navigation.state.params.params.params
+
+    // console.log('<--->'+JSON.stringify(gets))
     this.apiKey = GLOBAL.opentok_api_key;
     this.sessionId = gets.session_id;
     this.token = gets.token;
@@ -170,7 +172,7 @@ playVideo=(value)=>{
         </View>
 
 
-        <View style={{position:'absolute', right:10, bottom:50}}>
+        <View style={{position:'absolute', right:10, top:60}}>
               <Image style={{width:70, height:70, borderRadius:35}}
               source={{uri : yeah.params.image}}
               />
@@ -190,8 +192,9 @@ playVideo=(value)=>{
               </View>
 
             </View>
-          {/*
-            <Chat/> */}
+
+            <LiveChat/> 
+
             </View>
           );
   }

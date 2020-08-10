@@ -154,7 +154,6 @@ export default class ProductListIn extends Component<Props> {
     }
 
     favoPro=(item, index)=>{
-//http://139.59.76.223/kundali_expert/api/add_gems_bookmark
 
       const url = GLOBAL.BASE_URL + "add_gems_bookmark";
     //  this.showLoading()
@@ -198,8 +197,6 @@ export default class ProductListIn extends Component<Props> {
     }
 
     unfavoPro=(item,index)=>{
-// http://139.59.76.223/kundali_expert/api/delete_bookmark_patient
-
       const url = GLOBAL.BASE_URL + "delete_bookmark_patient";
     //  this.showLoading()
     fetch(url, {
@@ -252,6 +249,8 @@ selectedFirst=(item, index)=>{
 
   _renderItem=({item, index}) => {
         return (
+    <>
+    {item.in_stock != "0" && (
     <TouchableOpacity style={{width:wp('45%'), margin:7,height:hp('28%'),backgroundColor:'white',}}
     activeOpacity={0.99} onPress={()=> this.selectedFirst(item, index)}>
       <View style  = {{width:wp('45%'), height:hp('28%'),backgroundColor:'#f7f7f7',shadowColor: "#000",
@@ -308,6 +307,38 @@ selectedFirst=(item, index)=>{
           )}
       </View>
     </TouchableOpacity>
+
+      )}
+
+    {item.in_stock == '0' && (
+    <TouchableOpacity style={{width:wp('45%'), margin:7,height:hp('28%'),backgroundColor:'white',}}
+    activeOpacity={0.99} onPress={()=> alert('Sold out!')}>
+      <View style  = {{width:wp('45%'), height:hp('28%'),backgroundColor:'#f7f7f7',shadowColor: "#000",
+          elevation:4, flexDirection:'column',alignItems:'center',borderRadius:5, 
+      }}>
+    <Image style={{width:wp(40), height:hp(15), resizeMode:'cover',marginTop:hp(1)}} source={{uri : item.image}}/>
+    <Image style={{width:140, height:70, resizeMode:'contain',position:'absolute', top:40}} 
+    source={require('./resources/sold_out.png')}/>
+
+    <View style={{backgroundColor:'white', width:wp('45%'),  flexDirection:'column', marginTop:hp(2), borderBottomLeftRadius:5, borderBottomRightRadius:5}}>
+          <Text style = {{fontSize:15,fontFamily:'Nunito-Regular',color:'#000000',width:wp('39%'),marginLeft:wp(3), marginTop:hp(1)}}
+          numberOfLines={2}>
+              {item.name}
+          </Text>
+          <View style={{width:wp('40%'), flexDirection:'row', justifyContent:'space-between',marginLeft:wp(3), }}>
+          <Text style = {{fontSize:10,fontFamily:'Nunito-Regular',color:'#E60000',width:wp(27),marginTop:hp(1)}}>
+              {item.Carat} Carat/{item.Ratti} Ratti
+          </Text>
+          </View>
+
+      </View>
+
+      </View>
+    </TouchableOpacity>
+
+      )}
+
+    </>
     )
 }
 

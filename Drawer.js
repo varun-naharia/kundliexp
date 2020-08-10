@@ -25,7 +25,7 @@ class Drawer extends React.Component {
 
     _fancyShareMessage=()=>{
 
-        var a = 'Hey! Checkout Kundali Expert app from Play Store'
+        var a = 'Hey! Checkout Kundali Expert app from Play Store '+'https://play.google.com/store/apps/details?id=com.kundliexpert'
 
         Share.share({
                 message:a
@@ -46,7 +46,7 @@ class Drawer extends React.Component {
      //        this.setState({my: GLOBAL.name})
      //    })
      // console.log('did')
-     this.getProfile()     
+     // this.getProfile()     
      this.props.navigation.addListener('willFocus',this._handleStateChange);
 
     }
@@ -275,6 +275,16 @@ openMembers=()=>{
                         <View style={styles.menuItem}>
 
                             <Image style={styles.drawericon}
+                                   source={require('./resources/drawer/d_history.png')} />
+                            <Text style = {styles.drawerTexts}
+                                  onPress={()=>this.props.navigation.navigate('FollowUpHistory')}>
+                                  Your Followups
+                            </Text>
+                        </View>
+
+                        <View style={styles.menuItem}>
+
+                            <Image style={styles.drawericon}
                                    source={require('./resources/drawer/d_about.png')} />
                             <Text style = {styles.drawerTexts}
                                   onPress={()=> this.props.navigation.navigate('AboutUs')}>
@@ -349,6 +359,15 @@ openMembers=()=>{
                             </Text>
                         </View>
 
+                        <View style={styles.menuItem}>
+
+                            <Image style={styles.drawericon}
+                                   source={require('./resources/drawer/d_refer.png')} />
+                            <Text style = {styles.drawerTexts}
+                                  onPress={()=> this.props.navigation.navigate('Refernearn')}>
+                               Refer And Earn
+                            </Text>
+                        </View>
 
 
 
@@ -406,7 +425,7 @@ openMembers=()=>{
                             </Text>
                         </View>
 
-                        <View style={styles.menuItem}>
+{/*                        <View style={styles.menuItem}>
 
                             <Image style={styles.drawericon}
                                    source={require('./resources/drawer/d_saved.png')} />
@@ -415,7 +434,7 @@ openMembers=()=>{
                                   Choose Saved Kundli
                             </Text>
                         </View>
-
+*/}
 
                         <View style={styles.menuItem}>
                             <Image style={styles.drawericon}

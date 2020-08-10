@@ -87,7 +87,6 @@ class Wishlist extends Component<Props> {
     }
 
     unfavoPro=(item,index)=>{
-// http://139.59.76.223/kundali_expert/api/delete_bookmark_patient
   console.log(JSON.stringify(item))
       const url = GLOBAL.BASE_URL + "delete_bookmark_patient";
     //  this.showLoading()

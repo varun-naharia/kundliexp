@@ -13,6 +13,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import ReadMore from 'react-native-read-more-text';
 import StarRating from 'react-native-star-rating';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Dialog, DialogContent, DialogComponent, DialogTitle,DialogButton,SlideAnimation } from 'react-native-dialog-component';
 
 type Props = {};
 export default class BookingScreen extends Component<Props> {
@@ -49,6 +50,8 @@ export default class BookingScreen extends Component<Props> {
             spinner:false,
             event_id:'',
             modalVisible: false,
+            followup_flag:0,
+            follow_up_list:[],
             results:[{
               id:'1',
               mode_name:'Video call',
@@ -212,6 +215,7 @@ _handleTextReady = () => {
 
 
     _handleStateChange=state=>{
+
     }
 
 
@@ -256,6 +260,8 @@ _handleTextReady = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          user_id: GLOBAL.user_id,
+          module: GLOBAL.consultMode,
           expert: 'km sinha',
 
         })
@@ -277,7 +283,9 @@ _handleTextReady = () => {
             this.setState({expertDetails : responseJson.detail,
               ratting: responseJson.ratting,
               rating_list: responseJson.rating_list,
-              count_reviews: responseJson.count_reviews
+              count_reviews: responseJson.count_reviews,
+              followup_flag: responseJson.followup_flag,
+              follow_up_list: responseJson.follow_up_list
             })
 
           } else {
@@ -316,7 +324,15 @@ buttonClickListener=()=>{
   }
 
   else{
-  this.props.navigation.navigate('SelectDateTime')
+
+    if(this.state.followup_flag == 1){
+      alert('You have remaining followup bookings!')
+      this.dialogComponents.show()
+      // this.props.navigation.navigate('FollowUpSelectDateTime')
+
+    }else{
+      this.props.navigation.navigate('SelectDateTime')
+    }
 
   }
 }
@@ -401,6 +417,56 @@ buttonClickListener=()=>{
       )
     }
 
+    selectFollowup=(item , index)=>{
+      GLOBAL.followup_code = item.followup_code
+      GLOBAL.followup_user_type = item.user_type
+      this.props.navigation.navigate('FollowUpSelectDateTime')
+    }
+
+  _render_follow_up_list=({item, index})=>{
+    if(item.plusImage){
+      return(
+        <TouchableOpacity onPress={()=> this.props.navigation.navigate('SelectDateTime')}>
+        <View style={{width:'90%', flexDirection:'column', }}>
+
+         <Text style={{marginLeft : 15,fontSize : 18,color :'#3A3A3A',fontFamily:'Nunito-SemiBold',}}>
+           Make a new Booking
+          </Text>
+
+        </View>
+        </TouchableOpacity>
+      )
+    }
+
+    return(
+        <TouchableOpacity onPress={()=> this.selectFollowup(item, index)}>
+        <View style={{width:'90%', flexDirection:'column'}}>
+         <View style={{flexDirection:'row', width:'100%', margin:10, marginBottom:0,
+         justifyContent:'space-between'}}>
+         <Text style={{marginLeft : 5,fontSize : 18,color :'#3A3A3A',fontFamily:'Nunito-SemiBold',alignSelf:'center'}}>
+                        {item.name}
+          </Text>
+        
+
+                <Image style={{width:25, height:35 , resizeMode:'contain',}}
+                source={require('./resources/ic_untick.png')}/>
+
+        </View>
+         <Text style={{marginLeft : 15,fontSize : 16,color :'#3A3A3A',fontFamily:'Nunito-SemiBold',}}>
+              Followup Code: {item.followup_code}
+          </Text>
+         <Text style={{marginLeft : 15,fontSize : 16,color :'#3A3A3A',fontFamily:'Nunito-SemiBold',}}>
+              Days Remain: {item.remain_days}
+          </Text>
+
+        </View>
+          <View style={{width:'100%', height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(1),marginBottom: hp(2) ,}}/>
+
+        </TouchableOpacity>
+
+    )
+  }
+  
 
     render() {
 
@@ -637,6 +703,33 @@ buttonClickListener=()=>{
                             </View>
                         </TouchableOpacity>
          </Modal>
+
+    <DialogComponent
+        dialogStyle = {{backgroundColor:'transparent',}}
+        dismissOnTouchOutside={true}
+        dismissOnHardwareBackPress={true}
+        width={wp(80)}
+        height={hp(40)}
+        dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }        
+        dialogStyle={{width:wp(80), height:hp(40),borderRadius:5,}}
+        ref={(dialogComponents) => { this.dialogComponents = dialogComponents; }}>
+
+      <DialogContent>
+
+    <View style={{flexDirection:'column', width:wp(80),alignSelf:'center'
+    ,backgroundColor:'white', height:hp(40),borderRadius:5, }}>
+
+      <FlatList data={[...this.state.follow_up_list, {plusImage: true}]}
+      renderItem={this._render_follow_up_list}
+      keyExtractor = { (item, index) => index.toString() }      
+      extraData={this.state}/>
+    <DialogButton text="DISMISS" align="center" textStyle ={{color:'red'}}
+    activeOpacity={0.99}
+    onPress={()=>{this.dialogComponents.dismiss()}}/>
+    </View>
+
+    </DialogContent>
+    </DialogComponent>
 
             </View>
         );

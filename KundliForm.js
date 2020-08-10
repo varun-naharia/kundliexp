@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {Platform, StyleSheet,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
 const windowW= Dimensions.get('window').width
 const windowH = Dimensions.get('window').height
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -14,6 +14,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 // import Svg ,{SvgXml}  from 'react-native-svg';
 import DatePickers from 'react-native-date-picker'
 import { Dialog, DialogContent, DialogComponent, DialogTitle, DialogButton } from 'react-native-dialog-component';
+import { TabView, SceneMap ,TabBar} from 'react-native-tab-view';
 
 type Props = {};
 var radio_props = [
@@ -41,7 +42,14 @@ export default class KundliForm extends Component<Props> {
             dates:'',
             time:'',
             value:0,
-            pob:''
+            pob:'',
+            index:0,
+            kundliList:[],    
+            allKundliList:[],
+            routes: [
+                { key: 'first', title: 'New Kundli' },
+                { key: 'second', title: 'Your Saved Kundli' },
+            ]                    
         }
     }
 
@@ -57,24 +65,64 @@ export default class KundliForm extends Component<Props> {
 
 
     componentDidMount(){
-        var getSavedKundli = GLOBAL.savedKundliDetails
-        if(GLOBAL.isSavedKundli == '1'){
-          this.setState({
-            name: getSavedKundli.name,
-            pob: getSavedKundli.lat_long_address,
-            time: getSavedKundli.hour + getSavedKundli.minute,
-            date: getSavedKundli.year+'-'+getSavedKundli.month+'-'+getSavedKundli.date
-          })
-        }else{
-        this.setState({pob : GLOBAL.glLocationName,
+        // var getSavedKundli = GLOBAL.savedKundliDetails
+        // if(GLOBAL.isSavedKundli == '1'){
+        //   this.setState({
+        //     name: getSavedKundli.name,
+        //     pob: getSavedKundli.lat_long_address,
+        //     time: getSavedKundli.hour + getSavedKundli.minute,
+        //     date: getSavedKundli.year+'-'+getSavedKundli.month+'-'+getSavedKundli.date
+        //   })
+        // }else{
+        // this.setState({pob : GLOBAL.glLocationName,
+        //   name: GLOBAL.userDetails.name
+        // })      
+
+        // }
+
+        this.setState({
+          // pob : GLOBAL.glLocationName,
           name: GLOBAL.userDetails.name
         })      
-
-        }
 
         this.props.navigation.addListener('willFocus',this._handleStateChange);
 
         console.log(this.props.navigation.state.params)
+    }
+
+    getSavedKundli= () =>{
+        const url = GLOBAL.BASE_URL + "user_saved_kundali_data";
+       // this.showLoading()
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: GLOBAL.user_id,
+
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          // this.hideLoading()
+       
+          // console.log(JSON.stringify(responseJson))
+
+          if (responseJson.status == true) {
+
+           this.setState({kundliList : responseJson.recent,
+            allKundliList: responseJson.all
+          })
+          } else {
+
+          }
+        })
+        .catch(error => {
+          console.error(error);
+         this.hideLoading()
+        });
+
     }
 
 
@@ -84,10 +132,13 @@ export default class KundliForm extends Component<Props> {
       if(GLOBAL.isSavedKundli == '1'){
 
       }else{
-        this.setState({pob : GLOBAL.glLocationName,
-          name: GLOBAL.userDetails.name
+        this.setState({
+          pob : GLOBAL.glLocationName,
+          // name: GLOBAL.userDetails.name
         })         
       }
+
+      this.getSavedKundli()
 
     }
 
@@ -157,7 +208,10 @@ buttonClickListener=()=>{
   var navigation = this.props.navigation.state.params
 
   if(navigation.astroReportType == 'kundli'){
+    this.timeoutCheck = setTimeout(() => {
       this.props.navigation.navigate('KundliListNew')    
+   }, 500);
+
   }else if(navigation.astroReportType == 'medical_astro'){
         this.props.navigation.navigate('MedicalAstrology')
   }else if(navigation.astroReportType == 'lal_kitab'){
@@ -276,33 +330,12 @@ buttonClickListener=()=>{
 //   });    
 
 }
-    render() {
-        if(this.state.loading){
-            return(
-                <View style={{flex: 1}}>
-                    <ActivityIndicator style = {styles.loading}
-                                       size={50} color="#E9128B" />
-                </View>
-            )
-        }
-        // alert(GLOBAL.response.svg)
-        // const xml = `${GLOBAL.response.svg}`;
-
-        return (
-
-        <View style={{flex:1, flexDirection:'column', backgroundColor:'white'}}>
-           <Header navigation={this.props.navigation}
-           showHeaderImage={false}
-           headerColor ={'#E60000'}
-           backImagePath={require('./resources/back.png')}
-           headerName={'KUNDLI FORM'}
-           headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
 
 
-{/*      <SvgXml xml={xml} width="100%" height="100%" /> */}
-          <KeyboardAwareScrollView>
-
-          <View style={{width:wp(92),alignSelf:'center', marginTop:hp(2),backgroundColor:'transparent',flex:1}}>
+    _renderScene = ({ route }) => {
+        switch (route.key) {
+            case 'first': 
+            return           <View style={{width:wp(92),alignSelf:'center', marginTop:hp(2),backgroundColor:'transparent',flex:1}}>
          
 
           <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey'}}>Name</Text>
@@ -402,23 +435,6 @@ buttonClickListener=()=>{
 
           <View style={{width:wp(92), height:hp(0.15), backgroundColor:'rgba(0,0,0,0.05)', alignSelf:'center', marginTop:hp(1),marginBottom: hp(2) ,}}/>
 
-
-{/*          <Text style={{fontSize:16,fontFamily:'Nunito-SemiBold',color:'lightgrey', marginTop:hp(1)}}>Country</Text>
-
-          <TextInput
-              style={{ height: hp(6), borderColor: '#f3f3f4',fontSize:17,paddingLeft:0, borderBottomWidth: 1, marginTop:0 ,marginBottom: hp(2) ,width:wp(92),color:'black',fontFamily:'Nunito-Regular'}}
-              // Adding hint in TextInput using Placeholder option.
-              placeholder="Enter Country"
-              placeholderTextColor = 'grey'
-              maxLength={35}
-              editable={false}
-              // Making the Under line Transparent.
-              underlineColorAndroid="transparent"
-              value = {'India'}
-              onChangeText={(text) => this.setState({cuuntry:text})}
-          />
-*/}
-
             <Button
             containerStyle={{width:wp('70%'),padding:16, height:hp(7.5), overflow:'hidden', borderRadius:40,
              backgroundColor: '#e60000', elevation: 5, alignSelf:'center', marginTop:hp(8), marginBottom:hp(5)}}
@@ -428,7 +444,177 @@ buttonClickListener=()=>{
             SUBMIT
             </Button>
 
+          </View>;
+            break;
+
+            case 'second': return <View>
+
+           <Text style = {{fontSize:15,fontFamily:'Nunito-Bold',color:'black',marginLeft:wp(3), marginTop:hp(1)}}>
+           RECENT
+           </Text>
+
+           {this.state.kundliList.length == 0&&(
+
+           <Text style = {{fontSize:14,fontFamily:'Nunito-SemiBold',color:'grey',alignSelf:'center', marginTop:hp(1)}}>
+           You have not generated any Kundli Yet!!
+           </Text>
+
+            )}
+            <FlatList style= {{flexGrow:0,marginVertical:hp(1.5), marginHorizontal:wp(1.5)}}
+                      data={this.state.kundliList}
+                      numColumns={1}
+                      keyExtractor = { (item, index) => index.toString() }
+                      renderItem={this._renderItem}
+                      extraData={this.state}
+            />
+
+       <Text style = {{fontSize:15,fontFamily:'Nunito-Bold',color:'black',marginLeft:wp(3), marginTop:hp(1)}}>
+       ALL
+       </Text>
+
+           {this.state.allKundliList.length == 0&&(
+
+           <Text style = {{fontSize:14,fontFamily:'Nunito-SemiBold',color:'grey',alignSelf:'center', marginTop:hp(1)}}>
+           You have not generated any Kundli Yet!!
+           </Text>
+
+            )}
+
+                    <FlatList style= {{marginBottom:hp(2)}}
+                              data={this.state.allKundliList}
+                              keyExtractor = { (item, index) => index.toString() }
+                              renderItem={this._renderItem}
+                              extaData={this.state}
+                    />
+
+            </View>;
+            break;
+
+            default: return null;
+  }
+  
+}
+
+    selectedPred=(item, index, url)=>{
+      console.log(JSON.stringify(item))
+      GLOBAL.gldate = item.date
+      GLOBAL.glmonth = item.month
+      GLOBAL.glyear =  item.year
+      GLOBAL.glhour = item.hour
+      GLOBAL.glminute = item.minute
+      GLOBAL.glLocationName= item.lat_long_address
+      GLOBAL.nameForBasic = item.name
+      
+      this.props.navigation.navigate('KundliListNew')    
+
+    }
+
+    _renderItem = ({item, index}) => {
+      var url = item.base_url + item.image
+        return (
+    <TouchableOpacity onPress={() => this.selectedPred(item, index, url)
+    } activeOpacity={0.9}>
+     <View style={{backgroundColor:'white',flexDirection:'row' ,borderColor:'red',borderWidth:0,
+      flex: 1 ,borderRadius :5,width : wp(95), padding:10, marginTop:hp(1), alignSelf:'center'}}>
+ 
+      <Image style={{width:60, height:60, borderRadius:30}}
+      source={{uri : url}}/>
+      <View style={{flexDirection:'column', marginLeft:wp(2)}}>
+       <Text style = {{fontSize:16,fontFamily:'Nunito-Bold',color:'black',}}>
+        {item.name}
+       </Text>
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Time of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {item.hour}:{item.minute}</Text>
+       </Text>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Date of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {item.date}-{item.month}-{item.year}</Text>
+       </Text>
+    
+      </View>
+              <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
+                Id: #{item.id}
+               </Text>
+
+        </View>
+
+    </TouchableOpacity>
+        )
+    }
+
+
+ renderTabBar(props) {
+        return (<TabBar
+                style={{backgroundColor: 'white', elevation: 0, borderColor: 'transparent', height:50,}}
+                labelStyle={{color: 'rgba(0,0,0,0.5)', fontSize: 13, fontFamily:'Nunito-Regular', textAlign:'left',}}
+
+                {...props}
+
+               renderLabel={({ route, focused, color }) => {
+                var decide
+                if(focused)
+                  decide='black'
+                else
+                  decide= 'rgba(0,0,0,0.5)'
+                return(
+                  <Text style={{color: decide, fontSize: 13, fontFamily:'Nunito-Bold', textAlign:'left',}}>
+                    {route.title}
+                  </Text>
+                )}}
+                scrollEnabled ={true}
+                tabStyle={{width:'auto'}}
+                pressColor={'grey'}
+                indicatorStyle={{backgroundColor: '#E60000', height: 2.5,}}
+            />
+        );
+    }
+
+    render() {
+        if(this.state.loading){
+            return(
+                <View style={{flex: 1}}>
+                    <ActivityIndicator style = {styles.loading}
+                                       size={50} color="#E9128B" />
+                </View>
+            )
+        }
+        // alert(GLOBAL.response.svg)
+        // const xml = `${GLOBAL.response.svg}`;
+
+        return (
+
+        <View style={{flex:1, flexDirection:'column', backgroundColor:'white'}}>
+           <Header navigation={this.props.navigation}
+           showHeaderImage={false}
+           headerColor ={'#E60000'}
+           backImagePath={require('./resources/back.png')}
+           headerName={'KUNDLI FORM'}
+           headerTextStyle={{fontFamily:'Nunito-SemiBold', color:'white',marginLeft:10}} />
+
+
+{/*      <SvgXml xml={xml} width="100%" height="100%" /> */}
+          <KeyboardAwareScrollView>
+
+          <View style={{width:wp('100%'),backgroundColor:'#E60000', flex:1}}>
+                <TabView
+                    navigationState={this.state}
+                    indicatorStyle={{ backgroundColor: '#800000' }}
+                    style={{ backgroundColor: 'white', flexGrow:1 }}
+                    renderTabBar={this.renderTabBar}
+                    renderScene={this._renderScene}
+                    pressColor={'#E60000'}
+                    // onSwipeStart ={(index)=> this.setState({ index })}
+                    // onSwipeEnd ={()=> this.hideLoading()}
+                    onIndexChange={index => this.setState({ index })}
+                    initialLayout={{ width: Dimensions.get('window').width }}
+                />
+
+
           </View>
+
+
 
           </KeyboardAwareScrollView>
      

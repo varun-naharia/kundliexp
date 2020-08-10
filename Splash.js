@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet,Text, View,ImageBackground,Animated,Easing,Image,Dimensions} from 'react-native';
+import { StyleSheet,Text, View,ImageBackground,Animated,Easing,Image,Dimensions, Alert, Linking} from 'react-native';
 const GLOBAL = require('./Global');
 type Props = {};
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -7,7 +7,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import TimeZone from 'react-native-timezone';
 import Geolocation from '@react-native-community/geolocation';
 var moment = require('moment-timezone');
+import DeviceInfo from 'react-native-device-info';
+import VersionCheck from 'react-native-version-check';
+
 import Geocoder from 'react-native-geocoding';
+
 Geocoder.init("AIzaSyCCT7vlingJBOvUgnWA_J4NMTwpXUtBEHI"); // use a valid API key
 
 export default class Splash extends Component {
@@ -41,12 +45,41 @@ StartImageRotateFunction () {
  
 }
 
+  _yes_update=()=>{
+  var link ="https://play.google.com/store/apps/details?id=com.kundliexpert"
+
+    Linking.canOpenURL(link).then(supported => {
+        supported && Linking.openURL(link);
+    }, (err) => console.log(err));
+  }
 
   componentDidMount(){
      this.StartImageRotateFunction();
      this.getTimeZone()
   this.timeoutCheck = setTimeout(() => {
-    this.proceed()
+VersionCheck.getLatestVersion({
+    provider: 'playStore'  // for Android
+  })
+  .then(latestVersion => {
+    console.log(latestVersion);    // 0.1.2
+
+    let getLatestVersion = latestVersion
+    let getCurrentVersion = DeviceInfo.getVersion()    
+    if(getCurrentVersion < getLatestVersion){
+        Alert.alert('Update Required!','A new version for the app is available. Please update the app.',
+            [
+              {text:"Update", onPress:()=>this._yes_update()},
+            ],
+            {cancelable:false}
+        )
+
+    }else{
+
+      this.proceed()
+    }
+  });
+
+    // alert(DeviceInfo.getVersion() + '--'+ DeviceInfo.getBuildNumber())
    }, 2000);
   Geolocation.getCurrentPosition(info => 
     {

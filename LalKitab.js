@@ -269,7 +269,7 @@ export default class LalKitab extends Component {
 
     getLalkitabChart=(indexs) =>{
 
-            const url = 'http://139.59.76.223/kundali_expert/astrology_api/laalkitaab_chart';
+            const url = 'http://134.209.159.180/kundali_expert/astrology_api/laalkitaab_chart';
             const data = new FormData();
             data.append('user_id', GLOBAL.user_id);
             data.append('lang', GLOBAL.glLanguage);

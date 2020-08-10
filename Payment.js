@@ -203,6 +203,7 @@ walletStateChange = () => {
     }else if(this.props.navigation.state.params.params.previous_screen =='from_cart'){
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = 0
 
       console.log('from cart', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='audio'){
@@ -1574,6 +1575,7 @@ walletStateChange = () => {
     }else if(this.props.navigation.state.params.params.previous_screen =='from_cart'){
       var getItem =this.props.navigation.state.params.params.finalData
       get_price = getItem.price;
+      tax_calc = 0
 
       console.log('from cart', this.props.navigation.state.params.params)
     }else if(this.props.navigation.state.params.params.previous_screen =='audio'){

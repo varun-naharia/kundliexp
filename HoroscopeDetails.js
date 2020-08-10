@@ -50,7 +50,7 @@ export default class HoroscopeDetails extends Component{
 
     getTodayHoroscope= () =>{
       // this.showLoading()
-        const url = 'http://139.59.76.223/kundali_expert/astrology_api/daily_sun_sign_prediction'
+        const url = 'http://134.209.159.180/kundali_expert/astrology_api/daily_sun_sign_prediction'
 
         fetch(url, {
             method: 'POST',

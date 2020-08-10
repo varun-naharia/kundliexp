@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
+import {Platform, StyleSheet,ScrollView, Text, View,FlatList,ImageBackground,ActivityIndicator,StatusBar,Image,TouchableOpacity ,Alert,Container,Linking ,TextInput , Dimensions} from 'react-native';
 const windowW= Dimensions.get('window').width
 const windowH = Dimensions.get('window').height
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

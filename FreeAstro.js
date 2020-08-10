@@ -330,16 +330,16 @@ selectedFirsts=(item,indexs)=>{
     GLOBAL.isDailyPres = '0'
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 6){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'lal_kitab'})  
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'lal_kitab'})  
   }else if(item == 7){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'kp_system'})  
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'kp_system'})  
   }else if(item == 8){
     GLOBAL.isDailyPres = '1'
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 9){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'sade_sati'})  
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'sade_sati'})  
   }else if(item == 10){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'life_report'})  
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'life_report'})  
   }else if(item == 11){
     this.props.navigation.navigate('MatchMaking', {matchReportType : 'match_making'})    
   }else if(item == 12){
@@ -359,7 +359,9 @@ selectedFirsts=(item,indexs)=>{
         ]
     );    
   }else if(item == 14){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'year_pred'})  
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'year_pred'})  
+  }else if(item == 15){
+    this.props.navigation.navigate('ViewMembership')  
   }else if(item == 16){
     GLOBAL.isDailyPres = '4'
     this.props.navigation.navigate('NumerologyForm')  
@@ -369,9 +371,9 @@ selectedFirsts=(item,indexs)=>{
     GLOBAL.isDailyPres = '3'
     this.props.navigation.navigate('NumerologyForm')  
   }else if(item == 19){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'rudraksh_sugges'})
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'rudraksh_sugges'})
   }else if(item == 20){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'gemstone_sugges'})
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'gemstone_sugges'})
   }else if(item == 21){
     this.props.navigation.navigate('GandMool')
   }else if(item == 22){
@@ -382,7 +384,7 @@ selectedFirsts=(item,indexs)=>{
   }else if(item == 24){
     alert('Coming soon...')
   }else if(item == 25){
-    this.props.navigation.navigate('KundliForm',{astroReportType : 'chaughadive'})
+    this.props.navigation.navigate('KundliFormRest',{astroReportType : 'chaughadive'})
   }else if(item == 26){
     this.props.navigation.navigate('DailyPanchang')
   }else if(item == 27){

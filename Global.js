@@ -1,10 +1,10 @@
 module.exports = {
     screen :'',
     time : 0,
-    BASE_URL: 'http://139.59.76.223/kundali_expert/api/',
+    BASE_URL: 'http://134.209.159.180/kundali_expert/api/',
     firebaseToken:'',
     helpline_number:'',
-    ASTRO_API_BASE_URL: 'http://139.59.76.223/kundali_expert/astrology_api/global_api',
+    ASTRO_API_BASE_URL: 'http://134.209.159.180/kundali_expert/astrology_api/global_api',
 
     ASTRO_APIS_URL: 'https://json.astrologyapi.com/v1/',
     ASTRO_APIS_PACKAGE: 'Premium ',
@@ -20,6 +20,7 @@ module.exports = {
 
     opentok_api_key:'46593922',
 
+    totalAmount:'',
     isSavedKundli:'0',
     savedKundliDetails:{},
     glLanguage:'en',
@@ -34,6 +35,8 @@ module.exports = {
     glzone:'5.5',
     glgender:'male',
 
+    followup_code: '',
+    followup_user_type:'',
 //    globalTax:0,
     gemsTax:0.00,
     classTax:0.00,

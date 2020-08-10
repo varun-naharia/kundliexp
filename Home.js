@@ -555,7 +555,6 @@ _renderItemNewsImageList=(itemData)=>{
 
 
     forConsult=()=>{
-      // console.log('recursive')
       const url = GLOBAL.BASE_URL + "home_user_dynamics";
       //  this.showLoading()
       fetch(url, {
@@ -590,6 +589,7 @@ _renderItemNewsImageList=(itemData)=>{
               this.dialogComponents.show()
 
             }
+            // console.log('recursive')
            this.forConsult() // recursive
 
           } else {
@@ -668,7 +668,7 @@ _renderItemNewsImageList=(itemData)=>{
                   GLOBAL.freePDF = responseJson.common_pdf
                   GLOBAL.glLanguage = responseJson.user_detail.language
                   GLOBAL.glChartStyle= responseJson.user_detail.chart_style
-//                  alert(JSON.stringify(GLOBAL.all_settings))
+                 // alert(JSON.stringify(GLOBAL.all_settings))
                 if(responseJson.user_detail.status=='0'){
                           AsyncStorage.removeItem('userID');
 
@@ -765,7 +765,7 @@ handleBackButton = () => {
     if (this.props.isFocused) {
       Alert.alert(
         'Exit App',
-        'Are you sure you want to exit KundliExpert app?',
+        'Are you sure you want to exit Kundali Expert app?',
         [
           {
             text: 'Cancel',
@@ -886,7 +886,12 @@ buttonOkJoin=()=>{
 
       <TouchableOpacity
       activeOpacity={0.99}
-      onPress={()=>{this.props.navigation.navigate('LiveStream' ,{params: {params: this.state.live_details}})}}>
+      onPress={()=>{
+        GLOBAL.chat_g_id = this.state.live_details.chat_id
+        // alert(GLOBAL.chat_g_id)
+        // console.log(JSON.stringify(this.state.live_details))
+        this.props.navigation.navigate('LiveStream' ,{params: {params: this.state.live_details}})
+      }}>
       <View style  = {{width:wp(92),height:hp(13), backgroundColor:'white',shadowColor: "#000",
           elevation:4, flexDirection:'column',alignItems:'center',borderRadius:5, alignSelf:'center', marginBottom:hp(3)
       }}>
