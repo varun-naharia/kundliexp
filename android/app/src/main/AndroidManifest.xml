@@ -37,7 +37,10 @@
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
-          android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+          android:screenOrientation="portrait"
+          tools:ignore="LockedOrientationActivity"
+
+          android:configChanges="keyboard|keyboardHidden|screenSize"
         android:windowSoftInputMode="adjustResize">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

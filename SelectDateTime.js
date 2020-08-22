@@ -130,6 +130,7 @@ export default class SelectDateTime extends Component<Props> {
         this.calculateDay(s)
         GLOBAL.date = moment(date).format('YYYY-MM-DD')
         this.getMembers()
+        this.setState({disabled: true})
     }
 
 

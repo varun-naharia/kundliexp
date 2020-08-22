@@ -2,6 +2,7 @@ module.exports = {
     screen :'',
     time : 0,
     BASE_URL: 'http://134.209.159.180/kundali_expert/api/',
+    // BASE_URL: 'http://134.209.159.180/kundali_expert_test/api/',
     firebaseToken:'',
     helpline_number:'',
     ASTRO_API_BASE_URL: 'http://134.209.159.180/kundali_expert/astrology_api/global_api',

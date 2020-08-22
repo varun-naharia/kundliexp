@@ -590,7 +590,7 @@ _renderItemNewsImageList=(itemData)=>{
 
             }
             // console.log('recursive')
-           this.forConsult() // recursive
+           // this.forConsult() // recursive
 
           } else {
             alert(

@@ -7,7 +7,8 @@ import {
     Alert,
     Dimensions,
     TouchableOpacity,
-    BackHandler
+    BackHandler,
+    ToastAndroid
 } from 'react-native';
 
 const window = Dimensions.get('window');
@@ -32,14 +33,20 @@ export default class Thankyou extends Component {
 
 
     componentDidMount(){
-      // BackHandler.addEventListener('hardwareBackPress', this._handlePress);
+      BackHandler.addEventListener('hardwareBackPress', this._handleBackPress);
 
     }
 
     componentWillUnmount () {
-      // BackHandler.removeEventListener('hardwareBackPress', this._handlePress);
+      BackHandler.removeEventListener('hardwareBackPress', this._handleBackPress);
 
     }
+
+    _handleBackPress(){
+        ToastAndroid.show('Back button is disabled!', ToastAndroid.SHORT);
+        return true;
+    }
+
     _handlePress=()=>{
 
     this.props

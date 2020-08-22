@@ -71,6 +71,7 @@ helloMessage = true;
     <View style={{flexDirection: 'row', width: '100%', justifyContent: 'space-between'}}>
      <Text style={{fontSize:15, color:'#4C5361',fontFamily: 'Nunito-Bold', width: '85%'}}
      numberOfLines={3}>{itemData.item.title}</Text>
+{/*
      {helloMessage == true && (
        <TouchableOpacity onPress= {()=> this.addtoFav(itemData.item)}>
      <Image style={{width: 25, height: 25, resizeMode: 'contain'}} source={require('./resources/favo.png')}/>
@@ -81,6 +82,7 @@ helloMessage = true;
        <Image style={{width: 25, height: 25, resizeMode: 'contain'}} source={require('./resources/unfavo.png')}/>
        </TouchableOpacity>
      )}
+*/}
      </View>
      <Text style={{fontSize:13, marginRight:10,  marginTop: 5, fontFamily: 'Nunito-Regular'}} numberOfLines={4}>{itemData.item.youtube_url}</Text>
 </View>

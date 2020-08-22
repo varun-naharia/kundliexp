@@ -284,6 +284,7 @@ walletStateChange = () => {
 
               if(this.state.finalCheckoutPrice == 0){
 
+                this.showLoading()
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
                 var body = {
@@ -318,6 +319,8 @@ walletStateChange = () => {
                 })
                   .then(response => response.json())
                   .then(responseJson => {
+                this.hideLoading()
+
                     console.log(JSON.stringify(responseJson))
                     if (responseJson.status == true) {
                       // var commonHtml = `${GLOBAL.user_id}|emergency|${responseJson.id}`;
@@ -357,6 +360,7 @@ walletStateChange = () => {
 
                 var finalBody = {...body , ...navigation.state.params.params.finalData}
                 console.log("temp"+JSON.stringify(finalBody))
+                this.showLoading()
 
                 fetch(url, {
                   method: "POST",
@@ -372,6 +376,7 @@ walletStateChange = () => {
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
 
+                      this.hideLoading()
                        this.rajorPay(commonHtml)
 
   //                    this.props.navigation.navigate("Thankyou");
@@ -400,6 +405,8 @@ walletStateChange = () => {
               decide_module = 'lifeprediction';
 
               if(this.state.finalCheckoutPrice == 0){
+                this.showLoading()
+
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
                 var body = {
@@ -435,6 +442,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
                       // var commonHtml = `${GLOBAL.user_id}|emergency|${responseJson.id}`;
 
@@ -473,7 +481,7 @@ walletStateChange = () => {
 
                 var finalBody = {...body , ...navigation.state.params.params.finalData}
                 console.log("temp"+JSON.stringify(finalBody))
-
+                this.showLoading()
                 fetch(url, {
                   method: "POST",
                   headers: {
@@ -485,9 +493,10 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
+
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
-
                        this.rajorPay(commonHtml)
 
 //                      this.props.navigation.navigate("Thankyou");
@@ -525,7 +534,7 @@ walletStateChange = () => {
                console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
               if(this.state.finalCheckoutPrice == 0){
-
+                this.showLoading()
                 const url = GLOBAL.BASE_URL + "add_permanent_booking";
                 var body = {
                     user_id: GLOBAL.user_id,
@@ -558,6 +567,8 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
+
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -599,9 +610,9 @@ walletStateChange = () => {
               var mem_ids= GLOBAL.single_sel_member
 
               console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
- 
+          
               if(this.state.finalCheckoutPrice == 0){
-                
+              this.showLoading()      
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
               var body={
@@ -642,6 +653,8 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
+
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -681,6 +694,7 @@ walletStateChange = () => {
                 trxn_mode:'normal'
               }
 
+              this.showLoading()
               console.log('---temp++'+JSON.stringify(body))
                 fetch(url, {
                   method: "POST",
@@ -693,6 +707,8 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
+
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_type}|${responseJson.id}`;
 
@@ -727,7 +743,7 @@ walletStateChange = () => {
               console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
           
               if(this.state.finalCheckoutPrice == 0){
-                
+              this.showLoading()                
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
               var body={
@@ -765,6 +781,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()                    
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -805,6 +822,7 @@ walletStateChange = () => {
               }
 
               console.log('---temp++'+JSON.stringify(body))
+              this.showLoading()
                 fetch(url, {
                   method: "POST",
                   headers: {
@@ -816,6 +834,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_type}|${responseJson.id}`;
 
@@ -849,6 +868,7 @@ walletStateChange = () => {
            console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
         if(this.state.finalCheckoutPrice==0){
+          this.showLoading()
             const url = GLOBAL.BASE_URL + "add_permanent_booking";
             var body ={
                 for: decide_for,
@@ -880,6 +900,8 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
+
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -908,7 +930,7 @@ walletStateChange = () => {
                 coupan_code: this.state.disc_code,
                 coupan_code_id:this.state.disc_code_id,                
               }
-
+              this.showLoading()
               console.log('---temp++'+JSON.stringify(body))
                 fetch(url, {
                   method: "POST",
@@ -921,6 +943,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
 
@@ -978,7 +1001,7 @@ walletStateChange = () => {
                 coupan_code_id:this.state.disc_code_id,                
               }
               console.log(JSON.stringify(body))
-
+              this.showLoading()
              fetch(url, {
                   method: "POST",
                   headers: {
@@ -990,6 +1013,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()                    
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -1025,6 +1049,7 @@ walletStateChange = () => {
                 coupan_code:this.state.disc_code,
                 coupan_code_id:this.state.disc_code_id,                
               }
+              this.showLoading()
               console.log('---temp++'+JSON.stringify(body))
                 fetch(url, {
                   method: "POST",
@@ -1037,6 +1062,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
 
@@ -1075,7 +1101,7 @@ walletStateChange = () => {
               console.log('amount with tax--' + get_price+'--taxAmount' + taxAmount)
 
               if(this.state.finalCheckoutPrice == 0){
-                
+              this.showLoading()               
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
               var body={
@@ -1115,6 +1141,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()                    
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -1153,7 +1180,7 @@ walletStateChange = () => {
                 discount_amount: this.state.disc_amount,
                 trxn_mode:'normal'
               }
-
+              this.showLoading()
               console.log('---temp++'+JSON.stringify(body))
                 fetch(url, {
                   method: "POST",
@@ -1167,6 +1194,7 @@ walletStateChange = () => {
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
                     if (responseJson.status == true) {
+                      this.hideLoading()
                       var commonHtml = `${GLOBAL.user_id}|${decide_type}|${responseJson.id}`;
 
                        this.rajorPay(commonHtml)
@@ -1220,6 +1248,7 @@ walletStateChange = () => {
                 var finalBody = {...body , ...navigation.state.params.params.finalData}
 
                 console.log(JSON.stringify(finalBody))
+                this.showLoading()
                 fetch(url, {
                   method: "POST",
                   headers: {
@@ -1230,6 +1259,7 @@ walletStateChange = () => {
                 })
                   .then(response => response.json())
                   .then(responseJson => {
+                    this.hideLoading()
                     console.log(JSON.stringify(responseJson))
                     if (responseJson.status == true) {
                       this.props.navigation.navigate("Thankyou");
@@ -1264,7 +1294,7 @@ walletStateChange = () => {
                 var finalBody = {...body , ...navigation.state.params.params.finalData}
 
                 console.log("temp"+JSON.stringify(finalBody))
-
+                this.showLoading()
                 fetch(url, {
                   method: "POST",
                   headers: {
@@ -1275,6 +1305,7 @@ walletStateChange = () => {
                 })
                   .then(response => response.json())
                   .then(responseJson => {
+                    this.hideLoading()
                     console.log(JSON.stringify(responseJson))
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${'pdfbooking'}|${responseJson.id}`;
@@ -1310,7 +1341,7 @@ walletStateChange = () => {
               decide_module = 'medical'
 
               if(this.state.finalCheckoutPrice == 0){
-                
+              this.showLoading()                
               const url = GLOBAL.BASE_URL + "add_permanent_booking";
 
               var body={
@@ -1344,6 +1375,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                      this.hideLoading()
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -1373,6 +1405,7 @@ walletStateChange = () => {
               var finalBody = {...body , ...navigation.state.params.params.finalData}
 
               console.log('---temp++'+JSON.stringify(finalBody))
+              this.showLoading()
                 fetch(url, {
                   method: "POST",
                   headers: {
@@ -1384,6 +1417,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
 
@@ -1436,7 +1470,7 @@ walletStateChange = () => {
               var finalBody = {...body , ...navigation.state.params.params.finalData}
 
               console.log('---perm++'+JSON.stringify(finalBody))
-
+              this.showLoading()
                   fetch(url, {
                   method: "POST",
                   headers: {
@@ -1448,6 +1482,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
 
                       this.props.navigation.navigate("Thankyou");
@@ -1475,7 +1510,7 @@ walletStateChange = () => {
                 discount_amount: this.state.disc_amount,
               }
               var finalBody = {...body , ...navigation.state.params.params.finalData}
-
+              this.showLoading()
               console.log('---temp++'+JSON.stringify(finalBody))
                 fetch(url, {
                   method: "POST",
@@ -1488,6 +1523,7 @@ walletStateChange = () => {
                   .then(response => response.json())
                   .then(responseJson => {
                     console.log(JSON.stringify(responseJson))
+                    this.hideLoading()
                     if (responseJson.status == true) {
                       var commonHtml = `${GLOBAL.user_id}|${decide_module}|${responseJson.id}`;
 

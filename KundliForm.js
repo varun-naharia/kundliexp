@@ -87,6 +87,8 @@ export default class KundliForm extends Component<Props> {
 
         this.props.navigation.addListener('willFocus',this._handleStateChange);
 
+      // this.getSavedKundli()
+
         console.log(this.props.navigation.state.params)
     }
 
@@ -495,6 +497,53 @@ buttonClickListener=()=>{
   
 }
 
+
+    _confDelete=(item)=>{
+      //  alert(JSON.stringify(item))
+         const url = GLOBAL.BASE_URL +  'delete_saved_kundali_data'
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "user_id":GLOBAL.user_id,
+                "id": item.id
+            }),
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                console.log(JSON.stringify(responseJson))
+
+
+                if (responseJson.status == true) {
+                  this.getSavedKundli()
+
+                }else{
+                    // this.setState({results:[]})
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                this.hideLoading()
+            });
+
+    }
+
+    askDelete=(item)=>{
+        Alert.alert('Remove Kundli!','Are you sure you want to remove this kundli?',
+            [{text:"Cancel"},
+                {text:"Confirm", onPress:()=>this._confDelete(item)
+                },
+            ],
+            {cancelable:false}
+        )
+
+    }
+
+
+
+
     selectedPred=(item, index, url)=>{
       console.log(JSON.stringify(item))
       GLOBAL.gldate = item.date
@@ -508,6 +557,8 @@ buttonClickListener=()=>{
       this.props.navigation.navigate('KundliListNew')    
 
     }
+
+
 
     _renderItem = ({item, index}) => {
       var url = item.base_url + item.image
@@ -532,6 +583,11 @@ buttonClickListener=()=>{
        Date of Birth: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
         {item.date}-{item.month}-{item.year}</Text>
        </Text>
+
+       <Text style = {{fontSize:13,fontFamily:'Nunito-Regular',color:'#757575',marginTop:hp(0.5)}}>
+       Birth Location: <Text style = {{fontSize:13,fontFamily:'Nunito-SemiBold',color:'black',}}>
+        {item.lat_long_address}</Text>
+       </Text>
     
       </View>
               <Text style = {{fontSize:15,fontFamily:'Nunito-SemiBold',color:'black',position:'absolute', right:10, top:13}}>
@@ -539,6 +595,12 @@ buttonClickListener=()=>{
                </Text>
 
         </View>
+
+                <TouchableOpacity style={{position:'absolute', right:20, top:40}}
+                onPress={()=> this.askDelete(item)}>
+                <Image style={{width:25, height:35 , resizeMode:'contain'}}
+                source={require('./resources/del.png')}/>
+                </TouchableOpacity>
 
     </TouchableOpacity>
         )

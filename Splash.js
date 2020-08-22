@@ -5,7 +5,7 @@ type Props = {};
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-community/async-storage';
 import TimeZone from 'react-native-timezone';
-import Geolocation from '@react-native-community/geolocation';
+// import Geolocation from '@react-native-community/geolocation';
 var moment = require('moment-timezone');
 import DeviceInfo from 'react-native-device-info';
 import VersionCheck from 'react-native-version-check';
@@ -81,18 +81,18 @@ VersionCheck.getLatestVersion({
 
     // alert(DeviceInfo.getVersion() + '--'+ DeviceInfo.getBuildNumber())
    }, 2000);
-  Geolocation.getCurrentPosition(info => 
-    {
-      console.log(info)
-// /AIzaSyCCT7vlingJBOvUgnWA_J4NMTwpXUtBEHI
-      console.log(info.coords.latitude +'lon '+ info.coords.longitude)
-    Geocoder.from(info.coords.latitude, info.coords.longitude)
-        .then(json => {
-            var addressComponent = json.results[0].address_components[0];
-            console.log(addressComponent);
-        })
-        .catch(error => console.warn(error));
-    });
+//   Geolocation.getCurrentPosition(info => 
+//     {
+//       console.log(info)
+// // /AIzaSyCCT7vlingJBOvUgnWA_J4NMTwpXUtBEHI
+//       console.log(info.coords.latitude +'lon '+ info.coords.longitude)
+//     Geocoder.from(info.coords.latitude, info.coords.longitude)
+//         .then(json => {
+//             var addressComponent = json.results[0].address_components[0];
+//             console.log(addressComponent);
+//         })
+//         .catch(error => console.warn(error));
+//     });
   }
 
 
@@ -122,6 +122,8 @@ console.log(timezone);
     })
 
   }
+
+
 
   render() {
 

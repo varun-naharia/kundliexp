@@ -142,19 +142,20 @@ class Wishlist extends Component<Props> {
                 ₹ {item.base_price}/-
                </Text>
 
+
 {/*               <TouchableOpacity>
                <Text style = {{fontSize:12,fontFamily:'Nunito-Regular',color:'#FF0000',marginTop:10}}>
                View Details
                </Text>
                </TouchableOpacity>
 */}
+
         </View>
-{/*
-      <TouchableOpacity style={{width:wp(5), height:hp(5), resizeMode:'contain',position:'absolute', top:2, right:wp(1)}}
-      onPress={()=> this.unfavoPro(item, index)}>
-        <Image style={{width:wp(3.5), height:hp(4), resizeMode:'contain',}} source={require('./resources/cross.png')}/>
-      </TouchableOpacity>
-*/}
+   {/*    <TouchableOpacity style={{position:'absolute', top:12, right:15}}
+       onPress= {()=> this.addtoFav(itemData.item)}>
+     <Image style={{width: 25, height: 25, resizeMode: 'contain'}} source={require('./resources/favo.png')}/>
+     </TouchableOpacity>
+*/}     
 
         </View>
 
