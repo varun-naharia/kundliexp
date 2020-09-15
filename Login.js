@@ -12,6 +12,7 @@ import PhoneInput from 'react-native-phone-input'
 import {
   BarIndicator,
 } from 'react-native-indicators';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends Component {
    static navigationOptions = ({ navigation }) => {
@@ -120,6 +121,11 @@ export default class Login extends Component {
 
   componentDidMount(){
 
+        var valuesf =  AsyncStorage.getItem('token');
+        valuesf.then((f)=> {
+            GLOBAL.firebaseToken = f
+
+        }) 
 
 
 

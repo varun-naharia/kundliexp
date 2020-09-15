@@ -131,8 +131,8 @@ android {
         applicationId "com.kundliexpert"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
         multiDexEnabled true
     }
     splits {
@@ -199,9 +199,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation 'com.google.android.gms:play-services-base:16.1.0'
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-messaging:17.6.0'
+    implementation 'com.google.android.gms:play-services-base:17.4.0'
+    implementation 'com.google.firebase:firebase-core:17.5.0'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
 
 }
 

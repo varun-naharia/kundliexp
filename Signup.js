@@ -9,6 +9,7 @@ import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import PhoneInput from 'react-native-phone-input'
+import AsyncStorage from '@react-native-community/async-storage';
 
 var randomString = require('random-string');
 type Props = {};
@@ -44,6 +45,11 @@ export default class Signup extends Component {
 
 
   componentDidMount(){
+        var valuesf =  AsyncStorage.getItem('token');
+        valuesf.then((f)=> {
+            GLOBAL.firebaseToken = f
+
+        }) 
 
   }
 
